@@ -1,0 +1,15 @@
+{
+  "short_name": "OSWAP token",
+  "name": "Governance token of Oswap DEX",
+  "icons": [
+    {
+      "src": "logo-inv.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
