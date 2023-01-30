@@ -1,7 +1,15 @@
 import { Fragment, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { Popover, Transition } from "@headlessui/react";
-import { ArrowsRightLeftIcon, Bars3Icon, BuildingLibraryIcon, ChevronDownIcon, QuestionMarkCircleIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowsRightLeftIcon,
+  Bars3Icon,
+  BuildingLibraryIcon,
+  ChevronDownIcon,
+  ClockIcon,
+  QuestionMarkCircleIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
 import cn from "classnames";
 
 import { Button } from "components/atoms";
@@ -16,7 +24,7 @@ const menuLinks = [
   {
     name: "Farming",
     href: "/farming",
-    icon: BuildingLibraryIcon,
+    icon: ClockIcon,
   },
   {
     name: "Governance",
