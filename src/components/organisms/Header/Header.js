@@ -50,7 +50,7 @@ const resources = [
     href: "https://v2-stats.oswap.io",
   },
   {
-    name: "Liquidity providers",
+    name: "Liquidity mining",
     description: "Every 7 days, 100 GB is distributed to liquidity providers on oswap.io.",
     href: "https://liquidity.obyte.org/",
   },

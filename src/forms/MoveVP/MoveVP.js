@@ -144,7 +144,7 @@ export const MoveVPForm = () => {
   return (
     <div>
       <Warning className="mb-5" type="warning">
-        Your changes can only affect 2 groups per transaction. The group is indicated in parentheses after the pool name.
+        Your changes can only affect up to 2 groups per transaction. The group is indicated in parentheses after the pool name.
       </Warning>
 
       <div className="items-center hidden grid-cols-6 gap-4 mb-4 sm:grid lg:grid-cols-7 text-primary-gray-light">

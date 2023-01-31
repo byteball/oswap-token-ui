@@ -21,7 +21,7 @@ export default () => {
 
   return (
     <GovernanceLayout>
-      <h2 className="text-3xl font-bold">Stake OSWAP tokens</h2>
+      <h2 className="text-3xl font-bold">Stake OSWAP tokens and vote</h2>
       <div className="text-base font-medium text-primary-gray-light">
         Lock your OSWAP tokens for up to 4 years to participate in governance and receive a share of OSWAP token emissions. Larger locking periods give you more
         voting power (VP) and a larger share of emissions. With larger VP, you have more influence on the distribution of rewards among incentivized pools.

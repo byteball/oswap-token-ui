@@ -108,7 +108,7 @@ export default () => {
       {!walletAddress ? (
         <WalletModal hideIfHas={true}>
           <div>
-            <Warning className="w-auto mt-5 cursor-pointer">Please add wallet address to display your data</Warning>
+            <Warning className="w-auto mt-5 cursor-pointer">Please add your wallet address to display your data</Warning>
           </div>
         </WalletModal>
       ) : (

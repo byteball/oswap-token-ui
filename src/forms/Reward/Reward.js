@@ -63,7 +63,7 @@ export const RewardForm = () => {
       </Helmet>
 
       <div className="mb-5 text-base font-medium text-primary-gray-light">
-        Withdraw reward accrued for locking your OSWAP tokens. If you'd like to re-stake the reward tokens, use the{" "}
+        Withdraw the reward accrued for locking your OSWAP tokens. If you'd like to re-stake the reward tokens, use the{" "}
         <Link className="text-primary" to="/governance/shares/stake">
           “Stake” tab
         </Link>

@@ -181,7 +181,7 @@ export const StakeForm = () => {
   return (
     <div>
       <Helmet>
-        <title>OSWAP token — Stake oswap token</title>
+        <title>OSWAP token — Stake and vote</title>
       </Helmet>
 
       <div className="mb-5 text-base font-medium text-primary-gray-light">
@@ -201,7 +201,7 @@ export const StakeForm = () => {
           {userData.reward >= 0 ? (
             <div className="mb-5">
               <Switch value={stakeReward} onChange={setStakeReward}>
-                Stake reward ({userRewardBalanceView} {symbol})
+                Stake the accrued reward ({userRewardBalanceView} {symbol})
               </Switch>
             </div>
           ) : null}
@@ -231,7 +231,7 @@ export const StakeForm = () => {
       {!presaleFunds && (
         <div className="mb-5">
           <NumSlider minLabelValue={minTerm} className="mt-5" onChange={handleChangeTerm} value={term.value} min={14} max={MAX_TERM} />
-          <small>Term: {termView}</small>
+          <small>Locking term: {termView}</small>
         </div>
       )}
 

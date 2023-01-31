@@ -25,7 +25,7 @@ export default () => {
       <Helmet>{isPresale ? <title>OSWAP token — Presale</title> : <title>OSWAP token — {currentTab === "buy" ? "Buy" : "Sell"} token</title>}</Helmet>
 
       <h1 className="mt-5 text-4xl font-bold tracking-tight text-center text-white sm:text-5xl lg:text-6xl">OSWAP token</h1>
-      <h2 className="mt-3 text-2xl text-center text-primary-gray-light">Governance token of Oswap DEX</h2>
+      <h2 className="mt-3 text-2xl text-center text-primary-gray-light">Governance and reward token of Oswap DEX</h2>
 
       {!isPresale ? (
         <div className="grid max-w-4xl grid-cols-6 gap-4 pl-5 pr-5 mx-auto mt-10 mb-5 lg:pl-0 lg:pr-0 rounded-xl">

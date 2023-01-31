@@ -32,11 +32,11 @@ export const GovernanceLayout = ({ children }) => {
               <Navigation.Item icon={HomeIcon} href="/governance/dashboard">
                 Governance
               </Navigation.Item>
+              <Navigation.Item icon={UsersIcon} disabled={!walletAddress} href="/governance/shares">
+                Stake &amp; vote
+              </Navigation.Item>
               <Navigation.Item icon={UsersIcon} disabled={!walletAddress} href="/governance/whitelist">
                 Pool whitelist
-              </Navigation.Item>
-              <Navigation.Item icon={UsersIcon} disabled={!walletAddress} href="/governance/shares">
-                Stake oswap tokens
               </Navigation.Item>
               <Navigation.Item icon={CalendarIcon} disabled={!walletAddress} href="/governance/params">
                 Params

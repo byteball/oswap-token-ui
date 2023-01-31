@@ -31,13 +31,13 @@ export const MainInfoPanel = memo(() => {
 
   return (
     <InfoPanel loading={stateVarsLoading}>
+      <InfoPanel.Item name="CURRENT PRICE" value={currentPriceView} suffix={<small className="text-sm"> GBYTE</small>} />
       <InfoPanel.Item
         name="APPRECIATION RATE"
         description={<span>Current yearly appreciation rate of OSWAP token</span>}
         value={appreciationRateView}
         suffix="%"
       />
-      <InfoPanel.Item name="CURRENT PRICE" value={currentPriceView} suffix={<small className="text-sm"> GBYTE</small>} />
       <InfoPanel.Item name="OSWAP TVL" description="Total value locked in all Oswap pools" value={currentTVLView} prefix="$" />
       <InfoPanel.Item
         name="TARGET APPRECIATION/TVL"

@@ -174,7 +174,7 @@ const PoolViewItem = ({ address, symbol, asset, decimals: pool_decimals, waiting
 
           {status === "WHITELISTED" && (
             <div className="text-primary-light">
-              <b>Share of emission:</b> {shareOfEmission}%
+              <b>Share of emissions:</b> {shareOfEmission}%
             </div>
           )}
         </div>
