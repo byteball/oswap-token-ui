@@ -16,7 +16,7 @@ import { ListOfVotersModal } from "../ListOfVotersModal/ListOfVotersModal";
 import { generateLink } from "utils";
 import appConfig from "appConfig";
 
-const NUMBER_PER_PAGE = 5;
+const POOLS_PER_PAGE = 5;
 
 export const Whitelist = () => {
   const pools = useSelector(selectPools);
@@ -24,14 +24,14 @@ export const Whitelist = () => {
   const [page, setPage] = useState(1);
 
   const listedOrWaitingPools = [...pools, ...waitingPools];
-  const maxPage = Math.ceil(listedOrWaitingPools.length / NUMBER_PER_PAGE);
+  const maxPage = Math.ceil(listedOrWaitingPools.length / POOLS_PER_PAGE);
 
   if (listedOrWaitingPools.length === 0) return "The whitelist is empty, please add the first pool.";
 
   return (
     <div>
       <div className="mt-8 -mx-4 overflow-hidden ring-1 ring-black ring-opacity-5 sm:-mx-6 md:mx-0 md:rounded-lg">
-        {listedOrWaitingPools.slice(0, page * NUMBER_PER_PAGE).map(({ symbol, asset, ...rest }) => (
+        {listedOrWaitingPools.slice(0, page * POOLS_PER_PAGE).map(({ symbol, asset, ...rest }) => (
           <PoolViewItem key={asset} symbol={symbol} asset={asset} {...rest} />
         ))}
       </div>

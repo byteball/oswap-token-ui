@@ -12,8 +12,8 @@ export const GovernanceLayout = ({ children }) => {
   const walletAddress = useSelector(selectWalletAddress);
   const presaleParams = useSelector(selectPresaleParams);
 
-  const lunchDate = moment.utc(presaleParams.launch_date, moment.ISO_8601);
-  const isPresale = lunchDate.isAfter();
+  const launchDate = moment.utc(presaleParams.launch_date, moment.ISO_8601);
+  const isPresale = launchDate.isAfter();
 
   return (
     <>

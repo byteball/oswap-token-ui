@@ -16,7 +16,7 @@ import { getAppreciationState } from "utils/getExchangeResult";
 
 import appConfig from "appConfig";
 
-const NUMBER_PER_PAGE = 5;
+const POOLS_PER_PAGE = 5;
 
 export const MyFarmingList = () => {
   const userData = useSelector(selectUserData);
@@ -33,7 +33,7 @@ export const MyFarmingList = () => {
 
   const [depositsWithData, loading] = useLoadDepositMeta(userData.deposits, pools, page);
 
-  const maxPage = Math.ceil(pools?.length / NUMBER_PER_PAGE);
+  const maxPage = Math.ceil(pools?.length / POOLS_PER_PAGE);
   const timestamp = moment.utc().unix();
   const year = 360 * 24 * 3600;
 
@@ -205,7 +205,7 @@ const useLoadDepositMeta = (deposits, pools, page = 1) => {
     setLoading(true);
 
     const updateDeposits = async (deposits, page) => {
-      const newDeposits = deposits.slice(0, NUMBER_PER_PAGE * page);
+      const newDeposits = deposits.slice(0, POOLS_PER_PAGE * page);
 
       newDeposits.forEach(({ asset_key }, index) => {
         const pool = pools.find((p) => p.asset_key === asset_key);

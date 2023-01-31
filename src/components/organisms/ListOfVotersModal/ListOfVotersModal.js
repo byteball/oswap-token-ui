@@ -57,7 +57,7 @@ export const ListOfVotersModal = ({ children, votes = [] }) => {
 
           {votes.length > 5 && page < maxPages && (
             <div className="flex justify-center">
-              <Button onClick={() => setPage((page) => page + 1)}>Load mote</Button>
+              <Button onClick={() => setPage((page) => page + 1)}>Load more</Button>
             </div>
           )}
         </div>
