@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { Helmet } from "react-helmet-async";
 import moment from "moment";
 import ReactGA from "react-ga";
+import { Link } from "react-router-dom";
 
 import { Button, Spin, Warning } from "components/atoms";
 import { WalletModal, Dashboard } from "components/organisms";
@@ -133,15 +134,23 @@ export default () => {
             value={rewardView}
             currency={symbol}
             extraValue={
-              <Button
-                onClick={sendRewardEvent}
-                type="text-primary"
-                disabled={reward <= 0}
-                className="leading-none text-[14px]"
-                href={withdrawStakingRewardLink}
-              >
-                claim now
-              </Button>
+              <div className="space-x-2">
+                <Button
+                  onClick={sendRewardEvent}
+                  type="text-primary"
+                  disabled={reward <= 0}
+                  className="leading-none text-[14px]"
+                  href={withdrawStakingRewardLink}
+                >
+                  claim now
+                </Button>
+
+                {reward > 0 && (
+                  <Link className="leading-none text-[14px] text-primary font-medium" to="/governance/shares/stake">
+                    claim and restake
+                  </Link>
+                )}
+              </div>
             }
           />
 
