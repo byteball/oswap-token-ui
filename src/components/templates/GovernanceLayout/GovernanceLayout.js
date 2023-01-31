@@ -1,4 +1,4 @@
-import { CalendarIcon, HomeIcon, UsersIcon } from "@heroicons/react/24/outline";
+import { Cog6ToothIcon, HomeIcon, QueueListIcon, ArrowDownTrayIcon } from "@heroicons/react/24/outline";
 import { Suspense } from "react";
 import { useSelector } from "react-redux";
 import moment from "moment";
@@ -32,13 +32,13 @@ export const GovernanceLayout = ({ children }) => {
               <Navigation.Item icon={HomeIcon} href="/governance/dashboard">
                 Governance
               </Navigation.Item>
-              <Navigation.Item icon={UsersIcon} disabled={!walletAddress} href="/governance/shares">
+              <Navigation.Item icon={ArrowDownTrayIcon} disabled={!walletAddress} href="/governance/shares">
                 Stake &amp; vote
               </Navigation.Item>
-              <Navigation.Item icon={UsersIcon} disabled={!walletAddress} href="/governance/whitelist">
+              <Navigation.Item icon={QueueListIcon} disabled={!walletAddress} href="/governance/whitelist">
                 Pool whitelist
               </Navigation.Item>
-              <Navigation.Item icon={CalendarIcon} disabled={!walletAddress} href="/governance/params">
+              <Navigation.Item icon={Cog6ToothIcon} disabled={!walletAddress} href="/governance/params">
                 Params
               </Navigation.Item>
             </Navigation>
