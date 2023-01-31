@@ -53,10 +53,10 @@ export default () => {
   const term = expiryTsMoment ? expiryTsMoment.diff(momentNow, "days") : 0;
 
   const normalizedVotingPower = userData?.balance ? (userData?.balance / 256) * 4 ** (term / 360 + (ts - appConfig.COMMON_TS) / appConfig.YEAR) : 0;
-  const normalizedVotingPowerView = normalizedVotingPower / 10 ** decimals;
+  const userActualVotingPower = userData?.normalized_vp ? userData?.normalized_vp / 4 ** ((moment.utc().unix() - appConfig.COMMON_TS) / appConfig.YEAR) : 0;
 
-  const maxVotingPower = normalizedVotingPower ? (userData?.balance / 256) * 4 ** (4 + (moment.utc().unix() - appConfig.COMMON_TS) / appConfig.YEAR) : 0;
-  const percentOfMaximumVotingPower = normalizedVotingPower ? (100 - ((maxVotingPower - normalizedVotingPower) / maxVotingPower) * 100).toFixed(2) : 100;
+  const userActualVotingPowerView = userActualVotingPower / 10 ** decimals;
+  const percentOfMaximumVotingPower = userActualVotingPower ? (100 - ((userData?.balance - userActualVotingPower) / userData?.balance) * 100).toFixed(2) : 100;
 
   // rewards
   const appreciationState = getAppreciationState(stateVars.state, appreciation_rate);
@@ -74,6 +74,7 @@ export default () => {
 
   const reward =
     appreciationState.total_normalized_vp !== 0 ? (newEmissionsSincePrevVisit * (userData.normalized_vp || 0)) / appreciationState.total_normalized_vp : 0;
+
   const rewardView = reward / 10 ** decimals;
 
   // links
@@ -169,10 +170,10 @@ export default () => {
 
           <Dashboard.Item
             title="Voting power"
-            value={normalizedVotingPowerView}
+            value={userActualVotingPowerView}
             currency={symbol}
             extraValue={
-              normalizedVotingPower ? (
+              userActualVotingPower ? (
                 <span className="text-[14px]">
                   {percentOfMaximumVotingPower}% of the maximum VP available <br /> with your locked balance
                 </span>
