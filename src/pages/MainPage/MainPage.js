@@ -14,10 +14,10 @@ export default () => {
   const [currentTab, setCurrentTab] = useState("buy");
   const presaleParams = useSelector(selectPresaleParams);
 
-  const lunchDate = moment.utc(presaleParams.launch_date, moment.ISO_8601);
+  const launchDate = moment.utc(presaleParams.launch_date, moment.ISO_8601);
   const startOfFreezePeriod = moment.utc(presaleParams.launch_date, moment.ISO_8601).subtract(presaleParams.buy_freeze_period, "days");
 
-  const isPresale = lunchDate.isAfter();
+  const isPresale = launchDate.isAfter();
   const isFrozen = startOfFreezePeriod.isBefore();
 
   return (
@@ -48,7 +48,7 @@ export default () => {
             <>
               <h2 className="mt-5 text-xl font-bold text-center uppercase text-primary">freeze period ends in</h2>
               <div className="mt-3 font-bold text-center text-white uppercase">
-                <Timer date={lunchDate.toISOString()} />
+                <Timer date={launchDate.toISOString()} />
               </div>
             </>
           ) : (

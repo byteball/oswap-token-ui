@@ -119,15 +119,15 @@ export const MoveVPForm = () => {
     }
   });
 
-  let roundedError = Object.values(changes).reduce((acc, current) => acc + Number(current), 0);
+  let roundingError = Object.values(changes).reduce((acc, current) => acc + Number(current), 0);
 
-  if (roundedError !== 0) {
+  if (roundingError !== 0) {
     Object.entries(changes).forEach(([key, diff]) => {
-      if (roundedError !== 0) {
+      if (roundingError !== 0) {
         if (votes[key] !== Math.abs(diff)) {
           if (diff < 0 || change > 0) {
-            changes[key] -= roundedError;
-            roundedError = 0;
+            changes[key] -= roundingError;
+            roundingError = 0;
           }
         }
       }
