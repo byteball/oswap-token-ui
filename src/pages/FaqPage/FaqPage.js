@@ -11,7 +11,7 @@ const faqs = [
     answer: <>
       <p>You are right, the price can't change just out of nowhere, and something has to be given up in exchange for an increase in price.</p>
       <p>To explain the appreciation mechanism mathematically, the token is issued on a bonding curve, which is a formula that links the amount of OSWAP tokens issued and the amount of the reserve currency (GBYTE) sent to issuing them (see the next question for details). The formula also determines the price of OSWAP tokens which changes depending on the amount of tokens already issued — grows with the growing supply of OSWAP tokens. The curve has several parameters that determine its shape. To change the price without buying or selling any tokens, the parameters of the curve need to be changed. With the new parameters, we start using another bonding curve, with slightly different shape that yields a higher price at the current supply of OSWAP tokens, however the price would fall faster if the supply were to decrease.</p>
-      <p>This means that the tonen's appreciation comes at the expense of a lower price for those who redeem last. However, there are also incentives for long-term locking of tokens, which make the possibility of large redemptions more remote. Also, fees collected from trading the OSWAP token change the shape of the bonding curve in such a way that late-redeemers get a better price.</p>
+      <p>This means that the token's appreciation comes at the expense of a lower price for those who redeem last. However, there are also incentives for long-term locking of tokens, which make the possibility of large redemptions more remote. Also, fees collected from trading the OSWAP token change the shape of the bonding curve in such a way that late-redeemers get a better price.</p>
     </>,
   },
   {
@@ -44,6 +44,12 @@ const faqs = [
       <p>The current trading fee for buying/selling OSWAP tokens is 0.3% but it can be changed by <Link to="/governance/params">governance</Link>.</p>
       <p>Also, there is an <i>arbitrageur profit tax</i>, which is an additional fee calculated based on implied arbitrageur profit when arbitraging this market against any external market where OSWAP token is also traded. This tax is currently set to 90% of estimated arbitrageur profit. It also can be changed by <Link to="/governance/params">governance</Link>.</p>
       <p>Both fees are added to the reserve and benefit the existing OSWAP token holders. Note that simply adding the earned fee to the reserve would break its bond with the supply (which didn't change) according to the bonding curve, so when adding the fee the AA also changes the <i>c</i> and <i>s</i><sub>0</sub> parameters to keep the supply and the price unchanged.</p>
+    </>,
+  },
+  {
+    question: "What ensures the liquidity of OSWAP token?",
+    answer: <>
+      <p>The bonding curve. Thanks to the bonding curve, it is always possible to buy and sell OSWAP tokens. On the front page, you can see the amount of GBYTE that backs the token's liquidity.</p>
     </>,
   },
   {
