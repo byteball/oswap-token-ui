@@ -1,33 +1,154 @@
 import { Helmet } from "react-helmet-async";
+import { Link } from "react-router-dom";
 
 const faqs = [
   {
-    question: "How do you make holy water?",
-    answer: "You boil the hell out of it. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas cupiditate laboriosam fugiat.",
+    question: "What's the purpose of OSWAP token?",
+    answer: <p>OSWAP token is designed to reflect the success of Oswap protocol — with greater total value locked (TVL) in all pools of <a href="https://oswap.io" target="_blank" rel="noopener">Oswap DEX</a> the token appreciates faster, and with lower TVL it appreciates slower. OSWAP token is also used to incentivize some Oswap pools by rewarding the liquidity providers (LPs) in those pools with emissions of OSWAP token. Which pools to incentivize and in what proportions is decided by governance of OSWAP token holders who lock their tokens for up to 4 years and are also rewarded with OSWAP token emissions.</p>,
   },
   {
-    question: "How do you make holy water?",
-    answer: "You boil the hell out of it. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas cupiditate laboriosam fugiat.",
+    question: "How does appreciation work? The price can't increase just out of nowhere, right?",
+    answer: <>
+      <p>You are right, the price can't change just out of nowhere, and something has to be given up in exchange for an increase in price.</p>
+      <p>To explain the appreciation mechanism mathematically, the token is issued on a bonding curve, which is a formula that links the amount of OSWAP tokens issued and the amount of the reserve currency (GBYTE) sent to issuing them (see the next question for details). The formula also determines the price of OSWAP tokens which changes depending on the amount of tokens already issued — grows with the growing supply of OSWAP tokens. The curve has several parameters that determine its shape. To change the price without buying or selling any tokens, the parameters of the curve need to be changed. With the new parameters, we start using another bonding curve, with slightly different shape that yields a higher price at the current supply of OSWAP tokens, however the price would fall faster if the supply were to decrease.</p>
+      <p>This means that the tonen's appreciation comes at the expense of a lower price for those who redeem last. However, there are also incentives for long-term locking of tokens, which make the possibility of large redemptions more remote. Also, fees collected from trading the OSWAP token change the shape of the bonding curve in such a way that late-redeemers get a better price.</p>
+    </>,
   },
   {
-    question: "How do you make holy water?",
-    answer: "You boil the hell out of it. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas cupiditate laboriosam fugiat.",
+    question: "How are the tokens priced?",
+    answer: <>
+      <p>OSWAP tokens are issued on a bonding curve — a mathematical formula that binds the supply of the tokens to the amount of the reserve currency (GBYTE) invested in issuing them. The formula looks like:</p>
+      <p>
+        <i>r</i> = <i>c</i> <i>s</i><sub>0</sub> <i>s</i> / (<i>s</i><sub>0</sub> - <i>s</i>)
+      </p>
+      <p>where</p>
+      <p>
+        <i>r</i> is the GBYTE reserve committed to issuing OSWAP tokens;<br/>
+        <i>s</i> is the supply of OSWAP tokens;<br/>
+        <i>s</i><sub>0</sub> is the maximum supply of OSWAP tokens;<br/>
+        <i>c</i> is a coefficient that starts with 1 and changes due to accruing fees, appreciation, and emissions.<br/>
+      </p>
+      <p>The price of OSWAP token is the derivative of <i>r</i> with respect to <i>s</i>:</p>
+      <p>
+        <i>p</i> = <i>c</i> <i>s</i><sub>0</sub><sup>2</sup> / (<i>s</i><sub>0</sub> - <i>s</i>)<sup>2</sup>
+      </p>
+      <p>It's clear from the above formulas that the price grows with the growing supply, and as the supply <i>s</i> approaches <i>s</i><sub>0</sub>, both the reserve and the price go to infinity.</p>
+      <p>This means that early investors get a lower price and every additional purchase further increases the price, while selling the token back to the curve decreases its price.</p>
+      <p>There are fees charged for every purchase or sale of OSWAP tokens, the fee is added back to the reserve and benefits the holders of OSWAP tokens.</p>
+      <p>The bonding curve is implemented by an <a href="https://obyte.org/platform/autonomous-agents" target="_blank" rel="noopener">Autonomous Agent</a>, and the AA acts like a decentralized market maker that automatically adjusts its prices in response to the changing demand. OSWAP holders act like shareholders of the decentralized market maker, and share its profits from trading fees.</p>
+    </>,
   },
   {
-    question: "How do you make holy water?",
-    answer: "You boil the hell out of it. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas cupiditate laboriosam fugiat.",
+    question: "What are the fees?",
+    answer: <>
+      <p>The current trading fee for buying/selling OSWAP tokens is 0.3% but it can be changed by <Link to="/governance/params">governance</Link>.</p>
+      <p>Also, there is an <i>arbitrageur profit tax</i>, which is an additional fee calculated based on implied arbitrageur profit when arbitraging this market against any external market where OSWAP token is also traded. This tax is currently set to 90% of estimated arbitrageur profit. It also can be changed by <Link to="/governance/params">governance</Link>.</p>
+      <p>Both fees are added to the reserve and benefit the existing OSWAP token holders. Note that simply adding the earned fee to the reserve would break its bond with the supply (which didn't change) according to the bonding curve, so when adding the fee the AA also changes the <i>c</i> and <i>s</i><sub>0</sub> parameters to keep the supply and the price unchanged.</p>
+    </>,
   },
   {
-    question: "How do you make holy water?",
-    answer: "You boil the hell out of it. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas cupiditate laboriosam fugiat.",
+    question: "How fast does OSWAP token appreciate?",
+    answer: <>
+      <p>You can see the current appreciation rate on the front page. It depends on the current TVL of all Oswap pools combined, target TVL, and the target appreciation rate. The latter two are regulated by <Link to="/governance/params">governance</Link>, currently they are set to 30% p.a. appreciation at $1m TVL. When the current TVL is different from the target TVL, the actual appreciation rate is scaled accordingly, so for example at $2m TVL it would be 60% per year.</p>
+    </>,
   },
   {
-    question: "How do you make holy water?",
-    answer: "You boil the hell out of it. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas cupiditate laboriosam fugiat.",
+    question: "How often is the appreciation applied? Daily, monthly?",
+    answer: <p>Continuously. It's applied before every trade based on the time elapsed since the previous trade. This ensures that the price changes in very small increments and there are no abrupt changes (that traders would try to take advantage of).</p>,
   },
   {
-    question: "How do you make holy water?",
-    answer: "You boil the hell out of it. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas cupiditate laboriosam fugiat.",
+    question: "How large is the emission rate?",
+    answer: <p>Currently, it is 30% p.a. That means that the supply of OSWAP tokens increases 30% per year (not including the supply changes due to trading) and the newly issued tokens are used to incentivize liquidity provision in Oswap pools and incentivize locking OSWAP tokens in governance. The emission rate can be changed by <Link to="/governance/params">governance</Link>. The distribution of newly minted tokens between LPs and OSWAP stakers is currently 50/50 but it can also be changed by <Link to="/governance/params">governance</Link>.</p>,
+  },
+  {
+    question: "How often are new tokens emitted? Daily, monthly?",
+    answer: <p>Continuously. Emission is applied before every trade based on the time elapsed since the previous trade.</p>,
+  },
+  {
+    question: "How do emissions affect the bonding curve?",
+    answer: <>
+      <p>They don't change the current price, however the bonding curve's parameters <i>c</i> and <i>s</i><sub>0</sub> are updated to match the new supply without changing the reserve and the price.</p>
+      <p>With the updated parameters, the price curve changes in such a way that the price would fall faster when the tokens are redeemed (sold back to the bonding curve), i.e. the late-redeemers would get a lower price. This effect is set off (partially or fully) by the accumulation of trading fees, which has the opposite effect, i.e. improves the conditions for the late-redeemers. Also, incentives are in place for long-term locking of OSWAP tokens, which makes the possibility of large redemptions more remote.</p>
+    </>,
+  },
+  {
+    question: "How large are the staking rewards for staking OSWAP tokens?",
+    answer: <>
+      <p>Currently, total yearly emissions are 30% of the total supply, and 50% of emissions go to stakers. However, it doesn't mean that the APY is 15%. It actually depends on the share of OSWAP tokens that is being staked as emissions are distributed only among stakers while non-stakers are not eligible for emissions. Your APY also depends on your locking period — the farther away your unlock date is, the greater share of emissions you receive (it is proportional to your voting power). You can see your current APY on the <Link to="/governance/dashboard">governance dashboard</Link>.</p>
+    </>,
+  },
+  {
+    question: "What is voting power?",
+    answer: <>
+      <p>Voting power (VP) determines the weight of your votes when voting on governance decisions. It also determines the share of stakers emissions you receive — it is equal to the ratio of your VP to the total VP of all stakers combined.</p>
+      <p>VP depends on the amount of OSWAP tokens you locked and the time left until unlocking, with longer locking periods yielding greater VP. If you lock the tokens for the maximum period — 4 years — you get the maximum possible VP which is equal to your locked balance. After you lock the tokens, your VP starts decaying exponentially so that it decays 2 times every half a year, or 4 times a year. After 4 years, it would decay 256 times. If you lock for less than 4 years, your initial VP is chosen such that at the end of your locking period it would be equal to 1/256th of your locked balance.</p>
+      <p>To regain your voting power (and the share in staking rewards) you can just periodically re-stake your accrued staking rewards and extend your locking period to 4 years in the future. This restores your VP to its maximum and also compounds your rewards.</p>
+    </>,
+  },
+  {
+    question: "How are the LP rewards distributed among pools?",
+    answer: <>
+      <p><Link to="/governance/shares/stake">Governance</Link> decides that. Every OSWAP staker indicates their preference about the percentages that each pool should receive. For example, one staker might say that they want 50% to go to pool1 and 50% to pool2, while another staker wants 20% to pool2, 45% to pool3, and 35% to pool4. The votes of stakers are weighed using their VP and averaged to get the final percentages that each pool receives. Governance participants can move their votes at any time and the distribution percentages can change as a result.</p>
+    </>,
+  },
+  {
+    question: "What pools can receive LP rewards?",
+    answer: <>
+      <p>Every <a href="https://oswap.io" target="_blank" rel="noopener">Oswap</a> pool can be incentivized with OSWAP token rewards, however it should first be <Link to="/governance/whitelist">added to the whitelist by a governance decision</Link>.</p>
+      <p>Any staker can offer any pool to be added and other stakers can vote for or against whitelisting. If the absolute majority of the voting power supports whitelisting, or if there are more supporters than the opponents (while the rest didn't vote) for 5 consecutive days, then the new pool is whitelisted and can start receiving votes for rewards redistribution.</p>
+      <p>This means that it should be easy to add a new pool by offering it even with a minimum VP and waiting for 5 days, unless it meets strong opposition among other voters.</p>
+    </>,
+  },
+  {
+    question: "I provide liquidity in one of Oswap pools, can I earn more?",
+    answer: <>
+      <p>Yes, that's what this website is for! If your pool is already listed on the <Link to="/farming">farming page</Link>, you can see the additional APY you would earn by depositing your pool tokens. Deposit the tokens, and you can harvest the rewards in OSWAP tokens as often as you like. To stop receiving rewards, you can withdraw the LP tokens at any time.</p>
+      <p>If your pool is not listed, you can add it. See the next question.</p>
+    </>,
+  },
+  {
+    question: "How can I add a new pool to farming?",
+    answer: <>
+      <p>If your pool is not listed on the <Link to="/farming">farming page</Link> but you want the LPs to earn additional income by receiving a share of OSWAP token emissions, you can add the pool by following these steps:</p>
+      <ol>
+        <li><Link to="/">Buy OSWAP tokens</Link> if you don't already have them.</li>
+        <li><Link to="/governance/shares/stake">Stake them in governance</Link> for a period from 14 days to 4 years.</li>
+        <li><Link to="/governance/whitelist">Add your pool to the whitelist</Link>. Your offer to add a new pool to the whitelist has to be voted by governance participants (including you). If there are no votes against your offer for 5 days, you can commit the addition on the same page. Now your pool is whitelisted and can receive a share of OSWAP token emissions.</li>
+        <li><Link to="/governance/shares/move">Move your votes</Link> in favor of the newly added pool. Now it will start receiving emissions as soon as the first pool tokens get deposited on the <Link to="/farming">farming page</Link>.</li>
+        <li>Deposit your LP tokens on the <Link to="/farming">farming page</Link>. If you are the only farmer of this pool so far, you get 100% of emissions directed to this pool.</li>
+      </ol>
+      <p>To increase the emissions directed to your pool, convince others to join governance and allocate a bigger share of their votes to your pool.</p>
+    </>,
+  },
+  {
+    question: "Do Oswap pools have to pay anything to OSWAP token holders or stakers?",
+    answer: <>
+      <p>No, there is no tax on the pools (unlike other popular DEXes such as Sushi, Curve, PanCakeSwap, QuickSwap, etc), 100% of the collected fees belong to LPs.</p>
+      <p>However, pools can be programmed to spend a share of the collected fees to buy OSWAP tokens and burn them, thus paying back to OSWAP holders (buying increases the current price and burning raises the price received when redeeming). This is completely voluntary. The current version of <a href="https://github.com/byteball/oswap-v2-aa" target="_blank" rel="noopener">Oswap AAs</a> doesn't offer such an option, however the AAs are open source and can be forked to include it.</p>
+    </>,
+  },
+  {
+    question: "How often are LP rewards paid?",
+    answer: <>
+      <p>Continuously. The rewards just accrue over time and you can claim them as often as you like.</p>
+    </>,
+  },
+  {
+    question: "When can I get my LP tokens back?",
+    answer: <>
+      <p>Any time you want. They are not time-locked (unlike OSWAP tokens in governance). Once you withdraw your LP tokens, you stop receiving rewards.</p>
+    </>,
+  },
+  {
+    question: "Why invest in OSWAP token?",
+    answer: <>
+      <p>There are several ways to benefit from investing in OSWAP token, directly or indirectly:</p>
+      <ul>
+        <li>Appreciation of OSWAP token. Its price on the bonding curve automatically increases and the rate of increase depends on how widely the <a href="https://oswap.io" target="_blank" rel="noopener">Oswap</a> protocol is used — higher total TVL in all Oswap pools yields faster appreciation. See another question above to learn how the appreciation works and its trade-offs.</li>
+        <li>Participation in governance. By buying OSWAP tokens and locking them in governance you get an opportunity to influence the distribution of OSWAP token emissions and direct more emissions to pools where you have interest, such as the pools where you provide liquidity or the pools that are an important piece of infrastructure for other projects you participate in. Your influence is determined by your voting power, which depends on the locked balance and the locking period (longer locking period — more VP)</li>
+        <li>Getting a share of OSWAP token emissions. By buying OSWAP tokens and locking them in governance you get a share of new OSWAP token emissions, which is currently 30% per year and 50% of the emission goes to governance participants (both percentages can be changed by governance). Your share in the emissions is proportional to your VP.</li>
+      </ul>
+    </>,
   },
 ];
 
