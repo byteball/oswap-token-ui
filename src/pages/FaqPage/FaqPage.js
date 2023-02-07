@@ -53,6 +53,13 @@ const faqs = [
     </>,
   },
   {
+    question: "How is TVL tracked?",
+    answer: <>
+      <p>There is an oracle that posts the combined TVL of all Oswap pools from time to time. The TVL is measured in USD. If a new version of Oswap is released, or there is a fork by independent developers, the TVL of their pools will be included in the combined TVL (as long as their main business is still a DEX).</p>
+      <p>The oracle can be updated by <Link to="/governance/params">governance</Link>. Currently, the oracle is centralized and there are risks of oracle malfunction (malicious or accidental). However small deviations of the posted TVL from the actual one don't pose a big risk to the ecosystem as they affect only the <i>rate</i> of appreciation for a short time until the oracle issue is resolved (by the oracle operator, or by governance — by appointing a new oracle).</p>
+    </>,
+  },
+  {
     question: "How fast does OSWAP token appreciate?",
     answer: <>
       <p>You can see the current appreciation rate on the front page. It depends on the current TVL of all Oswap pools combined, target TVL, and the target appreciation rate. The latter two are regulated by <Link to="/governance/params">governance</Link>, currently they are set to 30% p.a. appreciation at $1m TVL. When the current TVL is different from the target TVL, the actual appreciation rate is scaled accordingly, so for example at $2m TVL it would be 60% per year.</p>
