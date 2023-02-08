@@ -88,7 +88,7 @@ export const WalletModal = ({ children, hideIfHas = false, visible: defaultVisib
             onChange={handleChange}
             extra={
               <div className="mt-1 text-xs">
-                <a href="https://obyte.org/#download" className="text-primary" target="_blank" rel="noreferrer">
+                <a href="https://obyte.org/#download" className="text-primary" target="_blank" rel="noopener">
                   Install Obyte wallet
                 </a>{" "}
                 if you don't have one yet, and copy/paste your address here.

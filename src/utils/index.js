@@ -4,4 +4,5 @@ export { generateLink } from "./generateLink";
 export { getExchangeResult } from "./getExchangeResult";
 export { getPoolListByStateVars } from "./getPoolListByStateVars";
 export { getCountOfDecimals } from "./getCountOfDecimals";
-export { getActualVpByNormalized } from "./getActualVpByNormalized";
+export { getCurrentVpByNormalized } from "./getCurrentVpByNormalized";
+export { getFarmingAPY } from "./getFarmingAPY";

@@ -14,8 +14,7 @@ import { selectExchangeRates, selectWalletAddress } from "store/slices/settingsS
 
 import { ListOfVotersModal } from "../ListOfVotersModal/ListOfVotersModal";
 
-import { generateLink, getActualVpByNormalized, getCurrentPrice } from "utils";
-import { getAppreciationState } from "utils/getExchangeResult";
+import { generateLink, getCurrentVpByNormalized, getFarmingAPY } from "utils";
 import appConfig from "appConfig";
 
 const POOLS_PER_PAGE = 5;
@@ -53,9 +52,11 @@ const PoolViewItem = ({ address, symbol, asset, decimals: pool_decimals, waiting
   const walletAddress = useSelector(selectWalletAddress);
   const walletVotes = useSelector(selectWalletVotes);
   const { decimals } = useSelector(selectTokenInfo);
-  const { challenging_period, appreciation_rate, inflation_rate, stakers_share } = useSelector(selectSettings);
+  const settings = useSelector(selectSettings);
   const stateVars = useSelector(selectStateVars);
   const exchangeRates = useSelector(selectExchangeRates);
+
+  const { challenging_period } = settings;
 
   const walletVoteVP = walletVotes[asset] || 0;
   const totalVp = vp || votes_vp?.vp;
@@ -97,32 +98,16 @@ const PoolViewItem = ({ address, symbol, asset, decimals: pool_decimals, waiting
   });
 
   // calc APY
-  let APY = 0;
-
-  const total_lp_tokens = (stateVars[`pool_asset_balance_${asset_key}`] || 0) / 10 ** pool_decimals;
-
-  if (total_lp_tokens) {
-    const pool_vps = stateVars[`pool_vps_${group_key}`] || {};
-    const gbyteToUSDRate = exchangeRates[`GBYTE_USD`];
-
-    const state = getAppreciationState(stateVars?.state || {}, appreciation_rate);
-    const total_normalized_vp = state?.total_normalized_vp || 0;
-    const supply = state?.supply || 0;
-    const oswap_token_price = getCurrentPrice(state);
-
-    const oswap_token_price_usd = oswap_token_price * gbyteToUSDRate;
-    const lp_price_usd = exchangeRates[`${asset}_USD`];
-
-    const total_emissions_per_day = ((1 / 360) * inflation_rate * supply) / 10 ** decimals;
-    const total_emissions_per_day_lp = total_emissions_per_day * (1 - stakers_share);
-
-    const daily_pool_income = total_emissions_per_day_lp * (pool_vps[asset_key] / total_normalized_vp);
-    const daily_pool_income_usd = daily_pool_income * oswap_token_price_usd;
-
-    const rate_of_return = (1 + daily_pool_income_usd / (total_lp_tokens * lp_price_usd)) ** 360;
-
-    APY = Number((rate_of_return - 1) * 100).toFixed(4);
-  }
+  const APY = getFarmingAPY({
+    stateVars,
+    settings,
+    exchangeRates,
+    asset_key,
+    group_key,
+    asset,
+    decimals,
+    pool_decimals,
+  });
 
   // handles
   const sendCommitEvent = () => {
@@ -156,7 +141,7 @@ const PoolViewItem = ({ address, symbol, asset, decimals: pool_decimals, waiting
           <div>
             <a
               target="_blank"
-              rel="noreferrer"
+              rel="noopener"
               className="flex items-center mb-3 text-xl text-primary md:mb-0"
               href={`https://${appConfig.ENVIRONMENT === "testnet" ? "v2-testnet" : ""}.oswap.io/#/swap/${address}`}
             >
@@ -174,7 +159,7 @@ const PoolViewItem = ({ address, symbol, asset, decimals: pool_decimals, waiting
               Net VP for
               <QuestionTooltip className="mt-[-2px]" description={"Voting power “for” minus voting power “against” whitelisting the pool."} />:
             </b>{" "}
-            <ListOfVotersModal votes={votesByValue}>{+Number(getActualVpByNormalized(totalVp) / 10 ** decimals).toFixed(decimals)}</ListOfVotersModal>{" "}
+            <ListOfVotersModal votes={votesByValue}>{+Number(getCurrentVpByNormalized(totalVp) / 10 ** decimals).toFixed(decimals)}</ListOfVotersModal>{" "}
           </div>
 
           {status === "WHITELISTED" && (
@@ -192,7 +177,7 @@ const PoolViewItem = ({ address, symbol, asset, decimals: pool_decimals, waiting
         >
           {!!walletVoteVP && (
             <div>
-              <b>My VP:</b> {+Number((getActualVpByNormalized(walletVoteVP) || 0) / 10 ** decimals).toFixed(decimals)}{" "}
+              <b>My VP:</b> {+Number((getCurrentVpByNormalized(walletVoteVP) || 0) / 10 ** decimals).toFixed(decimals)}{" "}
             </div>
           )}
 

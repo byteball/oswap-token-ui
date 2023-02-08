@@ -227,7 +227,7 @@ export const PresaleInvestForm = ({ frozen, buyFreezePeriod }) => {
         {!window.ethereum && token.network !== "Obyte" && (
           <Warning type="error" className="w-auto mt-4">
             Please add{" "}
-            <a href="https://metamask.io/download/" rel="noreferrer" className="text-primary" target="_blank">
+            <a href="https://metamask.io/download/" rel="noopener" className="text-primary" target="_blank">
               metamask
             </a>{" "}
             to your browser

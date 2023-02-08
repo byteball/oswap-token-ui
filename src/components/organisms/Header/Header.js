@@ -123,7 +123,7 @@ export const Header = () => {
                               key={item.name}
                               href={item.href}
                               target="_blank"
-                              rel="noreferrer"
+                              rel="noopener"
                               className="block p-3 -m-3 text-white rounded-md hover:bg-gray-50 hover:text-primary-gray"
                             >
                               <p className="text-base font-medium ">{item.name}</p>
@@ -198,7 +198,7 @@ export const Header = () => {
                       key={resource.name}
                       href={resource.href}
                       target="_blank"
-                      rel="noreferrer"
+                      rel="noopener"
                       className="text-base font-medium text-gray-400 hover:text-gray-400/75"
                     >
                       {resource.name}
@@ -212,7 +212,7 @@ export const Header = () => {
 
                   <p className="mt-6 text-base text-center text-gray-400">
                     Don't have our wallet?{" "}
-                    <a href="https://obyte.org/#download" target="_blank" rel="noreferrer" className="text-primary">
+                    <a href="https://obyte.org/#download" target="_blank" rel="noopener" className="text-primary">
                       Download
                     </a>
                   </p>

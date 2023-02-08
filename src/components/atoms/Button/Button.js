@@ -5,7 +5,7 @@ const stylesByType = {
   default: "text-white bg-primary-gray hover:bg-primary-gray-light",
   danger: "text-white bg-red-700 hover:bg-red-900",
   text: "text-white p-0 m-0 leading-none",
-  "text-primary": "text-primary hover:text-primary/75 p-0 m-0 leading-none",
+  "text-primary": "text-primary hover:text-primary/75 p-0 m-0",
   light: "text-gray-700 bg-white hover:bg-gray-300",
   metamask: "text-white bg-metamask hover:bg-metamask/75",
   disabled: "cursor-not-allowed bg-primary-gray-light/20 text-white/20 pointer-events-none",

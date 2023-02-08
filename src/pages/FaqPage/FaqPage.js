@@ -205,7 +205,7 @@ export default () => {
             <h2 className="text-3xl font-bold tracking-tight text-white">Frequently asked questions</h2>
             <p className="mt-4 text-lg text-gray-500">
               Can’t find the answer you’re looking for? Ask on{" "}
-              <a href="https://discord.obyte.org/" target="_blank" rel="noreferrer" className="font-medium text-primary hover:text-primary/75">
+              <a href="https://discord.obyte.org/" target="_blank" rel="noopener" className="font-medium text-primary hover:text-primary/75">
                 Obyte discord
               </a>.
             </p>

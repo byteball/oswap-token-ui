@@ -11,7 +11,7 @@ import { GovernanceLayout } from "components/templates/GovernanceLayout/Governan
 import { selectSettings, selectStateVars, selectStateVarsLoading, selectTokenInfo, selectUserData } from "store/slices/agentSlice";
 import { selectWalletAddress } from "store/slices/settingsSlice";
 import { selectWalletBalance } from "store/slices/userWalletSlice";
-import { generateLink, getActualVpByNormalized } from "utils";
+import { generateLink, getCurrentVpByNormalized } from "utils";
 import { getAppreciationState } from "utils/getExchangeResult";
 
 import appConfig from "appConfig";
@@ -48,9 +48,11 @@ export default () => {
   const isExpired = expiryTsMoment ? expiryTsMoment.isBefore() : false;
 
   // VP
-  const userActualVotingPower = userData?.normalized_vp ? getActualVpByNormalized(userData?.normalized_vp) : 0;
-  const userActualVotingPowerView = userActualVotingPower / 10 ** decimals;
-  const percentOfMaximumVotingPower = userActualVotingPower ? (100 - ((userData?.balance - userActualVotingPower) / userData?.balance) * 100).toFixed(2) : 100;
+  const userCurrentVotingPower = userData?.normalized_vp ? getCurrentVpByNormalized(userData?.normalized_vp) : 0;
+  const userCurrentVotingPowerView = userCurrentVotingPower / 10 ** decimals;
+  const percentOfMaximumVotingPower = userCurrentVotingPower
+    ? (100 - ((userData?.balance - userCurrentVotingPower) / userData?.balance) * 100).toFixed(2)
+    : 100;
 
   // rewards
   const appreciationState = getAppreciationState(stateVars.state, appreciation_rate);
@@ -160,10 +162,10 @@ export default () => {
 
           <Dashboard.Item
             title="Voting power"
-            value={userActualVotingPowerView}
+            value={userCurrentVotingPowerView}
             currency={symbol}
             extraValue={
-              userActualVotingPower ? (
+              userCurrentVotingPower ? (
                 <span className="text-[14px]">
                   {percentOfMaximumVotingPower}% of the maximum VP available <br /> with your locked balance
                 </span>

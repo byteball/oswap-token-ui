@@ -192,7 +192,7 @@ export const MoveVPForm = () => {
             <Select value={asset_key} onChange={(value) => changeNewPool(value, index)} className="col-span-2">
               {notVotedPools.map(({ symbol, asset_key, group_key }) => (
                 <Select.Option disabled={newPools.find(({ asset_key: a }) => a === asset_key)} value={asset_key}>
-                  {symbol} {showGroups && `(${group_key.toUpperCase()})`}
+                  {`${symbol} ${showGroups ? `(${group_key.toUpperCase()})` : ""}`}
                 </Select.Option>
               ))}
             </Select>

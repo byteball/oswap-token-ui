@@ -9,7 +9,7 @@ import { Modal } from "components/molecules";
 
 import { selectTokenInfo } from "store/slices/agentSlice";
 
-import { getActualVpByNormalized } from "utils";
+import { getCurrentVpByNormalized } from "utils";
 
 import appConfig from "appConfig";
 
@@ -49,13 +49,13 @@ export const ListOfVotersModal = ({ children, votes = [] }) => {
               <Button
                 type="text-primary"
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener"
                 href={`https://${appConfig.ENVIRONMENT === "testnet" ? "testnet" : ""}explorer.obyte.org/address/${address}`}
               >
                 {address.slice(0, 12)}...{address.slice(26, 32)} <ArrowTopRightOnSquareIcon className="w-[1em] h-[1em] ml-2 mt-[-2px]" aria-hidden="true" />
               </Button>
               <div className={cn({ "text-red-500": vp < 0, "text-green-500": vp > 0 })}>
-                {Number(getActualVpByNormalized(vp) / 10 ** decimals).toFixed(decimals)}
+                {Number(getCurrentVpByNormalized(vp) / 10 ** decimals).toFixed(decimals)}
               </div>
             </div>
           ))}
