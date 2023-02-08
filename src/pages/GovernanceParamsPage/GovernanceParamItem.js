@@ -11,7 +11,7 @@ import { ListOfVotersModal } from "components/organisms/ListOfVotersModal/ListOf
 import { selectSettings, selectStateVars, selectTokenInfo } from "store/slices/agentSlice";
 import { selectWalletAddress } from "store/slices/settingsSlice";
 
-import { convertBigNum, generateLink } from "utils";
+import { convertBigNum, generateLink, getActualVpByNormalized } from "utils";
 import appConfig from "appConfig";
 
 const viewParams = (name, value) => {
@@ -133,7 +133,7 @@ export const GovernanceParamItem = ({ name, description, value, leader, votes = 
                           <tr key={`${value} ${name}`}>
                             <td className="py-2 pl-4 pr-3 text-sm text-white whitespace-nowrap sm:pl-6">{viewParams(name, value)}</td>
                             <td className="px-2 py-2 text-sm text-white whitespace-nowrap">
-                              <ListOfVotersModal votes={votesByValue}>{+Number(vp / 10 ** decimals).toPrecision(4)}</ListOfVotersModal>
+                              <ListOfVotersModal votes={votesByValue}>{+Number(getActualVpByNormalized(vp) / 10 ** decimals).toPrecision(4)}</ListOfVotersModal>
                             </td>
                             <td className="px-2 py-2 text-sm whitespace-nowrap">
                               <ChangeParamsModal

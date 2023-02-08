@@ -23,11 +23,12 @@ const Navigation = ({ direction = "vertical", children, border = false }) => {
   );
 };
 
-Navigation.Item = ({ href, icon: Icon, children, disabled, border = false }) => {
+Navigation.Item = ({ href, icon: Icon, children, disabled, border = false, end = false }) => {
   return (
     <NavLink
       key={href}
       to={href}
+      end={end}
       className={cn(
         { "flex items-center px-3 py-2 text-sm font-medium text-white rounded-md hover:bg-gray-50 hover:text-gray-900 group select-none": !border },
         { "pointer-events-none opacity-20 cursor-not-allowed": disabled },

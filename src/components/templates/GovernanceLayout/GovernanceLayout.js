@@ -7,6 +7,7 @@ import { Navigation } from "components/molecules";
 import { Warning } from "components/atoms";
 
 import { selectPresaleParams, selectWalletAddress } from "store/slices/settingsSlice";
+import { Outlet } from "react-router-dom";
 
 export const GovernanceLayout = ({ children }) => {
   const walletAddress = useSelector(selectWalletAddress);
@@ -46,7 +47,10 @@ export const GovernanceLayout = ({ children }) => {
         </div>
 
         <div className="col-span-8 p-3 text-white md:p-6 lg:col-span-6 bg-primary-gray rounded-xl">
-          <Suspense fallback="Loading...">{children}</Suspense>
+          <Suspense fallback="Loading...">
+            {children}
+            <Outlet />
+          </Suspense>
         </div>
       </div>
     </>

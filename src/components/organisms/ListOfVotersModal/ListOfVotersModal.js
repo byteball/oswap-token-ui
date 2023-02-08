@@ -8,6 +8,9 @@ import { Button } from "components/atoms";
 import { Modal } from "components/molecules";
 
 import { selectTokenInfo } from "store/slices/agentSlice";
+
+import { getActualVpByNormalized } from "utils";
+
 import appConfig from "appConfig";
 
 const MAX_VOTES_ON_PAGE = 5;
@@ -51,7 +54,9 @@ export const ListOfVotersModal = ({ children, votes = [] }) => {
               >
                 {address.slice(0, 12)}...{address.slice(26, 32)} <ArrowTopRightOnSquareIcon className="w-[1em] h-[1em] ml-2 mt-[-2px]" aria-hidden="true" />
               </Button>
-              <div className={cn({ "text-red-500": vp < 0, "text-green-500": vp > 0 })}>{Number(vp / 10 ** decimals).toFixed(decimals)}</div>
+              <div className={cn({ "text-red-500": vp < 0, "text-green-500": vp > 0 })}>
+                {Number(getActualVpByNormalized(vp) / 10 ** decimals).toFixed(decimals)}
+              </div>
             </div>
           ))}
 

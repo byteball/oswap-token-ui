@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 const faqs = [
   {
     question: "What's the purpose of OSWAP token?",
-    answer: <p>OSWAP token is designed to reflect the success of Oswap protocol — with greater total value locked (TVL) in all pools of <a href="https://oswap.io" target="_blank" rel="noopener">Oswap DEX</a> the token appreciates faster, and with lower TVL it appreciates slower. OSWAP token is also used to incentivize some Oswap pools by rewarding the liquidity providers (LPs) in those pools with emissions of OSWAP token. Which pools to incentivize and in what proportions is decided by governance of OSWAP token holders who lock their tokens for up to 4 years and are also rewarded with OSWAP token emissions.</p>,
+    answer: <p>OSWAP token is designed to reflect the success of Oswap protocol — with greater total value locked (TVL) in all pools of <a href="https://oswap.io" target="_blank" rel="noopener" className="text-primary">Oswap DEX</a> the token appreciates faster, and with lower TVL it appreciates slower. OSWAP token is also used to incentivize some Oswap pools by rewarding the liquidity providers (LPs) in those pools with emissions of OSWAP token. Which pools to incentivize and in what proportions is decided by governance of OSWAP token holders who lock their tokens for up to 4 years and are also rewarded with OSWAP token emissions.</p>,
   },
   {
     question: "How does appreciation work? The price can't increase just out of nowhere, right?",
@@ -18,31 +18,59 @@ const faqs = [
     question: "How are the tokens priced?",
     answer: <>
       <p>OSWAP tokens are issued on a bonding curve — a mathematical formula that binds the supply of the tokens to the amount of the reserve currency (GBYTE) invested in issuing them. The formula looks like:</p>
-      <p>
-        <i>r</i> = <i>c</i> <i>s</i><sub>0</sub> <i>s</i> / (<i>s</i><sub>0</sub> - <i>s</i>)
-      </p>
+      <span className="inline-flex items-center text-xl leading-tight">
+        <span>
+          <i>r</i>&nbsp; = &nbsp;
+          <i>c </i> &nbsp;
+        </span>
+        <span className="flex flex-col items-center justify-center">
+          <span>
+            <i>s</i><sub><small>0</small></sub>  <i>s</i>
+          </span>
+          <span className="mt-1 border-t border-primary-gray-light">
+            <span className="whitespace-nowrap">
+              <i>s</i><sub><small>0</small></sub> - <i>s</i>
+            </span>
+          </span>
+        </span>
+      </span>
       <p>where</p>
-      <p>
-        <i>r</i> is the GBYTE reserve committed to issuing OSWAP tokens;<br/>
-        <i>s</i> is the supply of OSWAP tokens;<br/>
-        <i>s</i><sub>0</sub> is the maximum supply of OSWAP tokens;<br/>
-        <i>c</i> is a coefficient that starts with 1 and changes due to accruing fees, appreciation, and emissions.<br/>
-      </p>
+      <ul>
+        <li><i>r</i> is the GBYTE reserve committed to issuing OSWAP tokens;</li>
+        <li><i>s</i> is the supply of OSWAP tokens;</li>
+        <li><i>s</i><sub>0</sub> is the maximum supply of OSWAP tokens;</li>
+        <li><i>c</i> is a coefficient that starts with 1 and changes due to accruing fees, appreciation, and emissions.</li>
+      </ul>
       <p>The price of OSWAP token is the derivative of <i>r</i> with respect to <i>s</i>:</p>
       <p>
-        <i>p</i> = <i>c</i> <i>s</i><sub>0</sub><sup>2</sup> / (<i>s</i><sub>0</sub> - <i>s</i>)<sup>2</sup>
+        <span className="inline-flex items-center text-xl leading-tight">
+          <span>
+            <i>p</i>&nbsp; = &nbsp;
+            <i>c </i> &nbsp;
+          </span>
+          <span className="flex flex-col items-center justify-center">
+            <span>
+              <i>s</i><sub><small>0</small></sub><sup><small>2</small></sup>
+            </span>
+            <span className="mt-1 border-t border-primary-gray-light">
+              <span className="whitespace-nowrap">
+                (<i>s</i><sub><small>0</small></sub> - <i>s</i>)<sup><small>2</small></sup>
+              </span>
+            </span>
+          </span>
+        </span>
       </p>
       <p>It's clear from the above formulas that the price grows with the growing supply, and as the supply <i>s</i> approaches <i>s</i><sub>0</sub>, both the reserve and the price go to infinity.</p>
       <p>This means that early investors get a lower price and every additional purchase further increases the price, while selling the token back to the curve decreases its price.</p>
       <p>There are fees charged for every purchase or sale of OSWAP tokens, the fee is added back to the reserve and benefits the holders of OSWAP tokens.</p>
-      <p>The bonding curve is implemented by an <a href="https://obyte.org/platform/autonomous-agents" target="_blank" rel="noopener">Autonomous Agent</a>, and the AA acts like a decentralized market maker that automatically adjusts its prices in response to the changing demand. OSWAP holders act like shareholders of the decentralized market maker, and share its profits from trading fees.</p>
+      <p>The bonding curve is implemented by an <a href="https://obyte.org/platform/autonomous-agents" target="_blank" rel="noopener" className="text-primary">Autonomous Agent</a>, and the AA acts like a decentralized market maker that automatically adjusts its prices in response to the changing demand. OSWAP holders act like shareholders of the decentralized market maker, and share its profits from trading fees.</p>
     </>,
   },
   {
     question: "What are the fees?",
     answer: <>
-      <p>The current trading fee for buying/selling OSWAP tokens is 0.3% but it can be changed by <Link to="/governance/params">governance</Link>.</p>
-      <p>Also, there is an <i>arbitrageur profit tax</i>, which is an additional fee calculated based on implied arbitrageur profit when arbitraging this market against any external market where OSWAP token is also traded. This tax is currently set to 90% of estimated arbitrageur profit. It also can be changed by <Link to="/governance/params">governance</Link>.</p>
+      <p>The current trading fee for buying/selling OSWAP tokens is 0.3% but it can be changed by <Link className="text-primary" to="/governance/params">governance</Link>.</p>
+      <p>Also, there is an <i>arbitrageur profit tax</i>, which is an additional fee calculated based on implied arbitrageur profit when arbitraging this market against any external market where OSWAP token is also traded. This tax is currently set to 90% of estimated arbitrageur profit. It also can be changed by <Link className="text-primary" to="/governance/params">governance</Link>.</p>
       <p>Both fees are added to the reserve and benefit the existing OSWAP token holders. Note that simply adding the earned fee to the reserve would break its bond with the supply (which didn't change) according to the bonding curve, so when adding the fee the AA also changes the <i>c</i> and <i>s</i><sub>0</sub> parameters to keep the supply and the price unchanged.</p>
     </>,
   },
@@ -56,13 +84,13 @@ const faqs = [
     question: "How is TVL tracked?",
     answer: <>
       <p>There is an oracle that posts the combined TVL of all Oswap pools from time to time. The TVL is measured in USD. If a new version of Oswap is released, or there is a fork by independent developers, the TVL of their pools will be included in the combined TVL (as long as their main business is still a DEX).</p>
-      <p>The oracle can be updated by <Link to="/governance/params">governance</Link>. Currently, the oracle is centralized and there are risks of oracle malfunction (malicious or accidental). However small deviations of the posted TVL from the actual one don't pose a big risk to the ecosystem as they affect only the <i>rate</i> of appreciation for a short time until the oracle issue is resolved (by the oracle operator, or by governance — by appointing a new oracle).</p>
+      <p>The oracle can be updated by <Link className="text-primary" to="/governance/params">governance</Link>. Currently, the oracle is centralized and there are risks of oracle malfunction (malicious or accidental). However small deviations of the posted TVL from the actual one don't pose a big risk to the ecosystem as they affect only the <i>rate</i> of appreciation for a short time until the oracle issue is resolved (by the oracle operator, or by governance — by appointing a new oracle).</p>
     </>,
   },
   {
     question: "How fast does OSWAP token appreciate?",
     answer: <>
-      <p>You can see the current appreciation rate on the front page. It depends on the current TVL of all Oswap pools combined, target TVL, and the target appreciation rate. The latter two are regulated by <Link to="/governance/params">governance</Link>, currently they are set to 30% p.a. appreciation at $1m TVL. When the current TVL is different from the target TVL, the actual appreciation rate is scaled accordingly, so for example at $2m TVL it would be 60% per year.</p>
+      <p>You can see the current appreciation rate on the front page. It depends on the current TVL of all Oswap pools combined, target TVL, and the target appreciation rate. The latter two are regulated by <Link className="text-primary" to="/governance/params">governance</Link>, currently they are set to 30% p.a. appreciation at $1m TVL. When the current TVL is different from the target TVL, the actual appreciation rate is scaled accordingly, so for example at $2m TVL it would be 60% per year.</p>
     </>,
   },
   {
@@ -71,7 +99,7 @@ const faqs = [
   },
   {
     question: "How large is the emission rate?",
-    answer: <p>Currently, it is 30% p.a. That means that the supply of OSWAP tokens increases 30% per year (not including the supply changes due to trading) and the newly issued tokens are used to incentivize liquidity provision in Oswap pools and incentivize locking OSWAP tokens in governance. The emission rate can be changed by <Link to="/governance/params">governance</Link>. The distribution of newly minted tokens between LPs and OSWAP stakers is currently 50/50 but it can also be changed by <Link to="/governance/params">governance</Link>.</p>,
+    answer: <p>Currently, it is 30% p.a. That means that the supply of OSWAP tokens increases 30% per year (not including the supply changes due to trading) and the newly issued tokens are used to incentivize liquidity provision in Oswap pools and incentivize locking OSWAP tokens in governance. The emission rate can be changed by <Link className="text-primary" to="/governance/params">governance</Link>. The distribution of newly minted tokens between LPs and OSWAP stakers is currently 50/50 but it can also be changed by <Link className="text-primary" to="/governance/params">governance</Link>.</p>,
   },
   {
     question: "How often are new tokens emitted? Daily, monthly?",
@@ -87,7 +115,7 @@ const faqs = [
   {
     question: "How large are the staking rewards for staking OSWAP tokens?",
     answer: <>
-      <p>Currently, total yearly emissions are 30% of the total supply, and 50% of emissions go to stakers. However, it doesn't mean that the APY is 15%. It actually depends on the share of OSWAP tokens that is being staked as emissions are distributed only among stakers while non-stakers are not eligible for emissions. Your APY also depends on your locking period — the farther away your unlock date is, the greater share of emissions you receive (it is proportional to your voting power). You can see your current APY on the <Link to="/governance/dashboard">governance dashboard</Link>.</p>
+      <p>Currently, total yearly emissions are 30% of the total supply, and 50% of emissions go to stakers. However, it doesn't mean that the APY is 15%. It actually depends on the share of OSWAP tokens that is being staked as emissions are distributed only among stakers while non-stakers are not eligible for emissions. Your APY also depends on your locking period — the farther away your unlock date is, the greater share of emissions you receive (it is proportional to your voting power). You can see your current APY on the <Link className="text-primary" to="/governance/dashboard">governance dashboard</Link>.</p>
     </>,
   },
   {
@@ -101,13 +129,13 @@ const faqs = [
   {
     question: "How are the LP rewards distributed among pools?",
     answer: <>
-      <p><Link to="/governance/shares/stake">Governance</Link> decides that. Every OSWAP staker indicates their preference about the percentages that each pool should receive. For example, one staker might say that they want 50% to go to pool1 and 50% to pool2, while another staker wants 20% to pool2, 45% to pool3, and 35% to pool4. The votes of stakers are weighed using their VP and averaged to get the final percentages that each pool receives. Governance participants can move their votes at any time and the distribution percentages can change as a result.</p>
+      <p><Link className="text-primary" to="/governance/shares/stake">Governance</Link> decides that. Every OSWAP staker indicates their preference about the percentages that each pool should receive. For example, one staker might say that they want 50% to go to pool1 and 50% to pool2, while another staker wants 20% to pool2, 45% to pool3, and 35% to pool4. The votes of stakers are weighed using their VP and averaged to get the final percentages that each pool receives. Governance participants can move their votes at any time and the distribution percentages can change as a result.</p>
     </>,
   },
   {
     question: "What pools can receive LP rewards?",
     answer: <>
-      <p>Every <a href="https://oswap.io" target="_blank" rel="noopener">Oswap</a> pool can be incentivized with OSWAP token rewards, however it should first be <Link to="/governance/whitelist">added to the whitelist by a governance decision</Link>.</p>
+      <p>Every <a href="https://oswap.io" className="text-primary" target="_blank" rel="noopener">Oswap</a> pool can be incentivized with OSWAP token rewards, however it should first be <Link className="text-primary" to="/governance/whitelist">added to the whitelist by a governance decision</Link>.</p>
       <p>Any staker can offer any pool to be added and other stakers can vote for or against whitelisting. If the absolute majority of the voting power supports whitelisting, or if there are more supporters than the opponents (while the rest didn't vote) for 5 consecutive days, then the new pool is whitelisted and can start receiving votes for rewards redistribution.</p>
       <p>This means that it should be easy to add a new pool by offering it even with a minimum VP and waiting for 5 days, unless it meets strong opposition among other voters.</p>
     </>,
@@ -115,20 +143,20 @@ const faqs = [
   {
     question: "I provide liquidity in one of Oswap pools, can I earn more?",
     answer: <>
-      <p>Yes, that's what this website is for! If your pool is already listed on the <Link to="/farming">farming page</Link>, you can see the additional APY you would earn by depositing your pool tokens. Deposit the tokens, and you can harvest the rewards in OSWAP tokens as often as you like. To stop receiving rewards, you can withdraw the LP tokens at any time.</p>
+      <p>Yes, that's what this website is for! If your pool is already listed on the <Link className="text-primary" to="/farming">farming page</Link>, you can see the additional APY you would earn by depositing your pool tokens. Deposit the tokens, and you can harvest the rewards in OSWAP tokens as often as you like. To stop receiving rewards, you can withdraw the LP tokens at any time.</p>
       <p>If your pool is not listed, you can add it. See the next question.</p>
     </>,
   },
   {
     question: "How can I add a new pool to farming?",
     answer: <>
-      <p>If your pool is not listed on the <Link to="/farming">farming page</Link> but you want the LPs to earn additional income by receiving a share of OSWAP token emissions, you can add the pool by following these steps:</p>
+      <p>If your pool is not listed on the <Link className="text-primary" to="/farming">farming page</Link> but you want the LPs to earn additional income by receiving a share of OSWAP token emissions, you can add the pool by following these steps:</p>
       <ol>
-        <li><Link to="/">Buy OSWAP tokens</Link> if you don't already have them.</li>
-        <li><Link to="/governance/shares/stake">Stake them in governance</Link> for a period from 14 days to 4 years.</li>
-        <li><Link to="/governance/whitelist">Add your pool to the whitelist</Link>. Your offer to add a new pool to the whitelist has to be voted by governance participants (including you). If there are no votes against your offer for 5 days, you can commit the addition on the same page. Now your pool is whitelisted and can receive a share of OSWAP token emissions.</li>
-        <li><Link to="/governance/shares/move">Move your votes</Link> in favor of the newly added pool. Now it will start receiving emissions as soon as the first pool tokens get deposited on the <Link to="/farming">farming page</Link>.</li>
-        <li>Deposit your LP tokens on the <Link to="/farming">farming page</Link>. If you are the only farmer of this pool so far, you get 100% of emissions directed to this pool.</li>
+        <li><Link className="text-primary" to="/">Buy OSWAP tokens</Link> if you don't already have them.</li>
+        <li><Link className="text-primary" to="/governance/shares/stake">Stake them in governance</Link> for a period from 14 days to 4 years.</li>
+        <li><Link className="text-primary" to="/governance/whitelist">Add your pool to the whitelist</Link>. Your offer to add a new pool to the whitelist has to be voted by governance participants (including you). If there are no votes against your offer for 5 days, you can commit the addition on the same page. Now your pool is whitelisted and can receive a share of OSWAP token emissions.</li>
+        <li><Link className="text-primary" to="/governance/shares/move">Move your votes</Link> in favor of the newly added pool. Now it will start receiving emissions as soon as the first pool tokens get deposited on the <Link className="text-primary" to="/farming">farming page</Link>.</li>
+        <li>Deposit your LP tokens on the <Link className="text-primary" to="/farming">farming page</Link>. If you are the only farmer of this pool so far, you get 100% of emissions directed to this pool.</li>
       </ol>
       <p>To increase the emissions directed to your pool, convince others to join governance and allocate a bigger share of their votes to your pool.</p>
     </>,
@@ -137,7 +165,7 @@ const faqs = [
     question: "Do Oswap pools have to pay anything to OSWAP token holders or stakers?",
     answer: <>
       <p>No, there is no tax on the pools (unlike other popular DEXes such as Sushi, Curve, PanCakeSwap, QuickSwap, etc), 100% of the collected fees belong to LPs.</p>
-      <p>However, pools can be programmed to spend a share of the collected fees to buy OSWAP tokens and burn them, thus paying back to OSWAP holders (buying increases the current price and burning raises the price received when redeeming). This is completely voluntary. The current version of <a href="https://github.com/byteball/oswap-v2-aa" target="_blank" rel="noopener">Oswap AAs</a> doesn't offer such an option, however the AAs are open source and can be forked to include it.</p>
+      <p>However, pools can be programmed to spend a share of the collected fees to buy OSWAP tokens and burn them, thus paying back to OSWAP holders (buying increases the current price and burning raises the price received when redeeming). This is completely voluntary. The current version of <a className="text-primary" href="https://github.com/byteball/oswap-v2-aa" target="_blank" rel="noopener">Oswap AAs</a> doesn't offer such an option, however the AAs are open source and can be forked to include it.</p>
     </>,
   },
   {
@@ -157,7 +185,7 @@ const faqs = [
     answer: <>
       <p>There are several ways to benefit from investing in OSWAP token, directly or indirectly:</p>
       <ul>
-        <li>Appreciation of OSWAP token. Its price on the bonding curve automatically increases and the rate of increase depends on how widely the <a href="https://oswap.io" target="_blank" rel="noopener">Oswap</a> protocol is used — higher total TVL in all Oswap pools yields faster appreciation. See another question above to learn how the appreciation works and its trade-offs.</li>
+        <li>Appreciation of OSWAP token. Its price on the bonding curve automatically increases and the rate of increase depends on how widely the <a className="text-primary" href="https://oswap.io" target="_blank" rel="noopener">Oswap</a> protocol is used — higher total TVL in all Oswap pools yields faster appreciation. See another question above to learn how the appreciation works and its trade-offs.</li>
         <li>Participation in governance. By buying OSWAP tokens and locking them in governance you get an opportunity to influence the distribution of OSWAP token emissions and direct more emissions to pools where you have interest, such as the pools where you provide liquidity or the pools that are an important piece of infrastructure for other projects you participate in. Your influence is determined by your voting power, which depends on the locked balance and the locking period (longer locking period — more VP)</li>
         <li>Getting a share of OSWAP token emissions. By buying OSWAP tokens and locking them in governance you get a share of new OSWAP token emissions, which is currently 30% per year and 50% of the emission goes to governance participants (both percentages can be changed by governance). Your share in the emissions is proportional to your VP.</li>
       </ul>
@@ -179,15 +207,15 @@ export default () => {
               Can’t find the answer you’re looking for? Ask on{" "}
               <a href="https://discord.obyte.org/" target="_blank" rel="noreferrer" className="font-medium text-primary hover:text-primary/75">
                 Obyte discord
-              </a>
+              </a>.
             </p>
           </div>
           <div className="mt-12 lg:col-span-2 lg:mt-0">
             <dl className="space-y-12">
               {faqs.map((faq) => (
-                <div key={faq.question}>
-                  <dt className="text-lg font-medium leading-6 text-white">{faq.question}</dt>
-                  <dd className="mt-2 text-base text-gray-500">{faq.answer}</dd>
+                <div key={faq.question} className="p-8 bg-primary-gray rounded-xl">
+                  <dt className="mb-5 text-xl font-bold text-white leading">{faq.question}</dt>
+                  <dd className="text-base font-medium prose text-primary-gray-light">{faq.answer}</dd>
                 </div>
               ))}
             </dl>

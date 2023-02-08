@@ -59,6 +59,7 @@ export const SellForm = () => {
 
   return (
     <div>
+      <div className="mb-1 text-primary-gray-light">You send: </div>
       <Input placeholder="Amount" value={amount.value} onChange={handleChange} onKeyDown={handleKeyDown} error={error} suffix={symbol} />
 
       <div className="pt-2 text-white align-middle cursor-default">

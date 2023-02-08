@@ -3,9 +3,12 @@ import cn from "classnames";
 import Tooltip from "rc-tooltip";
 import { useRef } from "react";
 
-export const Input = ({ error = "", extra = "", currency, suffix = "", className = "", disabled = false, ...rest }) => {
+import { TokenSelector } from "components/organisms/TokenSelector/TokenSelector";
+
+export const Input = ({ error = "", extra = "", currency, suffix = "", className = "", disabled = false, token, setToken, ...rest }) => {
   const suffixStyle = error && typeof error === "string" ? { marginRight: 45 } : {};
   const suffixWrapRef = useRef(null);
+  const tokenSelectorWrapRef = useRef(null);
 
   return (
     <>
@@ -13,7 +16,13 @@ export const Input = ({ error = "", extra = "", currency, suffix = "", className
         <input
           {...rest}
           disabled={disabled}
-          style={suffix && suffixWrapRef?.current ? { paddingRight: suffixWrapRef?.current.offsetWidth + 8 } : {}}
+          style={
+            suffix && suffixWrapRef?.current
+              ? { paddingRight: suffixWrapRef?.current.offsetWidth + 8 }
+              : token && tokenSelectorWrapRef?.current
+              ? { paddingRight: tokenSelectorWrapRef?.current.offsetWidth + 4 }
+              : {}
+          }
           className={cn(
             "block border w-full h-[45px] rounded-lg border-primary-gray-light bg-transparent text-white px-4 text-lg font-normal focus:outline-none focus:ring-1 focus:border-primary focus:ring-primary",
             { "border-red-500 focus:border-red-500 focus:ring-red-500": error, "cursor-not-allowed bg-primary-gray-light/40 text-white/40": disabled }
@@ -34,16 +43,13 @@ export const Input = ({ error = "", extra = "", currency, suffix = "", className
               {suffix}
             </div>
           ) : null}
-          {/* {currency && <div className={`${error ? "mr-7" : ""}`}>
-          <select
-            className="w-auto h-full py-0 pl-2 text-gray-500 bg-transparent border-transparent active:outline-none focus:outline-none focus:ring-0 focus:ring-transparent pr-7 sm:text-sm focus:border-transparent"
-          >
-            <option>Obyte</option>
-            <option>Ethereum</option>
-            <option>BSC</option>
-            <option>Polygon</option>
-          </select>
-        </div>} */}
+
+          {token && (
+            <div className={cn("hidden xs:block", { "mr-7": error })}>
+              <TokenSelector ref={tokenSelectorWrapRef} token={token} setToken={setToken} />
+            </div>
+          )}
+
           {error && typeof error === "string" ? (
             <div className="absolute inset-y-0 right-0 flex items-center pr-3">
               <Tooltip placement="top" trigger={["hover"]} overlayInnerStyle={{ background: "#EF4444" }} overlay={<span>{error}</span>}>
@@ -53,6 +59,12 @@ export const Input = ({ error = "", extra = "", currency, suffix = "", className
           ) : null}
         </div>
       </div>
+
+      {token && (
+        <div className={cn("xs:hidden block", { "mr-7": error })}>
+          <TokenSelector border token={token} setToken={setToken} />
+        </div>
+      )}
 
       {extra && !error && <p className="text-sm text-white">{extra}</p>}
     </>

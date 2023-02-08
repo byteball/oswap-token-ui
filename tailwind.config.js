@@ -4,10 +4,9 @@ module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
-      colors: ({ colors }) => ({
-        // primary: "#1e90ff",
+      colors: () => ({
         primary: "#295eff",
-        "primary-gray": "#24292e",
+        "primary-gray": "#24292f",
         "primary-gray-light": "#6d7682",
         "primary-gray-medium": "#30363d",
         metamask: "#E27625",
@@ -30,7 +29,10 @@ module.exports = {
         "8xl": ["6rem", { lineHeight: "1" }],
         "9xl": ["8rem", { lineHeight: "1" }],
       },
+      screens: {
+        xs: "390px",
+      },
     },
   },
-  plugins: [require("@tailwindcss/forms")],
+  plugins: [require("@tailwindcss/forms"), require("@tailwindcss/typography")],
 };

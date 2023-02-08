@@ -67,7 +67,7 @@ export const QRButton = forwardRef(
                 "pl-1": type.startsWith("text"),
               })}
             >
-              <span className="overflow-hidden truncate text-ellipsis sm:max-w-full max-w-[120px]">{children}</span>
+              <span className="overflow-hidden truncate text-ellipsis sm:max-w-full max-w-[140px]">{children}</span>
             </Button>
           </span>
         </Tooltip>

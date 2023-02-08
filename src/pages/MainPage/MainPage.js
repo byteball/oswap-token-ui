@@ -12,6 +12,7 @@ import { selectPresaleParams } from "store/slices/settingsSlice";
 export default () => {
   const [currentTab, setCurrentTab] = useState("buy");
   const presaleParams = useSelector(selectPresaleParams);
+  const [refreshed, setRefreshed] = useState(false);
 
   const launchDate = moment.utc(presaleParams.launch_date, moment.ISO_8601);
   const startOfFreezePeriod = moment.utc(presaleParams.launch_date, moment.ISO_8601).subtract(presaleParams.buy_freeze_period, "days");
@@ -19,10 +20,17 @@ export default () => {
   const isPresale = launchDate.isAfter();
   const isFrozen = startOfFreezePeriod.isBefore();
 
+  const refresh = () => {
+    if (!refreshed) {
+      setRefreshed(true);
+      setTimeout(() => window.location.reload(), 10 * 1000);
+    }
+  };
+
   return (
     <div>
       <h1 className="mt-5 text-4xl font-bold tracking-tight text-center text-white sm:text-5xl lg:text-6xl">OSWAP token</h1>
-      <h2 className="mt-3 text-2xl text-center text-primary-gray-light">Governance and reward token of Oswap DEX</h2>
+      <h2 className="p-2 mt-3 text-2xl text-center text-primary-gray-light">Governance and reward token of Oswap DEX</h2>
 
       {!isPresale ? (
         <div className="grid max-w-4xl grid-cols-6 gap-4 pl-5 pr-5 mx-auto mt-10 mb-5 lg:pl-0 lg:pr-0 rounded-xl">
@@ -52,7 +60,7 @@ export default () => {
             <>
               <h2 className="mt-5 text-xl font-bold text-center uppercase text-primary">PRESALE WILL END IN</h2>
               <div className="mt-3 font-bold text-center text-white uppercase">
-                <Timer onComplete={() => window.location.reload()} date={startOfFreezePeriod.toISOString()} />
+                <Timer onComplete={refresh} date={startOfFreezePeriod.toISOString()} />
               </div>
             </>
           )}
@@ -68,11 +76,11 @@ export default () => {
                 <div className="p-6 mt-6 text-white bg-primary-gray rounded-xl">
                   {isFrozen && currentTab === "buy" && (
                     <Warning type="warning" className="mb-4">
-                      Investment ended 1 day before the launch day
+                      Investment ended {presaleParams.buy_freeze_period} day before the launch day
                     </Warning>
                   )}
 
-                  {currentTab === "buy" ? <PresaleInvestForm frozen={isFrozen} /> : <PresaleWithdrawForm />}
+                  {currentTab === "buy" ? <PresaleInvestForm buyFreezePeriod={presaleParams.buy_freeze_period} frozen={isFrozen} /> : <PresaleWithdrawForm />}
                 </div>
               </div>
 

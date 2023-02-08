@@ -14,13 +14,27 @@ export const Layout = ({ children }) => {
   useEffect(() => {
     let unlisten;
 
-    if (appConfig.GA_ID) {
-      unlisten = historyInstance.listen(({ location, action }) => {
-        if (action === "PUSH" || action === "POP") {
+    unlisten = historyInstance.listen(({ location, action }) => {
+      if (action === "PUSH" || action === "POP") {
+        const split = location.pathname.split("/");
+
+        if (split.includes("farming") && !(split.includes("all") || split.includes("my"))) {
+          historyInstance.replace("/farming/all");
+        } else if (split[1] === "governance") {
+          if (split[2] === "shares" && !split[3]) {
+            historyInstance.replace("/governance/shares/stake");
+          } else if (!split[2]) {
+            historyInstance.replace("/governance/dashboard");
+          }
+        }
+
+        if (appConfig.GA_ID) {
           ReactGA.pageview(location.pathname);
         }
-      });
+      }
+    });
 
+    if (appConfig.GA_ID) {
       ReactGA.pageview(location.pathname);
     }
 
