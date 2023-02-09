@@ -144,6 +144,13 @@ const faqs = [
     </>,
   },
   {
+    question: "I'm new to Obyte, do I need to buy GBYTE first in order to buy OSWAP token?",
+    answer: <>
+      <p>You can but it's not necessary. You can also buy OSWAP token using USDC, ETH, or WBTC. However you do need an <a href="https://obyte.org/#download" className="text-primary" target="_blank" rel="noopener">Obyte</a> wallet in order to receive your OSWAP tokens.</p>
+      <p>If you buy using Ethereum tokens, your input tokens will be automatically bridged to Obyte through <a href="https://counterstake.org" className="text-primary" target="_blank" rel="noopener">Counterstake Bridge</a>, then swapped to GBYTE via <a href="https://oswap.io" className="text-primary" target="_blank" rel="noopener">Oswap</a> and the GBYTE sent to buy OSWAP tokens.</p>
+    </>,
+  },
+  {
     question: "How are the LP rewards distributed among pools?",
     answer: <>
       <p><Link className="text-primary" to="/governance/shares/stake">Governance</Link> decides that. Every OSWAP staker indicates their preference about the percentages that each pool should receive. For example, one staker might say that they want 50% to go to pool1 and 50% to pool2, while another staker wants 20% to pool2, 45% to pool3, and 35% to pool4. The votes of stakers are weighed using their VP and averaged to get the final percentages that each pool receives. Governance participants can move their votes at any time and the distribution percentages can change as a result.</p>
