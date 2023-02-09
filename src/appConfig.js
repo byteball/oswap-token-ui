@@ -6,4 +6,13 @@ export default {
   RESERVE_ASSET: "base",
   COMMON_TS: 1657843200, // from AA Fri Jul 15 2022 00:00:00 GMT+0000
   YEAR: 360 * 24 * 3600,
+  TOKENS: [
+    { symbol: "GBYTE", network: "Obyte", decimals: 9, initial: 0.01 },
+    { symbol: "GBYTE", network: "Ethereum", decimals: 9, initial: 0.01 },
+    { symbol: "GBYTE", network: "Polygon", decimals: 9, initial: 0.01 },
+    { symbol: "GBYTE", network: "BSC", decimals: 9, initial: 0.01 },
+    { symbol: "ETH", network: "Ethereum", decimals: 8, initial: 0.001 },
+    { symbol: "USDC", network: "Ethereum", decimals: 4, initial: 10 },
+    { symbol: "WBTC", network: "Ethereum", decimals: 4, initial: 0.0001 },
+  ],
 };

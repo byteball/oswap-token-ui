@@ -79,6 +79,7 @@ export const getExchangeResult = (tokens_amount, reserve_amount_with_fee, old_st
       total_fee: 0,
       fee_percent: 0,
       coef_multiplier: 0,
+      reserve_amount_with_fee,
     };
   }
 
@@ -150,5 +151,6 @@ export const getExchangeResult = (tokens_amount, reserve_amount_with_fee, old_st
     coef_multiplier,
     new_s,
     blocked,
+    reserve_amount_with_fee,
   };
 };

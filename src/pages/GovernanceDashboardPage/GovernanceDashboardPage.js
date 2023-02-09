@@ -2,7 +2,6 @@ import { isEmpty } from "lodash";
 import { useSelector } from "react-redux";
 import { Helmet } from "react-helmet-async";
 import moment from "moment";
-import ReactGA from "react-ga";
 import { Link } from "react-router-dom";
 
 import { Button, Spin, Warning } from "components/atoms";
@@ -12,7 +11,7 @@ import { GovernanceLayout } from "components/templates/GovernanceLayout/Governan
 import { selectSettings, selectStateVars, selectStateVarsLoading, selectTokenInfo, selectUserData } from "store/slices/agentSlice";
 import { selectWalletAddress } from "store/slices/settingsSlice";
 import { selectWalletBalance } from "store/slices/userWalletSlice";
-import { generateLink } from "utils";
+import { generateLink, getCurrentVpByNormalized } from "utils";
 import { getAppreciationState } from "utils/getExchangeResult";
 
 import appConfig from "appConfig";
@@ -45,18 +44,15 @@ export default () => {
   const lockedBalance = userData.balance || 0;
   const lockedBalanceView = lockedBalance / 10 ** decimals;
 
-  // VP
-  const momentNow = moment.utc();
   const expiryTsMoment = userData?.expiry_ts ? moment.unix(userData?.expiry_ts) : null;
   const isExpired = expiryTsMoment ? expiryTsMoment.isBefore() : false;
 
-  const term = expiryTsMoment ? expiryTsMoment.diff(momentNow, "days") : 0;
-
-  const normalizedVotingPower = userData?.balance ? (userData?.balance / 256) * 4 ** (term / 360 + (ts - appConfig.COMMON_TS) / appConfig.YEAR) : 0;
-  const userActualVotingPower = userData?.normalized_vp ? userData?.normalized_vp / 4 ** ((moment.utc().unix() - appConfig.COMMON_TS) / appConfig.YEAR) : 0;
-
-  const userActualVotingPowerView = userActualVotingPower / 10 ** decimals;
-  const percentOfMaximumVotingPower = userActualVotingPower ? (100 - ((userData?.balance - userActualVotingPower) / userData?.balance) * 100).toFixed(2) : 100;
+  // VP
+  const userCurrentVotingPower = userData?.normalized_vp ? getCurrentVpByNormalized(userData?.normalized_vp) : 0;
+  const userCurrentVotingPowerView = userCurrentVotingPower / 10 ** decimals;
+  const percentOfMaximumVotingPower = userCurrentVotingPower
+    ? (100 - ((userData?.balance - userCurrentVotingPower) / userData?.balance) * 100).toFixed(2)
+    : 100;
 
   // rewards
   const appreciationState = getAppreciationState(stateVars.state, appreciation_rate);
@@ -77,8 +73,16 @@ export default () => {
 
   const rewardView = reward / 10 ** decimals;
 
+  const stakeAPY =
+    stateVars?.state?.total_normalized_vp && userData?.balance
+      ? ((inflation_rate * stakers_share * stateVars?.state?.supply * (userData?.normalized_vp || 0)) /
+          ((userData?.balance || 0) * stateVars?.state?.total_normalized_vp)) *
+        100
+      : 0;
+
+  const stakeAPYView = +stakeAPY.toFixed(4);
+
   // links
-  const withdrawStakingRewardLink = generateLink({ amount: 1e4, aa: appConfig.AA_ADDRESS, from_address: walletAddress, data: { withdraw_staking_reward: 1 } });
   const withdrawStakingLink = generateLink({
     amount: 1e4,
     aa: appConfig.AA_ADDRESS,
@@ -86,21 +90,13 @@ export default () => {
     data: { unstake: 1, group_key: "g1" }, // TODO: fix it
   });
 
-  const sendRewardEvent = () => {
-    ReactGA.event({
-      category: "OSWAP_TOKEN",
-      action: "Reward",
-      label: walletAddress,
-    });
-  };
-
   return (
     <GovernanceLayout>
       <Helmet>
         <title>OSWAP token — OSWAP token governance</title>
       </Helmet>
 
-      <h2 className="text-3xl font-bold">OSWAP token governance</h2>
+      <h2 className="mb-3 text-3xl font-bold leading-tight">OSWAP token governance</h2>
 
       <div className="text-base font-medium text-primary-gray-light">
         Lock your OSWAP tokens for up to 4 years to participate in governance and receive a share of OSWAP token emissions. Larger locking periods give you more
@@ -136,18 +132,14 @@ export default () => {
             currency={symbol}
             extraValue={
               <div className="space-x-2">
-                <Button
-                  onClick={sendRewardEvent}
-                  type="text-primary"
-                  disabled={reward <= 0}
-                  className="leading-none text-[14px]"
-                  href={withdrawStakingRewardLink}
-                >
-                  claim now
-                </Button>
+                {reward > 0 && (
+                  <Link className="leading-none text-[14px] text-primary font-medium" to="/governance/shares/rewards">
+                    claim now
+                  </Link>
+                )}
 
                 {reward > 0 && (
-                  <Link className="leading-none text-[14px] text-primary font-medium" to="/governance/shares/stake">
+                  <Link className="leading-none text-[14px] text-primary font-medium" to="/governance/shares/stake?stake_reward=1">
                     claim and restake
                   </Link>
                 )}
@@ -170,16 +162,18 @@ export default () => {
 
           <Dashboard.Item
             title="Voting power"
-            value={userActualVotingPowerView}
+            value={userCurrentVotingPowerView}
             currency={symbol}
             extraValue={
-              userActualVotingPower ? (
+              userCurrentVotingPower ? (
                 <span className="text-[14px]">
                   {percentOfMaximumVotingPower}% of the maximum VP available <br /> with your locked balance
                 </span>
               ) : null
             }
           />
+
+          <Dashboard.Item title="Staking APY" value={stakeAPYView} currency="%" />
         </Dashboard>
       )}
     </GovernanceLayout>

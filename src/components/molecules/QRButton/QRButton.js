@@ -67,7 +67,7 @@ export const QRButton = forwardRef(
                 "pl-1": type.startsWith("text"),
               })}
             >
-              <span className="overflow-hidden truncate text-ellipsis sm:max-w-full max-w-[120px]">{children}</span>
+              <span className="overflow-hidden truncate text-ellipsis sm:max-w-full max-w-[140px]">{children}</span>
             </Button>
           </span>
         </Tooltip>
@@ -91,11 +91,11 @@ export const QRButton = forwardRef(
             </div>
             <div className="mt-4 text-xs text-center">
               Install Obyte wallet for{" "}
-              <a className="text-primary" target="_blank" rel="noreferrer" href="https://apps.apple.com/us/app/byteball/id1147137332?platform=iphone">
+              <a className="text-primary" target="_blank" rel="noopener" href="https://apps.apple.com/us/app/byteball/id1147137332?platform=iphone">
                 iOS
               </a>{" "}
               or{" "}
-              <a className="text-primary" target="_blank" rel="noreferrer" href="https://play.google.com/store/apps/details?id=org.byteball.wallet">
+              <a className="text-primary" target="_blank" rel="noopener" href="https://play.google.com/store/apps/details?id=org.byteball.wallet">
                 Android
               </a>{" "}
               <br /> if you don't have one yet

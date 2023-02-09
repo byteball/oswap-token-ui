@@ -27,6 +27,8 @@ export const MoveVPForm = () => {
   const votesVpSum = Object.values(votes).reduce((acc, current) => acc + Number(current), 0);
   const notVotedPools = pools.filter(({ asset_key }) => !(asset_key in votes));
 
+  const showGroups = Math.ceil(pools.length / 30) > 2;
+
   const currentPercentSum = [...mVotes, ...newPools].reduce((acc, current) => {
     if (Number(current.newPercent) === Number(current.percentView) && !current.isNew) {
       return acc + Number(current.percentView);
@@ -143,9 +145,11 @@ export const MoveVPForm = () => {
 
   return (
     <div>
-      <Warning className="mb-5" type="warning">
-        Your changes can only affect up to 2 groups per transaction. The group is indicated in parentheses after the pool name.
-      </Warning>
+      {showGroups && (
+        <Warning className="mb-5" type="warning">
+          Your changes can only affect up to 2 groups per transaction. The group is indicated in parentheses after the pool name.
+        </Warning>
+      )}
 
       <div className="items-center hidden grid-cols-6 gap-4 mb-4 sm:grid lg:grid-cols-7 text-primary-gray-light">
         <div className="col-span-2 text-left">Pool</div>
@@ -160,7 +164,7 @@ export const MoveVPForm = () => {
         return (
           <div key={`vote_${asset_key}_${group_key}`} className="grid items-center grid-cols-2 gap-4 mb-4 sm:grid-cols-6 lg:grid-cols-7">
             <div className="col-span-2 text-left break-all">
-              {symbol} ({group_key.toUpperCase()})
+              {symbol} {showGroups && `(${group_key.toUpperCase()})`}
             </div>
 
             <Input value={percentView} className="col-span-2" suffix="%" disabled={true} />
@@ -187,10 +191,9 @@ export const MoveVPForm = () => {
           <div key={`${asset_key}-${index}`} className="grid items-center grid-cols-2 gap-3 mb-3 sm:grid-cols-6 lg:grid-cols-7">
             <Select value={asset_key} onChange={(value) => changeNewPool(value, index)} className="col-span-2">
               {notVotedPools.map(({ symbol, asset_key, group_key }) => (
-                <Select.Option
-                  disabled={newPools.find(({ asset_key: a }) => a === asset_key)}
-                  value={asset_key}
-                >{`${symbol} (${group_key.toUpperCase()})`}</Select.Option>
+                <Select.Option disabled={newPools.find(({ asset_key: a }) => a === asset_key)} value={asset_key}>
+                  {`${symbol} ${showGroups ? `(${group_key.toUpperCase()})` : ""}`}
+                </Select.Option>
               ))}
             </Select>
 

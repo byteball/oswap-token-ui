@@ -5,7 +5,7 @@ import { Helmet } from "react-helmet-async";
 import { Navigation } from "components/molecules";
 import { MyFarmingList } from "components/organisms/MyFarmingList/MyFarmingList";
 import { FarmingList } from "components/organisms/FarmingList/FarmingList";
-import { Redirect } from "components/atoms";
+
 import { selectWalletAddress } from "store/slices/settingsSlice";
 
 export default () => {
@@ -34,7 +34,6 @@ export default () => {
           <Routes>
             <Route path="all" element={<FarmingList />} />
             {walletAddress && <Route path="my" element={<MyFarmingList />} />}
-            <Route path="*" element={<Redirect path="all" />} />
           </Routes>
         </div>
       </div>

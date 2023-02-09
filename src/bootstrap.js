@@ -50,7 +50,7 @@ export const bootstrap = async () => {
     swap_fee_rate: stateVars.swap_fee || 0.003,
     arb_profit_tax_rate: stateVars.arb_profit_tax || 0.9,
     base_rate: stateVars.base_rate || 0.3,
-    inflation_rate: stateVars.inflation_rate || 0.1,
+    inflation_rate: stateVars.inflation_rate || 0.3,
     stakers_share: stateVars.stakers_share || 0.5,
     challenging_period: stateVars.challenging_period || 432000, // 5 days
   };

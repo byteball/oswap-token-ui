@@ -4,16 +4,17 @@ import { useState } from "react";
 import Countdown from "react-countdown";
 import { useSelector } from "react-redux";
 import ReactGA from "react-ga";
+import cn from "classnames";
 
 import { Button } from "components/atoms";
 import { QRButton, QuestionTooltip } from "components/molecules";
 
 import { selectPools, selectSettings, selectStateVars, selectTokenInfo, selectWaitingPools, selectWalletVotes } from "store/slices/agentSlice";
-import { selectWalletAddress } from "store/slices/settingsSlice";
+import { selectExchangeRates, selectWalletAddress } from "store/slices/settingsSlice";
 
 import { ListOfVotersModal } from "../ListOfVotersModal/ListOfVotersModal";
 
-import { generateLink } from "utils";
+import { generateLink, getCurrentVpByNormalized, getFarmingAPY } from "utils";
 import appConfig from "appConfig";
 
 const POOLS_PER_PAGE = 5;
@@ -51,8 +52,11 @@ const PoolViewItem = ({ address, symbol, asset, decimals: pool_decimals, waiting
   const walletAddress = useSelector(selectWalletAddress);
   const walletVotes = useSelector(selectWalletVotes);
   const { decimals } = useSelector(selectTokenInfo);
-  const { challenging_period } = useSelector(selectSettings);
+  const settings = useSelector(selectSettings);
   const stateVars = useSelector(selectStateVars);
+  const exchangeRates = useSelector(selectExchangeRates);
+
+  const { challenging_period } = settings;
 
   const walletVoteVP = walletVotes[asset] || 0;
   const totalVp = vp || votes_vp?.vp;
@@ -82,7 +86,7 @@ const PoolViewItem = ({ address, symbol, asset, decimals: pool_decimals, waiting
   const commitUrl = totalVp >= 0 ? whitelistedUrl : blacklistedUrl;
 
   const shareOfEmission = stateVars?.state?.total_normalized_vp
-    ? Number((stateVars?.[`pool_vps_${group_key}`]?.[asset_key] / stateVars?.state?.total_normalized_vp) * 100).toFixed(4)
+    ? +Number((stateVars?.[`pool_vps_${group_key}`]?.[asset_key] / stateVars?.state?.total_normalized_vp) * 100).toFixed(4)
     : 0;
 
   const votesByValue = [];
@@ -93,6 +97,19 @@ const PoolViewItem = ({ address, symbol, asset, decimals: pool_decimals, waiting
     }
   });
 
+  // calc APY
+  const APY = getFarmingAPY({
+    stateVars,
+    settings,
+    exchangeRates,
+    asset_key,
+    group_key,
+    asset,
+    decimals,
+    pool_decimals,
+  });
+
+  // handles
   const sendCommitEvent = () => {
     ReactGA.event({
       category: "Whitelist",
@@ -120,11 +137,11 @@ const PoolViewItem = ({ address, symbol, asset, decimals: pool_decimals, waiting
   return (
     <div className="rounded-lg bg-[#131519]/30 p-5 mb-5">
       <div className="">
-        <div className="md:flex md:justify-between">
+        <div className="mb-2 md:flex md:justify-between">
           <div>
             <a
               target="_blank"
-              rel="noreferrer"
+              rel="noopener"
               className="flex items-center mb-3 text-xl text-primary md:mb-0"
               href={`https://${appConfig.ENVIRONMENT === "testnet" ? "v2-testnet" : ""}.oswap.io/#/swap/${address}`}
             >
@@ -136,40 +153,13 @@ const PoolViewItem = ({ address, symbol, asset, decimals: pool_decimals, waiting
           </div>
         </div>
 
-        <div className="pt-2 max-w-[600px]">
-          {flipTsISO && status !== futureStatus ? (
-            <div className="text-primary-light">
-              {!flipTsExpired ? (
-                <div className="text-yellow-500">
-                  Will become {futureStatus} in{" "}
-                  <Countdown
-                    date={flipTsISO}
-                    autoStart
-                    renderer={({ hours, minutes, days }) => (
-                      <span className="">
-                        {days} days {hours}h {minutes}m
-                      </span>
-                    )}
-                  />{" "}
-                  unless the balance of for and against votes changes
-                </div>
-              ) : (
-                <div className="flex items-center">
-                  Voting has ended.{" "}
-                  <QRButton text type="text-primary" onClick={sendCommitEvent} href={commitUrl} className="mt-0 ml-1 mr-1 leading-none text-primary">
-                    Commit
-                  </QRButton>{" "}
-                  to change the status to {futureStatus}
-                </div>
-              )}
-            </div>
-          ) : null}
-        </div>
-
         <div className="md:flex md:justify-between">
-          <div className="flex space-x-1">
-            <b>Total VP:</b> <ListOfVotersModal votes={votesByValue}>{Number(totalVp / 10 ** decimals).toFixed(decimals)}</ListOfVotersModal>{" "}
-            {totalVp < 0 && <QuestionTooltip className="mt-[3px]" description={"Negative VP means votes against whitelisting the pool"} />}
+          <div className="flex items-center space-x-1">
+            <b>
+              Net VP for
+              <QuestionTooltip className="mt-[-2px]" description={"Voting power “for” minus voting power “against” whitelisting the pool."} />:
+            </b>{" "}
+            <ListOfVotersModal votes={votesByValue}>{+Number(getCurrentVpByNormalized(totalVp) / 10 ** decimals).toFixed(decimals)}</ListOfVotersModal>{" "}
           </div>
 
           {status === "WHITELISTED" && (
@@ -179,12 +169,52 @@ const PoolViewItem = ({ address, symbol, asset, decimals: pool_decimals, waiting
           )}
         </div>
 
-        {!!walletVoteVP && (
-          <div className="mb-2">
-            <b>My VP:</b> {Number((walletVoteVP || 0) / 10 ** decimals).toFixed(decimals)}{" "}
-            {walletVoteVP < 0 && <QuestionTooltip className="mt-[-2px]" description={"Negative VP means votes against whitelisting the pool"} />}
+        <div
+          className={cn("md:flex", {
+            "md:justify-between": walletVoteVP && status === "WHITELISTED",
+            "md:justify-end": !walletVoteVP && status === "WHITELISTED",
+          })}
+        >
+          {!!walletVoteVP && (
+            <div>
+              <b>My VP:</b> {+Number((getCurrentVpByNormalized(walletVoteVP) || 0) / 10 ** decimals).toFixed(decimals)}{" "}
+            </div>
+          )}
+
+          {status === "WHITELISTED" && (
+            <div>
+              <b>APY:</b> {+APY.toFixed(2)}%
+            </div>
+          )}
+        </div>
+
+        {flipTsISO && status !== futureStatus ? (
+          <div className="text-primary-light pt-2 max-w-[600px]">
+            {!flipTsExpired ? (
+              <div className="text-yellow-500">
+                Will become {futureStatus} in{" "}
+                <Countdown
+                  date={flipTsISO}
+                  autoStart
+                  renderer={({ hours, minutes, days }) => (
+                    <span className="">
+                      {days} days {hours}h {minutes}m
+                    </span>
+                  )}
+                />{" "}
+                unless the balance of for and against votes changes
+              </div>
+            ) : (
+              <div className="flex items-center">
+                Voting has ended.{" "}
+                <QRButton text type="text-primary" onClick={sendCommitEvent} href={commitUrl} className="mt-0 ml-1 mr-1 leading-none text-primary">
+                  Commit
+                </QRButton>{" "}
+                to change the status to {futureStatus}
+              </div>
+            )}
           </div>
-        )}
+        ) : null}
 
         <div className="flex mt-2 space-x-4">
           <QRButton href={whitelistedUrl} onClick={sendVoteForEvent} type="text-primary">

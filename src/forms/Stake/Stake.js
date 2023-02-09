@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import moment from "moment";
 import { Helmet } from "react-helmet-async";
 import ReactGA from "react-ga";
+import { useLocation } from "react-router-dom";
 
 import { Input, NumSlider, Switch } from "components/atoms";
 import { QRButton } from "components/molecules";
@@ -40,9 +41,17 @@ export const StakeForm = () => {
   const minTerm = userData?.expiry_ts ? Math.abs(moment.utc().diff(moment.unix(userData?.expiry_ts), "days")) + 1 : 14;
   const presaleAaAddress = useSelector(selectPresaleAddress);
 
+  const location = useLocation();
+
   useEffect(() => {
     setTerm({ value: MAX_TERM, valid: true });
   }, [minTerm]);
+
+  useEffect(() => {
+    if (presaleFunds) {
+      setStakeReward(false);
+    }
+  }, [presaleFunds]);
 
   // other hooks
   const btnRef = useRef(null);
@@ -128,7 +137,18 @@ export const StakeForm = () => {
   const newBalance =
     (userData?.balance || 0) + ((stakeReward ? reward || 0 : 0) + (presaleFunds ? userPresaleBalance : 0) + amount.value * 10 ** decimals || 0);
   const final_voting_power = newBalance / 256;
-  const newVP = final_voting_power * 4 ** (term.value / 360 + (moment().unix() - appConfig.COMMON_TS) / YEAR);
+  const newNormalizedVP = final_voting_power * 4 ** (term.value / 360 + (moment.utc().unix() - appConfig.COMMON_TS) / YEAR);
+
+  const diffUserVp = newNormalizedVP - userData.normalized_vp;
+
+  const stakeAPY =
+    stateVars?.state?.total_normalized_vp && newBalance
+      ? ((((inflation_rate * stakers_share * stateVars?.state?.supply) / newBalance) * (newNormalizedVP || 0)) /
+          (stateVars?.state?.total_normalized_vp + diffUserVp)) *
+        100
+      : 0;
+
+  const newVPView = +Number(newNormalizedVP / 4 ** ((moment.utc().unix() - appConfig.COMMON_TS) / appConfig.YEAR) / 10 ** decimals).toFixed(decimals);
 
   // handles
   const handleChange = (ev) => {
@@ -177,6 +197,15 @@ export const StakeForm = () => {
   } else {
     termView = `${termView} day${termView > 1 ? "s" : ""}`;
   }
+
+  useEffect(() => {
+    const search = new URLSearchParams(location.search);
+    if (search.get("stake_reward")) {
+      if (reward && reward > 0) {
+        setStakeReward(true);
+      }
+    }
+  }, [location]);
 
   return (
     <div>
@@ -235,10 +264,17 @@ export const StakeForm = () => {
         </div>
       )}
 
-      <div className="mb-5">
+      <div className="mb-2">
         <div>
           <b>New VP: </b>
-          {+Number(newVP / 10 ** decimals).toFixed(9)}
+          {newVPView}
+        </div>
+      </div>
+
+      <div className="mb-5">
+        <div>
+          <b>New APY: </b>
+          {+Number(stakeAPY).toFixed(2)}%
         </div>
       </div>
 

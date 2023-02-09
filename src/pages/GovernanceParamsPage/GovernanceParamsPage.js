@@ -43,7 +43,7 @@ export const params = {
   },
   inflation_rate: {
     description: "Yearly inflation rate due to emissions of OSWAP tokens to LPs and governance participants (stakers).",
-    initValue: 0.1,
+    initValue: 0.3,
     validate: (value) => Number(value) >= 0,
     view_unit: "%",
     helpText: "The value of the inflation rate parameter must be greater than or equal to 0.",
@@ -106,7 +106,7 @@ export default () => {
       <Helmet>
         <title>OSWAP token — Change params</title>
       </Helmet>
-      <h2 className="text-3xl font-bold">Change params</h2>
+      <h2 className="mb-3 text-3xl font-bold leading-tight">Change params</h2>
       <div className="text-base font-medium text-primary-gray-light">Vote to change the parameters of OSWAP token.</div>
 
       {Object.entries(actualParams).map(([name, { description, value, leader, votes, view_unit, custom_name }]) => (

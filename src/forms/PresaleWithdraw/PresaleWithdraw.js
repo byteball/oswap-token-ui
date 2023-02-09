@@ -86,6 +86,8 @@ export const PresaleWithdrawForm = () => {
           New initial price of OSWAP token after your withdrawal. Tokens get cheaper if less capital is committed to buying them.
         </p>
       </div>
+
+      <div className="mb-1 text-primary-gray-light">You send: </div>
       <Input
         placeholder="Amount"
         value={amount.value}

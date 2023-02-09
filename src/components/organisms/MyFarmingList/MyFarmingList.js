@@ -136,7 +136,7 @@ export const MyFarmingList = () => {
                     type="text-primary"
                     href={`https://${appConfig.ENVIRONMENT === "testnet" ? "v2-testnet" : ""}.oswap.io/#/swap/${address}`}
                     target="_blank"
-                    rel="noreferrer"
+                    rel="noopener"
                   >
                     {symbol} <ArrowTopRightOnSquareIcon className="w-[1em] h-[1em] ml-2 mt-[-2px]" aria-hidden="true" />
                   </Button>

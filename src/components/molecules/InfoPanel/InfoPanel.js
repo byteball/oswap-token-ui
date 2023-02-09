@@ -52,7 +52,7 @@ const InfoPanel = ({ children, className = "", loading }) => {
   );
 };
 
-InfoPanel.Item = ({ last = false, name = "", description = "", value, prefix = "", suffix = "", hide = false, loading = false }) => (
+InfoPanel.Item = ({ last = false, name = "", description = "", value = "", prefix = "", suffix = "", hide = false, loading = false }) => (
   <div className={`flex ${loading ? "animate-pulse opacity-30" : ""} flex-col ${last ? "mb-0" : "mb-3"}`}>
     {loading ? (
       <div className="bg-primary-gray-light h-[18px] mb-[6px] w-[3em] rounded-xl"></div>

@@ -27,7 +27,7 @@ export default () => {
       </Helmet>
       <div className="sm:flex sm:items-center">
         <div className="sm:flex-auto">
-          <h2 className="text-3xl font-bold">Pool whitelist</h2>
+          <h2 className="mb-3 text-3xl font-bold leading-tight">Pool whitelist</h2>
           <div className="text-base font-medium text-primary-gray-light">
             Vote for adding or removing pools eligible to receive rewards. Once added, the pool’s share of rewards is voted on{" "}
             <Link to="/governance/shares/stake" className="text-primary">

@@ -1,13 +1,15 @@
 import React, { Suspense } from "react";
 import { useSelector } from "react-redux";
 import { Routes, Route, unstable_HistoryRouter as HistoryRouter } from "react-router-dom";
-import { historyInstance } from "./historyInstance";
+
 import { Layout } from "components/templates";
 import { GovernanceLayout } from "components/templates/GovernanceLayout/GovernanceLayout";
-import { Redirect, Spin } from "components/atoms";
+import { Spin } from "components/atoms";
 import GovernancePoolsPage from "pages/GovernancePoolsPage/GovernancePoolsPage";
 
 import { selectWalletAddress } from "store/slices/settingsSlice";
+
+import { historyInstance } from "./historyInstance";
 
 const MainPage = React.lazy(() => import("pages/MainPage/MainPage"));
 const FaqPage = React.lazy(() => import("pages/FaqPage/FaqPage"));
@@ -27,7 +29,6 @@ const AppRouter = () => {
           <Routes>
             <Route path="/" element={<MainPage />} />
             <Route path="/faq" element={<FaqPage />} />
-            <Route path="/farming" element={<Redirect path="/farming/all" />} />
             <Route path="/farming/*" element={<FarmingPage />} />
           </Routes>
         </Suspense>
@@ -50,9 +51,6 @@ const AppRouter = () => {
                   <Route path="/governance/whitelist" element={<GovernancePoolsPage />} />
                 </>
               )}
-
-              <Route path="/governance" element={<Redirect path="/governance/dashboard" />} />
-              <Route path="/governance/*" element={<Redirect path="/governance/dashboard" />} />
             </Route>
           </Routes>
         </Suspense>

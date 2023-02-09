@@ -2,13 +2,13 @@ import { ArrowTopRightOnSquareIcon, ChevronDownIcon } from "@heroicons/react/24/
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import Tooltip from "rc-tooltip";
+import cn from "classnames";
 
 import { Button, Spin } from "components/atoms";
 import { LPDepositModal } from "components/organisms";
 import { selectPools, selectSettings, selectStateVars, selectStateVarsLoading, selectTokenInfo } from "store/slices/agentSlice";
 import { selectExchangeRates, selectWalletAddress } from "store/slices/settingsSlice";
-import { getCurrentPrice } from "utils";
-import { getAppreciationState } from "utils/getExchangeResult";
+import { getFarmingAPY } from "utils";
 
 import { selectWalletBalance } from "store/slices/userWalletSlice";
 
@@ -22,7 +22,7 @@ export const FarmingList = () => {
   const { decimals } = useSelector(selectTokenInfo);
   const stateVars = useSelector(selectStateVars);
   const exchangeRates = useSelector(selectExchangeRates);
-  const { appreciation_rate, inflation_rate, stakers_share } = useSelector(selectSettings);
+  const settings = useSelector(selectSettings);
   const walletAddress = useSelector(selectWalletAddress);
   const walletBalance = useSelector(selectWalletBalance);
 
@@ -32,40 +32,25 @@ export const FarmingList = () => {
   const [page, setPage] = useState(1);
   const maxPage = Math.ceil(pools.length / MAX_POOLS_ON_PAGE);
 
+  const { appreciation_rate, inflation_rate, stakers_share } = settings;
+
   useEffect(() => {
     const poolsWithAPY = [...pools];
 
     poolsWithAPY.forEach(({ group_key, asset_key, decimals: pool_decimals, asset }, index) => {
-      let daily_pool_income_usd = 0;
-      let lp_price_usd = 0;
-      let daily_pool_income = 0;
-      let rate_of_return = 0;
-      let oswap_token_price_usd = 0;
-
-      const pool_vps = stateVars[`pool_vps_${group_key}`] || {};
-      const state = getAppreciationState(stateVars?.state || {}, appreciation_rate);
-
-      const supply = state?.supply || 0;
-      const total_normalized_vp = state?.total_normalized_vp || 0;
+      const lp_price_usd = exchangeRates[`${asset}_USD`] || 0;
       const total_lp_tokens = (stateVars[`pool_asset_balance_${asset_key}`] || 0) / 10 ** pool_decimals;
-      const gbyteToUSDRate = exchangeRates[`GBYTE_USD`];
 
-      if (total_lp_tokens) {
-        const oswap_token_price = getCurrentPrice(state);
-
-        oswap_token_price_usd = oswap_token_price * gbyteToUSDRate;
-        lp_price_usd = exchangeRates[`${asset}_USD`];
-
-        const total_emissions_per_day = ((1 / 360) * inflation_rate * supply) / 10 ** decimals;
-        const total_emissions_per_day_lp = total_emissions_per_day * (1 - stakers_share);
-
-        daily_pool_income = total_emissions_per_day_lp * (pool_vps[asset_key] / total_normalized_vp);
-        daily_pool_income_usd = daily_pool_income * oswap_token_price_usd;
-
-        rate_of_return = (1 + daily_pool_income_usd / (total_lp_tokens * lp_price_usd)) ** 360;
-
-        poolsWithAPY[index].apy = Number((rate_of_return - 1) * 100).toFixed(4);
-      }
+      poolsWithAPY[index].apy = getFarmingAPY({
+        stateVars,
+        settings,
+        exchangeRates,
+        asset_key,
+        group_key,
+        asset,
+        decimals,
+        pool_decimals
+      });
 
       poolsWithAPY[index].total_locked_usd = +Number(total_lp_tokens * lp_price_usd).toFixed(4);
       poolsWithAPY[index].total_locked = +Number(total_lp_tokens).toFixed(pool_decimals);
@@ -103,9 +88,7 @@ export const FarmingList = () => {
               <span className="inline-flex items-center cursor-pointer group" onClick={() => setSortType("apy")}>
                 APY
                 <span
-                  className={`flex-none ml-2 text-white/50 bg-[#131519]/60 rounded group-hover:opacity-100 ${
-                    sortType === "apy" ? "opacity-100" : "opacity-50"
-                  }`}
+                  className={`flex-none ml-2 text-white/50 bg-[#131519]/60 rounded group-hover:opacity-100 ${sortType === "apy" ? "opacity-100" : "opacity-50"}`}
                 >
                   <ChevronDownIcon className="w-4 h-4" aria-hidden="true" />
                 </span>
@@ -116,9 +99,7 @@ export const FarmingList = () => {
               <span className="inline-flex items-center cursor-pointer group" onClick={() => setSortType("total")}>
                 Total deposited
                 <span
-                  className={`flex-none ml-2 text-white/50 bg-[#131519]/60 rounded group-hover:opacity-100 ${
-                    sortType === "total" ? "opacity-100" : "opacity-50"
-                  }`}
+                  className={`flex-none ml-2 text-white/50 bg-[#131519]/60 rounded group-hover:opacity-100 ${sortType === "total" ? "opacity-100" : "opacity-50"}`}
                 >
                   <ChevronDownIcon className="w-4 h-4" aria-hidden="true" />
                 </span>
@@ -135,7 +116,7 @@ export const FarmingList = () => {
           </tr>
         </thead>
 
-        <tbody className="divide-y bg-primary-gray/50 divide-gray-200/10">
+        <tbody className="divide-y divide-gray-200/10">
           {sortedPoolsWithAPY
             .slice(0, page * MAX_POOLS_ON_PAGE)
             .map(
@@ -149,14 +130,14 @@ export const FarmingList = () => {
                 total_locked_usd = 0,
                 wallet_balance_usd = 0,
                 wallet_balance = 0,
-              }) => {
+              }, index, list) => {
                 return (
-                  <tr key={asset} className="text-white last:bg-red">
-                    <td className="py-4 pl-4 pr-3 text-sm font-medium whitespace-nowrap sm:pl-6 lg:pl-8">
+                  <tr key={asset} className="text-white bg-primary-gray/50">
+                    <td className={cn("py-4 pl-4 pr-3 text-sm font-medium whitespace-nowrap sm:pl-6 lg:pl-8", { "rounded-bl-xl": index === list.length - 1 })}>
                       <Button
                         type="text-primary"
                         target="_blank"
-                        rel="noreferrer"
+                        rel="noopener"
                         href={`https://${appConfig.ENVIRONMENT === "testnet" ? "v2-testnet" : ""}.oswap.io/#/swap/${address}`}
                         className="flex items-center"
                       >
@@ -205,11 +186,11 @@ export const FarmingList = () => {
                       </td>
                     )}
 
-                    <td className="relative py-4 pl-3 pr-4 space-x-4 text-sm font-medium text-right whitespace-nowrap sm:pr-6 lg:pr-8">
+                    <td className={cn("relative py-4 pl-3 pr-4 space-x-4 text-sm font-medium text-right whitespace-nowrap sm:pr-6 lg:pr-8", { "rounded-br-xl": index === list.length - 1 })}>
                       <Button
                         type="text-primary"
                         target="_blank"
-                        rel="noreferrer"
+                        rel="noopener"
                         href={`https://${appConfig.ENVIRONMENT === "testnet" ? "v2-testnet" : ""}.oswap.io/#/add-liquidity/${address}`}
                       >
                         Add liquidity
