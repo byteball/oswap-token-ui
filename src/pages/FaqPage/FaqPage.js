@@ -4,7 +4,10 @@ import { Link } from "react-router-dom";
 const faqs = [
   {
     question: "What's the purpose of OSWAP token?",
-    answer: <p>OSWAP token is designed to reflect the success of Oswap protocol — with greater total value locked (TVL) in all pools of <a href="https://oswap.io" target="_blank" rel="noopener" className="text-primary">Oswap DEX</a> the token appreciates faster, and with lower TVL it appreciates slower. OSWAP token is also used to incentivize some Oswap pools by rewarding the liquidity providers (LPs) in those pools with emissions of OSWAP token. Which pools to incentivize and in what proportions is decided by governance of OSWAP token holders who lock their tokens for up to 4 years and are also rewarded with OSWAP token emissions.</p>,
+    answer: <>
+      <p>OSWAP token is designed to reflect the success of Oswap protocol — with greater total value locked (TVL) in all pools of <a href="https://oswap.io" target="_blank" rel="noopener" className="text-primary">Oswap DEX</a> the token appreciates faster, and with lower TVL it appreciates slower.</p>
+      <p>OSWAP token is also used to incentivize some Oswap pools by rewarding the liquidity providers (LPs) in those pools with emissions of OSWAP token. Which pools to incentivize and in what proportions is decided by <Link className="text-primary" to="/governance">governance</Link> of OSWAP token holders who lock their tokens for up to 4 years and are also rewarded with OSWAP token emissions.</p>
+    </>,
   },
   {
     question: "How does appreciation work? The price can't increase just out of nowhere, right?",
@@ -78,12 +81,13 @@ const faqs = [
     question: "What ensures the liquidity of OSWAP token?",
     answer: <>
       <p>The bonding curve. Thanks to the bonding curve, it is always possible to buy and sell OSWAP tokens. On the front page, you can see the amount of GBYTE that backs the token's liquidity.</p>
+      <p>However, the full liquidity backing OSWAP tokens is actually larger. Firstly, there might be other markets where OSWAP tokens are traded. Secondly, if the tokens are sold to the bonding curve and the price goes down, more buyers might appear who would be happy to buy at a lower price. A bonding curve is similar to a depth chart on an exchange, and like a depth chart, it doesn't show all the buyers (however, unlike a depth chart, the liquidity cannot be removed from a bonding curve). The same is true about sell liquidity when the tokens are bought.</p>
     </>,
   },
   {
     question: "How is TVL tracked?",
     answer: <>
-      <p>There is an oracle that posts the combined TVL of all Oswap pools from time to time. The TVL is measured in USD. If a new version of Oswap is released, or there is a fork by independent developers, the TVL of their pools will be included in the combined TVL (as long as their main business is still a DEX).</p>
+      <p>There is an <a href="https://obyte.io/@KMCA3VLWKLO3AWSSDA3LQIKI3OQEN7TV" className="text-primary" target="_blank" rel="noopener">oracle</a> that posts the combined TVL of all Oswap pools from time to time. The TVL is measured in USD. If a new version of Oswap is released, or there is a fork by independent developers, the TVL of their pools will be included in the combined TVL (as long as their main business is still a DEX).</p>
       <p>The oracle can be updated by <Link className="text-primary" to="/governance/params">governance</Link>. Currently, the oracle is centralized and there are risks of oracle malfunction (malicious or accidental). However small deviations of the posted TVL from the actual one don't pose a big risk to the ecosystem as they affect only the <i>rate</i> of appreciation for a short time until the oracle issue is resolved (by the oracle operator, or by governance — by appointing a new oracle).</p>
     </>,
   },
@@ -113,9 +117,22 @@ const faqs = [
     </>,
   },
   {
+    question: "How to prevent dilution due to emissions of OSWAP token?",
+    answer: <>
+      <p><Link className="text-primary" to="/governance/shares/stake">Stake (lock) your OSWAP tokens</Link> in governance and you'll be among those who receive the emissions.</p>
+      <p>Participation in governance also allows you to influence how the emissions are distributed among <a className="text-primary" href="https://oswap.io" target="_blank" rel="noopener">Oswap</a> pools and direct more emissions to those pools where you provide liquidity, or pools with the tokens that you hold.</p>
+    </>,
+  },
+  {
     question: "How large are the staking rewards for staking OSWAP tokens?",
     answer: <>
-      <p>Currently, total yearly emissions are 30% of the total supply, and 50% of emissions go to stakers. However, it doesn't mean that the APY is 15%. It actually depends on the share of OSWAP tokens that is being staked as emissions are distributed only among stakers while non-stakers are not eligible for emissions. Your APY also depends on your locking period — the farther away your unlock date is, the greater share of emissions you receive (it is proportional to your voting power). You can see your current APY on the <Link className="text-primary" to="/governance/dashboard">governance dashboard</Link>.</p>
+      <p>Currently, total yearly emissions are 30% of the total supply, and 50% of emissions go to stakers. However, it doesn't mean that the APY is 15%. It actually depends on the share of OSWAP tokens that is being staked as emissions are distributed only among stakers while non-stakers are not eligible for emissions. Your APY also depends on your locking period — the farther away your unlock date is, the greater share of emissions you receive (it is proportional to your voting power). You can see your current staking APY on the <Link className="text-primary" to="/governance/dashboard">governance dashboard</Link>.</p>
+    </>,
+  },
+  {
+    question: "What are the minimum and maximum locking periods of OSWAP tokens?",
+    answer: <>
+      <p>14 days and 4 years. A longer locking period gives you more voting power and a larger share of OSWAP token emissions.</p>
     </>,
   },
   {
@@ -143,7 +160,8 @@ const faqs = [
   {
     question: "I provide liquidity in one of Oswap pools, can I earn more?",
     answer: <>
-      <p>Yes, that's what this website is for! If your pool is already listed on the <Link className="text-primary" to="/farming">farming page</Link>, you can see the additional APY you would earn by depositing your pool tokens. Deposit the tokens, and you can harvest the rewards in OSWAP tokens as often as you like. To stop receiving rewards, you can withdraw the LP tokens at any time.</p>
+      <p>Yes, that's what this website is for!</p>
+      <p>If your pool is already listed on the <Link className="text-primary" to="/farming">farming page</Link>, you can see the additional APY you would earn by depositing your pool tokens. Deposit the tokens, and you can harvest the rewards in OSWAP tokens as often as you like. To stop receiving rewards, you can withdraw the LP tokens at any time.</p>
       <p>If your pool is not listed, you can add it. See the next question.</p>
     </>,
   },
