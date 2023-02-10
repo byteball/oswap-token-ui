@@ -2,8 +2,8 @@ import { useLocation } from "react-router-dom";
 import ReactGA from "react-ga";
 import { useEffect } from "react";
 
-import { Footer } from "components/organisms";
-import { Header } from "components/organisms";
+import { Footer, Header } from "components/organisms";
+import { Notifications } from "components/atoms";
 
 import { historyInstance } from "historyInstance";
 import appConfig from "appConfig";
@@ -38,19 +38,29 @@ export const Layout = ({ children }) => {
       ReactGA.pageview(location.pathname);
     }
 
+    const split = location.pathname.split("/");
+
+    if (split[1] === "governance" && !split[2]) {
+      historyInstance.replace("/governance/dashboard");
+    }
+
     return () => {
       unlisten && unlisten();
     };
   }, []);
 
   return (
-    <div className="antialiased">
-      <div className="container mx-auto" style={{ minHeight: "calc(100vh - 88px)" }}>
-        <Header />
-        {children}
+    <>
+      <div className="antialiased">
+        <div className="container mx-auto" style={{ minHeight: "calc(100vh - 88px)" }}>
+          <Header />
+          {children}
+        </div>
+
+        <Footer />
       </div>
 
-      <Footer />
-    </div>
+      <Notifications />
+    </>
   );
 };

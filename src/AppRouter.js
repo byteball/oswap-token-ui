@@ -4,7 +4,7 @@ import { Routes, Route, unstable_HistoryRouter as HistoryRouter } from "react-ro
 
 import { Layout } from "components/templates";
 import { GovernanceLayout } from "components/templates/GovernanceLayout/GovernanceLayout";
-import { Spin } from "components/atoms";
+import { Redirect, Spin } from "components/atoms";
 import GovernancePoolsPage from "pages/GovernancePoolsPage/GovernancePoolsPage";
 
 import { selectWalletAddress } from "store/slices/settingsSlice";
@@ -43,13 +43,13 @@ const AppRouter = () => {
           <Routes>
             <Route path="/governance">
               <Route path="/governance/dashboard" element={<GovernanceDashboardPage />} />
+              <Route path="/governance/params" element={<GovernanceParamsPage />} />
+              <Route path="/governance/whitelist" element={<GovernancePoolsPage />} />
 
-              {walletAddress && (
-                <>
-                  <Route path="/governance/shares/*" element={<GovernanceSharesPage />} />
-                  <Route path="/governance/params" element={<GovernanceParamsPage />} />
-                  <Route path="/governance/whitelist" element={<GovernancePoolsPage />} />
-                </>
+              {walletAddress ? (
+                <Route path="/governance/shares/*" element={<GovernanceSharesPage />} />
+              ) : (
+                <Route path="/governance/*" element={<Redirect path="/governance/dashboard" />} />
               )}
             </Route>
           </Routes>

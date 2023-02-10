@@ -26,7 +26,7 @@ export const GovernanceLayout = ({ children }) => {
         </div>
       )}
 
-      <div className="grid max-w-6xl grid-cols-8 gap-8 pl-2 pr-2 mx-auto mt-10 mb-5 md:pl-5 md:pr-5 auto-cols-min lg:pl-0 lg:pr-0">
+      <div className="grid max-w-full grid-cols-8 gap-8 pl-2 pr-2 mx-auto mt-10 mb-5 md:pl-5 md:pr-5 auto-cols-min lg:pl-6 lg:pr-6">
         <div className="col-span-8 lg:col-span-2">
           <div className="p-3 md:p-6 bg-primary-gray rounded-xl">
             <Navigation>
@@ -36,10 +36,10 @@ export const GovernanceLayout = ({ children }) => {
               <Navigation.Item icon={ArrowDownTrayIcon} disabled={!walletAddress} href="/governance/shares">
                 Stake &amp; vote
               </Navigation.Item>
-              <Navigation.Item icon={QueueListIcon} disabled={!walletAddress} href="/governance/whitelist">
+              <Navigation.Item icon={QueueListIcon} href="/governance/whitelist">
                 Pool whitelist
               </Navigation.Item>
-              <Navigation.Item icon={Cog6ToothIcon} disabled={!walletAddress} href="/governance/params">
+              <Navigation.Item icon={Cog6ToothIcon} href="/governance/params">
                 Params
               </Navigation.Item>
             </Navigation>

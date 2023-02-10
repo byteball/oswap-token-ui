@@ -2,8 +2,8 @@ import { useSelector } from "react-redux";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 
-import { Spin } from "components/atoms";
-import { AddPoolModal } from "components/organisms";
+import { Spin, Warning } from "components/atoms";
+import { AddPoolModal, WalletModal } from "components/organisms";
 import { Whitelist } from "components/organisms/Whitelist/Whitelist";
 import { GovernanceLayout } from "components/templates/GovernanceLayout/GovernanceLayout";
 
@@ -25,6 +25,13 @@ export default () => {
       <Helmet>
         <title>OSWAP token — Pool whitelist</title>
       </Helmet>
+
+      <WalletModal hideIfHas={true}>
+        <div>
+          <Warning className="w-auto mb-5 cursor-pointer">Please add your wallet address to access all site features</Warning>
+        </div>
+      </WalletModal>
+
       <div className="sm:flex sm:items-center">
         <div className="sm:flex-auto">
           <h2 className="mb-3 text-3xl font-bold leading-tight">Pool whitelist</h2>

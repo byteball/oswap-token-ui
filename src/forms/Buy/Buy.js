@@ -1,5 +1,5 @@
 import { createRef, useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { estimateOutput, transferEVM2Obyte } from "counterstake-sdk";
 
 import { EstimatedTranView, WalletModal } from "components/organisms";
@@ -9,6 +9,7 @@ import { Input, Spin, Warning } from "components/atoms";
 import { selectSettings, selectStateVars, selectStateVarsLoading, selectTokenInfo } from "store/slices/agentSlice";
 import { selectWalletAddress } from "store/slices/settingsSlice";
 import { selectPresaleStateVarsLoading } from "store/slices/presaleSlice";
+import { sendNotification } from "store/thunks/sendNotification";
 
 import { generateLink, getExchangeResult, getCountOfDecimals } from "utils";
 
@@ -34,6 +35,7 @@ export const BuyForm = () => {
 
   // other hooks
   const btnRef = createRef(null);
+  const dispatch = useDispatch();
 
   // handlers
   const handleChange = (ev) => {
@@ -140,7 +142,13 @@ export const BuyForm = () => {
         setInProcess(false);
       });
     } catch (err) {
-      console.error("error", err);
+      if (err) {
+        if (err.code === "UNPREDICTABLE_GAS_LIMIT") {
+          dispatch(sendNotification({ title: "Buying error", type: "error", description: "Please check your balance" }));
+        } else {
+          dispatch(sendNotification({ title: "Buying error", type: "error", description: err.reason }));
+        }
+      }
       setInProcess(false);
     }
   };

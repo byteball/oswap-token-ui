@@ -1,4 +1,4 @@
-import { PlusIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { CheckCircleIcon, PlusIcon, XCircleIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Button, Input, Select } from "components/atoms";
 import { isNaN } from "lodash";
 import Tooltip from "rc-tooltip";
@@ -19,7 +19,7 @@ export const DistributionList = ({ distributions, setDistributions }) => {
   // handles
   const handleChangePercent = (ev, index) => {
     const value = ev.target.value;
-    if (getCountOfDecimals(value) <= 9 && !isNaN(Number(value))) {
+    if (getCountOfDecimals(value) <= 9 && !isNaN(Number(value)) && Number(value) < 1e3) {
       const newArray = [...distributions];
       newArray[index].percent = value;
       setDistributions(newArray);
@@ -45,15 +45,19 @@ export const DistributionList = ({ distributions, setDistributions }) => {
             <div key={"list" + asset} className="grid items-center grid-cols-5 gap-2 mb-4">
               <div className="col-span-5 md:col-span-2">
                 <Select value={asset} key={`select-${asset}`} placeholder="Select a pool" onChange={(v) => handleChangePool(v, index)} className="md:mr-3">
-                  {pools.map(({ symbol, asset, group_key }) => (
-                    <Select.Option
-                      key={"pool-d-" + asset + group_key}
-                      value={asset}
-                      disabled={(firstGroupKey ? firstGroupKey !== group_key : false) || !!distributions.find((ds) => ds.asset === asset)}
-                    >
-                      {`${symbol || asset.slice(0, 13) + "..."} (${group_key.toUpperCase()})`}
-                    </Select.Option>
-                  ))}
+                  {pools.map(({ symbol, asset, group_key }) => {
+                    const assetInAnotherField = distributions.find((ds) => ds.asset === asset);
+
+                    return (
+                      <Select.Option
+                        key={"pool-d-" + asset + group_key}
+                        value={asset}
+                        disabled={(firstGroupKey ? firstGroupKey !== group_key : false) || (!!assetInAnotherField && distributions[index].asset !== asset)}
+                      >
+                        {`${symbol || asset.slice(0, 13) + "..."} (${group_key.toUpperCase()})`}
+                      </Select.Option>
+                    );
+                  })}
                 </Select>
               </div>
 
@@ -80,17 +84,29 @@ export const DistributionList = ({ distributions, setDistributions }) => {
         </div>
       ) : null}
 
-      {distributionSum !== 100 ? (
-        <div className="text-sm text-red-700">{distributionSum > 100 ? "Maximum number of percent 100" : `${+maxPercent.toFixed(9)}% still undistributed`}</div>
-      ) : null}
-
-      <Button
-        type="text"
-        onClick={() => setDistributions((d) => [...d, { percent: +Number(maxPercent).toFixed(9) }])}
-        icon={<PlusIcon style={{ width: 20, height: 20 }} />}
-      >
-        Add a pool
-      </Button>
+      <div className="grid items-center grid-cols-5 gap-2 mb-4">
+        <div className="flex items-center col-span-5 md:col-span-2">
+          <Button
+            type="text"
+            onClick={() => setDistributions((d) => [...d, { percent: +Number(maxPercent).toFixed(9) }])}
+            icon={<PlusIcon style={{ width: 20, height: 20 }} />}
+          >
+            Add a pool
+          </Button>
+        </div>
+        <div className="col-span-3 md:col-span-3">
+          <div className="flex items-center col-span-3 space-x-2 text-primary-gray-light">
+            <span>SUM: {+Number(distributionSum).toFixed(9)}%</span>{" "}
+            {distributionSum === 100 ? (
+              <CheckCircleIcon className="w-[1em] inline text-green-500" />
+            ) : (
+              <Tooltip placement="top" trigger={["hover"]} overlayClassName="max-w-[250px]" overlay="The total percentage should be 100">
+                <XCircleIcon className="w-[1em] inline text-red-500" />
+              </Tooltip>
+            )}
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

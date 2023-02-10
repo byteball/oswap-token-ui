@@ -3,7 +3,8 @@ import { useSelector } from "react-redux";
 import obyte from "obyte";
 import { Helmet } from "react-helmet-async";
 
-import { Spin } from "components/atoms";
+import { Spin, Warning } from "components/atoms";
+import { WalletModal } from "components/organisms/WalletModal/WalletModal";
 import { GovernanceLayout } from "components/templates/GovernanceLayout/GovernanceLayout";
 
 import { selectGovernance, selectStateVarsLoading } from "store/slices/agentSlice";
@@ -106,11 +107,19 @@ export default () => {
       <Helmet>
         <title>OSWAP token — Change params</title>
       </Helmet>
+
+      <WalletModal hideIfHas={true}>
+        <div>
+          <Warning className="w-auto mb-5 cursor-pointer">Please add your wallet address to access all site features</Warning>
+        </div>
+      </WalletModal>
+
       <h2 className="mb-3 text-3xl font-bold leading-tight">Change params</h2>
       <div className="text-base font-medium text-primary-gray-light">Vote to change the parameters of OSWAP token.</div>
 
       {Object.entries(actualParams).map(([name, { description, value, leader, votes, view_unit, custom_name }]) => (
         <GovernanceParamItem
+          key={name}
           name={name}
           value={value}
           votes={votes}

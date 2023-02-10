@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ReactGA from "react-ga";
 import { estimateOutput, transferEVM2Obyte } from "counterstake-sdk";
 
@@ -11,6 +11,7 @@ import { selectSettings, selectStateVarsLoading, selectTokenInfo } from "store/s
 import { selectPresaleAddress, selectWalletAddress } from "store/slices/settingsSlice";
 
 import { selectPresaleStateVars, selectPresaleStateVarsLoading } from "store/slices/presaleSlice";
+import { sendNotification } from "store/thunks/sendNotification";
 
 import { generateLink, getCountOfDecimals } from "utils";
 import { get_presale_prices } from "utils/getExchangeResult";
@@ -34,6 +35,8 @@ export const PresaleInvestForm = ({ frozen, buyFreezePeriod }) => {
   const { symbol, decimals } = useSelector(selectTokenInfo);
   const presaleAaAddress = useSelector(selectPresaleAddress);
   const { inflation_rate, stakers_share } = useSelector(selectSettings);
+
+  const dispatch = useDispatch();
 
   const handleChange = (ev) => {
     const value = ev.target.value;
@@ -155,7 +158,13 @@ export const PresaleInvestForm = ({ frozen, buyFreezePeriod }) => {
         sendInvestEvent();
       });
     } catch (err) {
-      console.error("error", err);
+      if (err) {
+        if (err.code === "UNPREDICTABLE_GAS_LIMIT") {
+          dispatch(sendNotification({ title: "Buying error", type: "error", description: "Please check your balance" }));
+        } else {
+          dispatch(sendNotification({ title: "Buying error", type: "error", description: err.reason }));
+        }
+      }
       setInProcess(false);
     }
   };
