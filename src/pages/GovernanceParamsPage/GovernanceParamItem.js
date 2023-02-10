@@ -89,14 +89,17 @@ export const GovernanceParamItem = ({ name, description, value, leader, votes = 
                       commit
                     </QRButton>
                   ) : (
-                    <Countdown
-                      renderer={({ hours, minutes, seconds, days }) => (
-                        <span>
-                          {days} days {hours}h {minutes}m {seconds}s
-                        </span>
-                      )}
-                      date={canChangeTimeMoment.toISOString()}
-                    />
+                    <span>
+                      Challenging period expires in{" "}
+                      <Countdown
+                        renderer={({ hours, minutes, days }) => (
+                          <span>
+                            {days} days {hours}h {minutes}m
+                          </span>
+                        )}
+                        date={canChangeTimeMoment.toISOString()}
+                      />
+                    </span>
                   )}
                 </>
               )}

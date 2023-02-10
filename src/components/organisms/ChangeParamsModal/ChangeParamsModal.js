@@ -73,6 +73,7 @@ export const ChangeParamsModal = ({ textBtn, name, disabled = false, validator, 
 
         <div className="mb-5">
           <Input
+            disabled={defaultValue !== undefined}
             value={value.value}
             error={value.value && !value.valid ? helpText : undefined}
             suffix={view_unit}

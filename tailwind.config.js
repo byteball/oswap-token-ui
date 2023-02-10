@@ -32,6 +32,11 @@ module.exports = {
       screens: {
         xs: "390px",
       },
+      container: {
+        screens: {
+          "2xl": "1280px",
+        },
+      },
     },
   },
   plugins: [require("@tailwindcss/forms"), require("@tailwindcss/typography")],

@@ -136,17 +136,28 @@ const PoolViewItem = ({ address, symbol, asset, decimals: pool_decimals, waiting
 
   return (
     <div className="rounded-lg bg-[#131519]/30 p-5 mb-5">
-      <div className="">
+      <div>
         <div className="mb-2 md:flex md:justify-between">
           <div>
-            <a
-              target="_blank"
-              rel="noopener"
-              className="flex items-center mb-3 text-xl text-primary md:mb-0"
-              href={`https://${appConfig.ENVIRONMENT === "testnet" ? "v2-testnet" : ""}.oswap.io/#/swap/${address}`}
-            >
-              {symbol || `${asset.slice(0, 13)}...`} <ArrowTopRightOnSquareIcon className="w-[1em] h-[1em] ml-2 mt-[-2px]" aria-hidden="true" />
-            </a>
+            {address ? (
+              <a
+                target="_blank"
+                rel="noopener"
+                className="flex items-center mb-3 text-xl text-primary md:mb-0"
+                href={`https://${appConfig.ENVIRONMENT === "testnet" ? "v2-testnet" : ""}.oswap.io/#/swap/${address}`}
+              >
+                {symbol || `${asset.slice(0, 13)}...`} <ArrowTopRightOnSquareIcon className="w-[1em] h-[1em] ml-2 mt-[-2px]" aria-hidden="true" />
+              </a>
+            ) : (
+              <a
+                target="_blank"
+                rel="noopener"
+                className="flex items-center mb-3 text-xl text-red-500 md:mb-0"
+                href={`https://${appConfig.ENVIRONMENT === "testnet" ? "testnet" : ""}explorer.obyte.org/asset/${asset}`}
+              >
+                NOT AN OSWAP POOL <ArrowTopRightOnSquareIcon className="w-[1em] h-[1em] ml-2 mt-[-2px]" aria-hidden="true" />
+              </a>
+            )}
           </div>
           <div className="text-xl">
             <b className="md:hidden">Status:</b> {status}
@@ -207,7 +218,14 @@ const PoolViewItem = ({ address, symbol, asset, decimals: pool_decimals, waiting
             ) : (
               <div className="flex items-center">
                 Voting has ended.{" "}
-                <QRButton text type="text-primary" onClick={sendCommitEvent} href={commitUrl} className="mt-0 ml-1 mr-1 leading-none text-primary">
+                <QRButton
+                  text
+                  type="text-primary"
+                  disabled={!walletAddress}
+                  onClick={sendCommitEvent}
+                  href={commitUrl}
+                  className="mt-0 ml-1 mr-1 leading-none text-primary"
+                >
                   Commit
                 </QRButton>{" "}
                 to change the status to {futureStatus}
@@ -217,11 +235,11 @@ const PoolViewItem = ({ address, symbol, asset, decimals: pool_decimals, waiting
         ) : null}
 
         <div className="flex mt-2 space-x-4">
-          <QRButton href={whitelistedUrl} onClick={sendVoteForEvent} type="text-primary">
+          <QRButton disabled={!walletAddress} href={whitelistedUrl} onClick={sendVoteForEvent} type="text-primary">
             vote for
           </QRButton>
 
-          <QRButton href={blacklistedUrl} onClick={sendVoteAgainstEvent} type="text-primary">
+          <QRButton disabled={!walletAddress} href={blacklistedUrl} onClick={sendVoteAgainstEvent} type="text-primary">
             vote against
           </QRButton>
         </div>

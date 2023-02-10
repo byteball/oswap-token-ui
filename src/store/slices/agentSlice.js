@@ -164,7 +164,7 @@ export const selectWaitingPools = createSelector(
         const asset = key.split("_")?.[2];
         const poolInCache = poolList[asset] || {};
 
-        votedPools.push({ asset, symbol: poolInCache.symbol, decimals: poolInCache.decimals, waiting: true, ...value });
+        votedPools.push({ asset, symbol: poolInCache.symbol, decimals: poolInCache.decimals, address: poolInCache.address, waiting: true, ...value });
       }
     });
 

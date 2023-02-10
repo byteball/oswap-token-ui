@@ -16,7 +16,7 @@ export default () => {
       <Helmet>
         <title>OSWAP token — Farming</title>
       </Helmet>
-      <div className="max-w-6xl p-6 m-auto ">
+      <div className="p-6 m-auto">
         <h2 className="mb-2 text-3xl font-bold text-white">Farming</h2>
         <div className="max-w-3xl mb-5 text-base font-medium text-primary-gray-light">
           Here are incentivized pools. Deposit your LP tokens here to receive additional rewards in OSWAP tokens. You can withdraw your accrued rewards and LP

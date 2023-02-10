@@ -58,7 +58,7 @@ export const StakeForm = () => {
 
   useEffect(() => {
     if (pools.length >= 1) {
-      let distributions = (pools.length !== 1 ? ["a1", "a2"] : ["a1"]).map((key) => {
+      const distributions = (pools.length !== 1 ? ["a1", "a2"] : ["a1"]).map((key, index) => {
         const data = pools.find(({ asset_key }) => asset_key === key);
 
         return {

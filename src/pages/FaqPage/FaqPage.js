@@ -199,7 +199,7 @@ export default () => {
       <Helmet>
         <title>OSWAP token — F.A.Q.</title>
       </Helmet>
-      <div className="px-4 py-16 mx-auto max-w-7xl sm:px-6 lg:py-20 lg:px-8">
+      <div className="px-4 py-16 mx-auto sm:px-6 lg:py-10 lg:px-6">
         <div className="lg:grid lg:grid-cols-3 lg:gap-8">
           <div>
             <h2 className="text-3xl font-bold tracking-tight text-white">Frequently asked questions</h2>

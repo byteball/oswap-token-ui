@@ -1,9 +1,10 @@
-import { isEmpty, keyBy, round } from "lodash";
+import { isEmpty, keyBy, remove, round } from "lodash";
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import cn from "classnames";
-import { PlusIcon } from "@heroicons/react/24/outline";
+import { CheckCircleIcon, PlusIcon, XCircleIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import ReactGA from "react-ga";
+import Tooltip from "rc-tooltip";
 
 import { Button, Input, Select, Warning } from "components/atoms";
 import { QRButton } from "components/molecules";
@@ -76,7 +77,7 @@ export const MoveVPForm = () => {
   const changeNewPool = (asset_key, index) => {
     const n = [...newPools];
 
-    n[index] = { ...n[index], ...poolsByKey[asset_key], newPercent: 0 };
+    n[index] = { ...n[index], ...poolsByKey[asset_key], newPercent: n[index].newPercent || "" };
 
     setNewPools(n);
   };
@@ -87,6 +88,14 @@ export const MoveVPForm = () => {
       np[index].newPercent = value;
       setNewPools(np);
     }
+  };
+
+  const removePool = (index) => {
+    const np = [...newPools];
+
+    remove(np, (_, i) => index === i);
+
+    setNewPools(np);
   };
 
   const sendMoveEvent = () => {
@@ -101,12 +110,13 @@ export const MoveVPForm = () => {
     return <div className="mb-5 text-base font-medium text-primary-gray-light">You don't have any staked tokens</div>;
   }
 
-  const disabled = changedGroups.length < 1 || changedGroups.length > 2 || currentPercentSum > 100 * (1 + 1 / 9e6) || currentPercentSum <= 100 * (1 - 1 / 1e9);
-
   const changes = {};
   let change = 0;
+  let noAssetKey = false;
 
   [...mVotes, ...newPools].forEach(({ asset_key, percentView = 0, newPercent = 0, vp = 0, isNew = false }) => {
+    if (!asset_key) noAssetKey = true;
+
     if (Number(newPercent) !== Number(percentView)) {
       if (Number(newPercent || 0) === 0 && !isNew) {
         change = vp - (percentView / 100) * votesVpSum;
@@ -120,6 +130,9 @@ export const MoveVPForm = () => {
       }
     }
   });
+
+  const disabled =
+    changedGroups.length < 1 || changedGroups.length > 2 || currentPercentSum > 100 * (1 + 1 / 9e6) || currentPercentSum <= 100 * (1 - 1 / 1e9) || noAssetKey;
 
   let roundingError = Object.values(changes).reduce((acc, current) => acc + Number(current), 0);
 
@@ -187,11 +200,15 @@ export const MoveVPForm = () => {
       })}
 
       {newPools.length > 0 &&
-        newPools.map(({ asset_key, newPercent }, index) => (
+        newPools?.map(({ asset_key, newPercent }, index) => (
           <div key={`${asset_key}-${index}`} className="grid items-center grid-cols-2 gap-3 mb-3 sm:grid-cols-6 lg:grid-cols-7">
             <Select value={asset_key} onChange={(value) => changeNewPool(value, index)} className="col-span-2">
               {notVotedPools.map(({ symbol, asset_key, group_key }) => (
-                <Select.Option disabled={newPools.find(({ asset_key: a }) => a === asset_key)} value={asset_key}>
+                <Select.Option
+                  key={asset_key}
+                  disabled={newPools.find(({ asset_key: a }) => a === asset_key) && newPools[index].asset_key !== asset_key}
+                  value={asset_key}
+                >
                   {`${symbol} ${showGroups ? `(${group_key.toUpperCase()})` : ""}`}
                 </Select.Option>
               ))}
@@ -201,31 +218,46 @@ export const MoveVPForm = () => {
 
             <Input
               value={newPercent}
-              className="col-span-2"
+              className="col-span-1 lg:col-span-2"
               error={newPercent > 100 && "Max value is 100."}
               onChange={(ev) => changePercentInNewPool(ev.target.value, index)}
               suffix="%"
             />
+
+            <div className="w-[50px] relative flex items-center">
+              <Tooltip className="inline-block ml-2" overlay="Remove pool">
+                <span className="inline ml-2 mr-2 font-medium text-white cursor-pointer" onClick={() => removePool(index)}>
+                  <XMarkIcon width={20} />{" "}
+                </span>
+              </Tooltip>
+            </div>
           </div>
         ))}
 
-      <div>
-        <Button
-          type="text-primary"
-          onClick={() => setNewPools((n) => [...n, { vp: 0, newPercent: 0, isNew: true }])}
-          icon={<PlusIcon style={{ width: 20, height: 20 }} />}
-          disabled={newPools.length >= notVotedPools.length}
-        >
-          Add a pool
-        </Button>
+      <div className="grid items-center grid-cols-2 gap-3 mb-3 sm:grid-cols-6 lg:grid-cols-7">
+        <div className="col-span-4">
+          <Button
+            type="text"
+            onClick={() => setNewPools((n) => [...n, { vp: 0, newPercent: "", isNew: true }])}
+            icon={<PlusIcon style={{ width: 20, height: 20 }} />}
+            disabled={newPools.length >= notVotedPools.length}
+          >
+            Add a pool
+          </Button>
+        </div>
+        <div className="flex items-center col-span-3 space-x-2 text-primary-gray-light">
+          <span>SUM: {+Number(currentPercentSum).toFixed(9)}%</span>{" "}
+          {currentPercentSum === 100 ? (
+            <CheckCircleIcon className="w-[1em] inline text-green-500" />
+          ) : (
+            <Tooltip placement="top" trigger={["hover"]} overlayClassName="max-w-[250px]" overlay="The total percentage should be 100">
+              <XCircleIcon className="w-[1em] inline text-red-500" />
+            </Tooltip>
+          )}
+        </div>
       </div>
 
-      <div className="mt-5 space-y-2">
-        {changedGroups.length > 2 && <Warning>More than two groups have been affected by your changes</Warning>}
-        {(currentPercentSum > 100 * (1 + 1 / 9e6) || currentPercentSum <= 0) && (
-          <Warning>The total percentage should be 100, now {+currentPercentSum.toFixed(4)}%</Warning>
-        )}
-      </div>
+      <div className="mt-5 space-y-2">{changedGroups.length > 2 && <Warning>More than two groups have been affected by your changes</Warning>}</div>
 
       <QRButton onClick={sendMoveEvent} href={link} disabled={disabled} type="primary" className="mt-5">
         Move
