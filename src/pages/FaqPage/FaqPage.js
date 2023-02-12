@@ -80,8 +80,9 @@ const faqs = [
   {
     question: "What ensures the liquidity of OSWAP token?",
     answer: <>
-      <p>The bonding curve. Thanks to the bonding curve, it is always possible to buy and sell OSWAP tokens. On the front page, you can see the amount of GBYTE that backs the token's liquidity.</p>
-      <p>However, the full liquidity backing OSWAP tokens is actually larger. Firstly, there might be other markets where OSWAP tokens are traded. Secondly, if the tokens are sold to the bonding curve and the price goes down, more buyers might appear who would be happy to buy at a lower price. A bonding curve is similar to a depth chart on an exchange, and like a depth chart, it doesn't show all the buyers (however, unlike a depth chart, the liquidity cannot be removed from a bonding curve). The same is true about sell liquidity when the tokens are bought.</p>
+      <p>The bonding curve. Thanks to the bonding curve, it is always possible to buy and sell OSWAP tokens. On the front page, you can see the amount of GBYTE that backs the token's liquidity. This is what we call <i>internal</i> liquidity.</p>
+      <p>However, the full liquidity backing OSWAP tokens is actually larger. Firstly, there might be other markets where OSWAP tokens are traded. Secondly, if the tokens are sold to the bonding curve and the price goes down, more buyers might appear who would be happy to buy at a lower price. A bonding curve is similar to a depth chart on an exchange, and like a depth chart, it doesn't show all the buyers (however, unlike a depth chart, the liquidity cannot be removed from a bonding curve). The same is true about sell liquidity when the tokens are bought. This is what we call <i>external</i> liquidity.</p>
+      <p>Immediately after launch, internal liquidity is all the liquidity that OSWAP token has. Over time, we expect the external liquidity to gradually grow in significance.</p>
     </>,
   },
   {
