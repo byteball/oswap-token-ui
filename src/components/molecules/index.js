@@ -5,3 +5,4 @@ export { MetaMaskButton } from "./MetaMaskButton/MetaMaskButton";
 export { default as Navigation } from "./Navigation/Navigation";
 export { default as InfoPanel } from "./InfoPanel/InfoPanel";
 export { default as Tabs } from "./Tabs/Tabs";
+export { default as RadioGroup } from "./RadioGroup/RadioGroup";

@@ -2,12 +2,12 @@ import { createRef, useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { estimateOutput, transferEVM2Obyte } from "counterstake-sdk";
 
-import { EstimatedTranView, WalletModal } from "components/organisms";
+import { EstimatedTranView, WalletModal, SettingsModal } from "components/organisms";
 import { MetaMaskButton, QRButton } from "components/molecules";
 import { Input, Spin, Warning } from "components/atoms";
 
 import { selectSettings, selectStateVars, selectStateVarsLoading, selectTokenInfo } from "store/slices/agentSlice";
-import { selectWalletAddress } from "store/slices/settingsSlice";
+import { selectSlippageTolerance, selectWalletAddress } from "store/slices/settingsSlice";
 import { selectPresaleStateVarsLoading } from "store/slices/presaleSlice";
 import { sendNotification } from "store/thunks/sendNotification";
 
@@ -32,6 +32,7 @@ export const BuyForm = () => {
   const presaleStateVarsLoading = useSelector(selectPresaleStateVarsLoading);
   const stateVarsLoading = useSelector(selectStateVarsLoading);
   const { symbol, decimals } = useSelector(selectTokenInfo);
+  const currentSlippageTolerance = useSelector(selectSlippageTolerance);
 
   // other hooks
   const btnRef = createRef(null);
@@ -120,7 +121,8 @@ export const BuyForm = () => {
     settings
   );
 
-  const link = generateLink({ amount: Math.ceil(amount.value * 1e9), aa: appConfig.AA_ADDRESS, from_address: walletAddress });
+  const min_tokens = exchangeResult.delta_s - (exchangeResult.delta_s * currentSlippageTolerance) / 100;
+  const link = generateLink({ amount: Math.ceil(amount.value * 1e9), aa: appConfig.AA_ADDRESS, from_address: walletAddress, data: { min_tokens } });
 
   const buyViaEVM = async () => {
     try {
@@ -133,7 +135,7 @@ export const BuyForm = () => {
         dst_network: "Obyte",
         dst_asset: "GBYTE",
         recipient_address: appConfig.AA_ADDRESS,
-        data: { to: walletAddress },
+        data: { to: walletAddress, soft_bounce: 1, min_tokens },
         assistant_reward_percent: 1,
         testnet: appConfig.ENVIRONMENT === "testnet",
         obyteClient: client,
@@ -154,7 +156,7 @@ export const BuyForm = () => {
   };
 
   return (
-    <div>
+    <div className="relative">
       <div className="mb-1 text-primary-gray-light">You send: </div>
       <Input placeholder="Amount" token={token} setToken={setToken} error={inputError} value={amount.value} onChange={handleChange} onKeyDown={handleKeyDown} />
 
@@ -222,6 +224,10 @@ export const BuyForm = () => {
         {exchangeResult.fee_percent >= 100 ? (
           <div className="pt-1 text-xs text-red-700">The fee would be above 100% because you change the price too much</div>
         ) : null}
+      </div>
+
+      <div className="absolute top-[-18px] right-[-18px]">
+        <SettingsModal />
       </div>
     </div>
   );

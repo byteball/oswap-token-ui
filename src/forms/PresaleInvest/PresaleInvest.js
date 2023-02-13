@@ -148,7 +148,7 @@ export const PresaleInvestForm = ({ frozen, buyFreezePeriod }) => {
         dst_network: "Obyte",
         dst_asset: "GBYTE",
         recipient_address: presaleAaAddress,
-        data: { to: walletAddress },
+        data: { to: walletAddress, soft_bounce: 1 },
         assistant_reward_percent: 1,
         testnet: appConfig.ENVIRONMENT === "testnet",
         obyteClient: client,
