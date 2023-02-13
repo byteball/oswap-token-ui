@@ -8,6 +8,7 @@ export const settingsSlice = createSlice({
     exchangeRates: {},
     exchangeRatesUpdatedTs: 0,
     presaleAAAddress: null,
+    slippageTolerance: 2,
     presaleParams: {
       buy_freeze_period: 0,
       launch_date: null,
@@ -29,11 +30,14 @@ export const settingsSlice = createSlice({
       state.presaleAAAddress = address;
       state.presaleParams = params;
     },
+    setSlippageTolerance: (state, action) => {
+      state.slippageTolerance = action.payload;
+    },
   },
   extraReducers: {},
 });
 
-export const { changeWallet, saveExchangeRates, savePresaleParams } = settingsSlice.actions;
+export const { changeWallet, saveExchangeRates, savePresaleParams, setSlippageTolerance } = settingsSlice.actions;
 
 export default settingsSlice.reducer;
 
@@ -45,4 +49,5 @@ export const selectWalletAddress = (state) => state.settings.walletAddress;
 export const selectExchangeRates = (state) => state.settings.exchangeRates;
 export const selectPresaleParams = (state) => state.settings.presaleParams;
 export const selectPresaleAddress = (state) => state.settings.presaleAAAddress;
+export const selectSlippageTolerance = (state) => state.settings.slippageTolerance;
 export const selectExchangeRatesUpdatedTs = (state) => state.settings.exchangeRatesUpdatedTs;

@@ -2,12 +2,12 @@ import { useRef, useState } from "react";
 import { isEmpty } from "lodash";
 import { useSelector } from "react-redux";
 
-import { EstimatedTranView } from "components/organisms";
+import { EstimatedTranView, SettingsModal } from "components/organisms";
 import { QRButton } from "components/molecules";
 import { Input, Spin } from "components/atoms";
 
 import { selectSettings, selectStateVars, selectTokenInfo } from "store/slices/agentSlice";
-import { selectWalletAddress } from "store/slices/settingsSlice";
+import { selectSlippageTolerance, selectWalletAddress } from "store/slices/settingsSlice";
 
 import { generateLink, getExchangeResult, getCountOfDecimals } from "utils";
 import appConfig from "appConfig";
@@ -21,6 +21,7 @@ export const SellForm = () => {
   const settings = useSelector(selectSettings);
   const { symbol, decimals } = useSelector(selectTokenInfo);
   const walletAddress = useSelector(selectWalletAddress);
+  const currentSlippageTolerance = useSelector(selectSlippageTolerance);
 
   // other hooks
   const refBtn = useRef(null);
@@ -46,8 +47,14 @@ export const SellForm = () => {
   };
 
   const maxAmountView = Number(stateVars.state.supply / 10 ** decimals).toPrecision(9);
-
-  const link = generateLink({ amount: Math.ceil(amount.value * 1e9), asset: stateVars.constants.asset, aa: appConfig.AA_ADDRESS, from_address: walletAddress });
+  const min_reserve_tokens = exchangeResult.payout - (exchangeResult.payout * currentSlippageTolerance) / 100;
+  const link = generateLink({
+    amount: Math.ceil(amount.value * 1e9),
+    asset: stateVars.constants.asset,
+    aa: appConfig.AA_ADDRESS,
+    from_address: walletAddress,
+    data: { min_reserve_tokens },
+  });
 
   let error = "";
 
@@ -58,7 +65,7 @@ export const SellForm = () => {
   }
 
   return (
-    <div>
+    <div className="relative">
       <div className="mb-1 text-primary-gray-light">You send: </div>
       <Input placeholder="Amount" value={amount.value} onChange={handleChange} onKeyDown={handleKeyDown} error={error} suffix={symbol} />
 
@@ -82,6 +89,10 @@ export const SellForm = () => {
           Send {amount.valid && amount.value ? amount.value : ""} {symbol}
         </QRButton>
         {exchangeResult.fee_percent >= 15 && <div className="pt-1 text-xs text-red-700">You pay too much commission because you change the price too much</div>}
+      </div>
+
+      <div className="absolute top-[-18px] right-[-18px]">
+        <SettingsModal />
       </div>
     </div>
   );
