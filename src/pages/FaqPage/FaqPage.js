@@ -14,7 +14,7 @@ const faqs = [
     answer: <>
       <p>You are right, the price can't change just out of nowhere, and something has to be given up in exchange for an increase in price.</p>
       <p>To explain the appreciation mechanism mathematically, the token is issued on a bonding curve, which is a formula that links the amount of OSWAP tokens issued and the amount of the reserve currency (GBYTE) sent to issuing them (see the next question for details). The formula also determines the price of OSWAP tokens which changes depending on the amount of tokens already issued — grows with the growing supply of OSWAP tokens. The curve has several parameters that determine its shape. To change the price without buying or selling any tokens, the parameters of the curve need to be changed. With the new parameters, we start using another bonding curve, with slightly different shape that yields a higher price at the current supply of OSWAP tokens, however the price would fall faster if the supply were to decrease.</p>
-      <div className="justify-between max-w-full space-x-4 sm:flex">
+      <div className="justify-between max-w-full sm:space-x-4 sm:flex">
         <img className="sm:max-w-[50%] m-0 p-2" src="/appreciation_1.svg" alt="" />
         <img className="sm:max-w-[50%] m-0 p-2" src="/appreciation_2.svg" alt="" />
       </div>
