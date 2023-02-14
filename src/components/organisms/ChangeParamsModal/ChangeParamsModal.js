@@ -29,7 +29,7 @@ export const ChangeParamsModal = ({ textBtn, name, disabled = false, validator, 
 
   // handles
   const handleChangeValue = (ev) => {
-    const value = ev.target.value;
+    const value = ev.target.value.trim();
 
     if (view_unit !== "%" || getCountOfDecimals(value) <= 4) {
       setValue({ value, valid: validator(toSmall(value)) });

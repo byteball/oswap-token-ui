@@ -31,7 +31,7 @@ export const SellForm = () => {
   const exchangeResult = getExchangeResult(amount.valid ? amount.value * 10 ** decimals : 0, 0, stateVars.state, settings);
 
   const handleChange = (ev) => {
-    const value = ev.target.value;
+    const value = ev.target.value.trim();
 
     if (getCountOfDecimals(value) <= 9 && value <= 1e6) {
       setAmount({ value, valid: !isNaN(Number(value)) && Number(value) > 0 && value <= stateVars.state.supply / 1e9 });

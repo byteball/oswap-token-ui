@@ -39,7 +39,7 @@ export const PresaleInvestForm = ({ frozen, buyFreezePeriod }) => {
   const dispatch = useDispatch();
 
   const handleChange = (ev) => {
-    const value = ev.target.value;
+    const value = ev.target.value.trim();
 
     if (getCountOfDecimals(value) <= token.decimals && value <= 1e6) {
       setAmount({ value, valid: !isNaN(Number(value)) && Number(value) > 0 });

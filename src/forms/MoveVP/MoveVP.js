@@ -69,7 +69,7 @@ export const MoveVPForm = () => {
   const changePercent = (value, index) => {
     if (getCountOfDecimals(value) <= 4 && !isNaN(Number(value)) && Number(value) <= 1e3 && Number(value) >= 0) {
       const v = [...mVotes];
-      v[index].newPercent = value;
+      v[index].newPercent = String(value).trim();
       setMVotes(v);
     }
   };
@@ -85,7 +85,7 @@ export const MoveVPForm = () => {
   const changePercentInNewPool = (value, index) => {
     if (getCountOfDecimals(value) <= 4 && !isNaN(Number(value)) && Number(value) <= 1e3 && Number(value) >= 0) {
       const np = [...newPools];
-      np[index].newPercent = value;
+      np[index].newPercent = String(value).trim();
       setNewPools(np);
     }
   };

@@ -176,17 +176,17 @@ export const Header = () => {
                 </div>
                 <div className="mt-6">
                   <nav className="grid grid-cols-1 gap-7">
-                    {menuLinks.map((solution) => (
-                      <a
-                        key={solution.name}
-                        href={solution.href}
+                    {menuLinks.map((link) => (
+                      <Link
+                        key={link.name}
+                        to={link.href}
                         className="flex items-center p-3 -m-3 text-white rounded-lg hover:bg-gray-50 hover:text-primary-gray"
                       >
                         <div className="flex items-center justify-center flex-shrink-0 w-10 h-10 text-white rounded-md bg-primary">
-                          <solution.icon className="w-6 h-6" aria-hidden="true" />
+                          <link.icon className="w-6 h-6" aria-hidden="true" />
                         </div>
-                        <div className="ml-4 text-base font-medium">{solution.name}</div>
-                      </a>
+                        <div className="ml-4 text-base font-medium">{link.name}</div>
+                      </Link>
                     ))}
                   </nav>
                 </div>

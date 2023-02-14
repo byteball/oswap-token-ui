@@ -29,7 +29,7 @@ export const WalletModal = ({ children, hideIfHas = false, visible: defaultVisib
   const dispatch = useDispatch();
 
   const handleChange = (ev) => {
-    const value = ev.target.value;
+    const value = ev.target.value.trim();
     const valid = obyte.utils.isValidAddress(value);
 
     setAddress({ value, valid });

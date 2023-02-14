@@ -34,7 +34,7 @@ export const PresaleWithdrawForm = () => {
   const maxAmountView = walletAddress ? +Number(maxAmount / 10 ** decimals).toPrecision(9) : presaleStateVars.total || 0;
 
   const handleChange = (ev) => {
-    const value = ev.target.value;
+    const value = ev.target.value.trim();
 
     if (getCountOfDecimals(value) <= 9 && value <= 1e6) {
       setAmount({ value, valid: !isNaN(Number(value)) && Number(value) > 0 && value <= maxAmount / 1e9 });
