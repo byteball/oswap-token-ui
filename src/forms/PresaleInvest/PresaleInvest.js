@@ -22,8 +22,8 @@ import appConfig from "appConfig";
 export const PresaleInvestForm = ({ frozen, buyFreezePeriod }) => {
   const btnRef = useRef(null);
 
-  const [amount, setAmount] = useState({ value: "0.1", valid: true });
-  const [token, setToken] = useState({ symbol: "GBYTE", network: "Obyte", decimals: 8, initial: 0.01 });
+  const [amount, setAmount] = useState({ value: "10", valid: true });
+  const [token, setToken] = useState({ symbol: "GBYTE", network: "Obyte", decimals: 8, initial: 10 });
   const [estimate, setEstimate] = useState();
   const [estimateError, setEstimateError] = useState();
   const [inProcess, setInProcess] = useState(false);

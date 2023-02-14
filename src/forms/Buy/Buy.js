@@ -20,7 +20,7 @@ import appConfig from "appConfig";
 export const BuyForm = () => {
   // state
   const [amount, setAmount] = useState({ value: appConfig.TOKENS[3].initial, valid: true });
-  const [token, setToken] = useState({ symbol: "GBYTE", network: "Obyte", decimals: 8, initial: 0.01 });
+  const [token, setToken] = useState({ symbol: "GBYTE", network: "Obyte", decimals: 8, initial: 10 });
   const [estimate, setEstimate] = useState();
   const [estimateError, setEstimateError] = useState();
   const [inProcess, setInProcess] = useState(false);
