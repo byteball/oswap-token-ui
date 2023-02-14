@@ -152,7 +152,7 @@ export const StakeForm = () => {
 
   // handles
   const handleChange = (ev) => {
-    const value = ev.target.value;
+    const value = ev.target.value.trim();
 
     if (getCountOfDecimals(value) <= 9 && value <= 1e6) {
       setAmount({ value, valid: !isNaN(Number(value)) && Number(value) > 0 });

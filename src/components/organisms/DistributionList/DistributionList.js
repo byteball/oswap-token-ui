@@ -18,7 +18,7 @@ export const DistributionList = ({ distributions, setDistributions }) => {
 
   // handles
   const handleChangePercent = (ev, index) => {
-    const value = ev.target.value;
+    const value = String(ev.target.value).trim();
     if (getCountOfDecimals(value) <= 9 && !isNaN(Number(value)) && Number(value) < 1e3) {
       const newArray = [...distributions];
       newArray[index].percent = value;
