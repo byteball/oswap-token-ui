@@ -121,7 +121,7 @@ export const GovernanceParamItem = ({ name, description, value, leader, votes = 
                           Value
                         </th>
                         <th scope="col" className="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-white">
-                          VPs
+                          Voting power
                         </th>
                         <th scope="col" className="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-white">
                           Support

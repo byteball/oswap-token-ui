@@ -211,6 +211,17 @@ const faqs = [
     </>,
   },
   {
+    question: "How will the initial sale of OSWAP tokens be organized?",
+    answer: <>
+      <p>OSWAP token will launch on April 6, 2023 at 04:34 UTC. Before the launch, every potential buyer can deposit their GBYTEs for buying the future OSWAP tokens. On the launch date, all the deposited GBYTEs will be sent to the bonding curve to buy OSWAP tokens, and the bought tokens will be distributed among buyers in proportion to their contributions. They will need to claim the tokens.</p>
+      <p>If a buyer changes their mind before the launch, they can withdraw their GBYTEs. New deposits from buyers are accepted up to 1 day before the launch.</p>
+      <p>If required, Obyte team can extend the initial sale period, but it cannot shorten it. That's the only privilege that Obyte team has. It becomes irrelevant after the launch.</p>
+      <p>The initial price of OSWAP token on the bonding curve is 1 OSWAP = 1 GBYTE but after the initial purchase, the price will increase (according to the bonding curve). However, since all buyers are buying together in one transaction, they all will receive the same (average) price. This price will be higher than 1 GBYTE (the initial price) but lower than the final price on the bonding curve, which the subsequent buyers will pay.</p>
+      <p>All OSWAP tokens bought in the initial sale will be locked for the maximum locking period — 4 years. Thus, immediately after the launch, there will be no freely circulating tokens for sale, and new tokens can be bought only from the bonding curve.</p>
+      <p>To participate in the initial sale, one needs to have GBYTE or use ETH, USDC, or WBTC on Ethereum, and the tokens will be automatically bridged (via <a href="https://counterstake.org" className="text-primary" target="_blank" rel="noopener">Counterstake</a>) and converted to GBYTE (via <a className="text-primary" href="https://oswap.io" target="_blank" rel="noopener">Oswap</a>) before depositing them for the initial sale.</p>
+    </>,
+  },
+  {
     question: "Why invest in OSWAP token?",
     answer: <>
       <p>There are several ways to benefit from investing in OSWAP token, directly or indirectly:</p>
