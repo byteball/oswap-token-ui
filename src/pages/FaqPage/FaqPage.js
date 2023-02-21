@@ -42,7 +42,7 @@ const faqs = [
         </span>
       </span>
       <p>where</p>
-      <ul>
+      <ul className="marker:text-primary-gray-light">
         <li><i>r</i> is the GBYTE reserve committed to issuing OSWAP tokens;</li>
         <li><i>s</i> is the supply of OSWAP tokens;</li>
         <li><i>s</i><sub>0</sub> is the maximum supply of OSWAP tokens;</li>
@@ -145,6 +145,7 @@ const faqs = [
     answer: <>
       <p>Voting power (VP) determines the weight of your votes when voting on governance decisions. It also determines the share of stakers emissions you receive — it is equal to the ratio of your VP to the total VP of all stakers combined.</p>
       <p>VP depends on the amount of OSWAP tokens you locked and the time left until unlocking, with longer locking periods yielding greater VP. If you lock the tokens for the maximum period — 4 years — you get the maximum possible VP which is equal to your locked balance. After you lock the tokens, your VP starts decaying exponentially so that it decays 2 times every half a year, or 4 times a year. After 4 years, it would decay 256 times. If you lock for less than 4 years, your initial VP is chosen such that at the end of your locking period it would be equal to 1/256th of your locked balance.</p>
+      <img className="sm:max-w-[70%] my-[-8%] mx-auto" src="/voting-power.svg" alt="" />
       <p>To regain your voting power (and the share in staking rewards) you can just periodically re-stake your accrued staking rewards and extend your locking period to 4 years in the future. This restores your VP to its maximum and also compounds your rewards.</p>
     </>,
   },
@@ -217,6 +218,7 @@ const faqs = [
       <p>If a buyer changes their mind before the launch, they can withdraw their GBYTEs. New deposits from buyers are accepted up to 1 day before the launch.</p>
       <p>If required, Obyte team can extend the initial sale period, but it cannot shorten it. That's the only privilege that Obyte team has. It becomes irrelevant after the launch.</p>
       <p>The initial price of OSWAP token on the bonding curve is 1 OSWAP = 1 GBYTE but after the initial purchase, the price will increase (according to the bonding curve). However, since all buyers are buying together in one transaction, they all will receive the same (average) price. This price will be higher than 1 GBYTE (the initial price) but lower than the final price on the bonding curve, which the subsequent buyers will pay.</p>
+      <img className="sm:max-w-[70%] mx-auto" src="/initial-sale.svg" alt="" />
       <p>All OSWAP tokens bought in the initial sale will be locked for the maximum locking period — 4 years. Thus, immediately after the launch, there will be no freely circulating tokens for sale, and new tokens can be bought only from the bonding curve.</p>
       <p>To participate in the initial sale, one needs to have GBYTE or use ETH, USDC, or WBTC on Ethereum, and the tokens will be automatically bridged (via <a href="https://counterstake.org" className="text-primary" target="_blank" rel="noopener">Counterstake</a>) and converted to GBYTE (via <a className="text-primary" href="https://oswap.io" target="_blank" rel="noopener">Oswap</a>) before depositing them for the initial sale.</p>
     </>,
@@ -225,7 +227,7 @@ const faqs = [
     question: "Why invest in OSWAP token?",
     answer: <>
       <p>There are several ways to benefit from investing in OSWAP token, directly or indirectly:</p>
-      <ul>
+      <ul className="marker:text-primary-gray-light">
         <li>Appreciation of OSWAP token. Its price on the bonding curve automatically increases and the rate of increase depends on how widely the <a className="text-primary" href="https://oswap.io" target="_blank" rel="noopener">Oswap</a> protocol is used — higher total TVL in all Oswap pools yields faster appreciation. See another question above to learn how the appreciation works and its trade-offs.</li>
         <li>Participation in governance. By buying OSWAP tokens and locking them in governance you get an opportunity to influence the distribution of OSWAP token emissions and direct more emissions to pools where you have interest, such as the pools where you provide liquidity or the pools that are an important piece of infrastructure for other projects you participate in. Your influence is determined by your voting power, which depends on the locked balance and the locking period (longer locking period — more VP)</li>
         <li>Getting a share of OSWAP token emissions. By buying OSWAP tokens and locking them in governance you get a share of new OSWAP token emissions, which is currently 30% per year and 50% of the emission goes to governance participants (both percentages can be changed by governance). Your share in the emissions is proportional to your VP.</li>
