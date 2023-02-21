@@ -68,6 +68,10 @@ const faqs = [
         </span>
       </p>
       <p>It's clear from the above formulas that the price grows with the growing supply, and as the supply <i>s</i> approaches <i>s</i><sub>0</sub>, both the reserve and the price go to infinity.</p>
+      <div className="justify-between max-w-full sm:space-x-4 sm:flex">
+        <img className="sm:max-w-[50%] m-0 p-2" src="/reserve.svg" alt="" />
+        <img className="sm:max-w-[50%] m-0 p-2" src="/price.svg" alt="" />
+      </div>
       <p>This means that early investors get a lower price and every additional purchase further increases the price, while selling the token back to the curve decreases its price.</p>
       <p>There are fees charged for every purchase or sale of OSWAP tokens, the fee is added back to the reserve and benefits the holders of OSWAP tokens.</p>
       <p>The bonding curve is implemented by an <a href="https://obyte.org/platform/autonomous-agents" target="_blank" rel="noopener" className="text-primary">Autonomous Agent</a>, and the AA acts like a decentralized market maker that automatically adjusts its prices in response to the changing demand. OSWAP holders act like shareholders of the decentralized market maker, and share its profits from trading fees.</p>
