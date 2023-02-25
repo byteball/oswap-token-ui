@@ -81,15 +81,12 @@ export const PresaleWithdrawForm = () => {
 
   return (
     <div>
-      <div>
-        <p className="pb-2 text-primary-gray-light">
-          New initial price of OSWAP token after your withdrawal. Tokens get cheaper if less capital is committed to buying them.
-        </p>
+      <div className="mb-2 text-primary-gray-light">
+        You can withdraw your GBYTEs if you changed your mind and no longer want to buy OSWAP tokens in the initial sale.
       </div>
 
-      <div className="mb-1 text-primary-gray-light">You send: </div>
       <Input
-        placeholder="Amount"
+        placeholder="Amount to withdraw"
         value={amount.value}
         onChange={handleChange}
         onKeyDown={handleKeyDown}

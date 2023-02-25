@@ -19,7 +19,7 @@ export const PresaleInfoPanel = memo(() => {
 
   const reserveView = +Number((presaleStateVars.total || 0) / 10 ** 9).toPrecision(PRECISION);
 
-  const { final_price = 0, cap = 0 } = get_presale_prices(presaleStateVars.total);
+  const { final_price = 0, cap = 0, avg_price = 0 } = get_presale_prices(presaleStateVars.total);
   const currentPresalePriceView = +Number(final_price).toPrecision(PRECISION);
   const capView = +Number(cap / 10 ** 9).toPrecision(PRECISION);
 
@@ -28,6 +28,8 @@ export const PresaleInfoPanel = memo(() => {
 
   const userTokenCost = balance ? final_price * balance : 0;
   const userTokenCostView = +Number(userTokenCost / 10 ** 9).toPrecision(PRECISION);
+
+  const averageBuyingPriceView = +Number(avg_price).toPrecision(PRECISION);
 
   return (
     <>
@@ -51,21 +53,27 @@ export const PresaleInfoPanel = memo(() => {
 
       <InfoPanel loading={presaleStateVarsLoading || stateVarsLoading}>
         <InfoPanel.Item
-          name="MARKET CAP"
-          description="Future market cap of OSWAP tokens. It is estimated at the current price, however the price can change due to other people investing."
-          value={capView}
+          name="OPENING PRICE"
+          description="The price of 1 OSWAP token if the presale were to stop now. The price will increase if more people join, or decrease if some investors change their minds before the launch."
+          value={currentPresalePriceView}
           suffix={<small className="text-sm"> GBYTE</small>}
         />
         <InfoPanel.Item
-          name="CURRENT PRICE"
-          description="The price of 1 OSWAP token if the presale were to stop now. The price will increase if more people join, or decrease if some investors change their minds before the launch."
-          value={currentPresalePriceView}
+          name="AVERAGE BUYING PRICE"
+          description="Average price of OSWAP tokens bought in the initial sale. All participants of the initial sale get this price. The price is less than the opening price after the initial sale ends."
+          value={averageBuyingPriceView}
           suffix={<small className="text-sm"> GBYTE</small>}
         />
         <InfoPanel.Item
           name="RESERVE"
           description="Total GBYTE amount committed to buying OSWAP tokens so far."
           value={reserveView}
+          suffix={<small className="text-sm"> GBYTE</small>}
+        />
+        <InfoPanel.Item
+          name="MARKET CAP"
+          description="Future market cap of OSWAP tokens. It is estimated at the opening price, however the price can change due to other people investing."
+          value={capView}
           suffix={<small className="text-sm"> GBYTE</small>}
         />
       </InfoPanel>

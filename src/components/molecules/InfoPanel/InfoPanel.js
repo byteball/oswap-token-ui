@@ -4,7 +4,7 @@ import { QuestionTooltip } from "components/molecules";
 import { Button } from "components/atoms";
 
 const InfoPanel = ({ children, className = "", loading }) => {
-  const [shown, setShown] = useState(false);
+  const [shown, setShown] = useState(children.length <= 4);
   const filteredChildren = children.filter((c) => !!c);
 
   const otherChildren = filteredChildren.slice(3, filteredChildren.length);
@@ -39,13 +39,13 @@ const InfoPanel = ({ children, className = "", loading }) => {
 
         {shown && filteredChildren.length > 3
           ? Children.toArray(otherChildren).map((item, i) => (
-              <div key={item.props.name}>
-                {cloneElement(item, {
-                  last: otherChildren.length - 1 === i,
-                  loading,
-                })}
-              </div>
-            ))
+            <div key={item.props.name}>
+              {cloneElement(item, {
+                last: otherChildren.length - 1 === i,
+                loading,
+              })}
+            </div>
+          ))
           : null}
       </div>
     </div>

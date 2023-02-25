@@ -173,21 +173,8 @@ export const PresaleInvestForm = ({ frozen, buyFreezePeriod }) => {
     <div>
       <div className="text-primary-gray-light">
         <p className="mb-2">
-          Add funds to participate in the initial sale of OSWAP tokens. You will receive OSWAP tokens locked in governance for 4 years (the maximum locking
-          period).
+          Add funds to participate in the initial sale of OSWAP tokens.
         </p>
-
-        <p className="mb-2">
-          With the locked tokens, you’ll be entitled to receive emissions of new OSWAP tokens ({stakeEmissionRate}% per year) and vote in governance decisions,
-          including deciding which Oswap pools should be incentivized with OSWAP token emissions and in what proportions.
-        </p>
-
-        <p className="mb-2">
-          The price of OSWAP tokens depends on the total capital committed by all investors to buying them. If you change your mind, you can withdraw before the
-          presale ends.
-        </p>
-
-        <p className="mb-2">You can add funds here up to {buyFreezePeriod} day before the presale ends.</p>
       </div>
 
       <div className="mb-1 text-primary-gray-light">You send: </div>
@@ -223,6 +210,21 @@ export const PresaleInvestForm = ({ frozen, buyFreezePeriod }) => {
             <QuestionTooltip description="Your tokens will be locked in governance for 4 years. You won’t be able to sell them before the term expires." />
           </div>{" "}
           <span className={`w-full sm:w-auto`}>4 years</span>
+        </div>
+
+        <div className="mt-4 text-primary-gray-light">
+          <p className="mb-2">You will receive OSWAP tokens locked in governance for 4 years (the maximum locking period).</p>
+          <p className="mb-2">
+            With the locked tokens, you’ll be entitled to receive emissions of new OSWAP tokens ({stakeEmissionRate}% per year) and vote in governance decisions,
+            including deciding which Oswap pools should be incentivized with OSWAP token emissions and in what proportions.
+          </p>
+
+          <p className="mb-2">
+            The price of OSWAP tokens depends on the total capital committed by all investors to buying them. If you change your mind, you can withdraw before the
+            presale ends.
+          </p>
+
+          <p className="mb-2">You can add funds here up to {buyFreezePeriod} day before the presale ends.</p>
         </div>
 
         {token.network !== "Obyte" && (
