@@ -58,7 +58,7 @@ export default () => {
             </>
           ) : (
             <>
-              <h2 className="mt-5 text-xl font-bold text-center uppercase text-primary">PRESALE WILL END IN</h2>
+              <h2 className="mt-5 text-xl font-bold text-center uppercase text-primary">INITIAL SALE WILL END IN</h2>
               <div className="mt-3 font-bold text-center text-white uppercase">
                 <Timer onComplete={refresh} date={startOfFreezePeriod.toISOString()} />
               </div>

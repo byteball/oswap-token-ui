@@ -21,7 +21,7 @@ export const GovernanceLayout = ({ children }) => {
       {isPresale && (
         <div className="max-w-6xl pl-2 pr-2 mx-auto mt-5 lg:pl-0 lg:pr-0 md:pl-5 md:pr-5 ">
           <Warning type="warning">
-            Governance will be enabled after the presale ends. Here you can preview what governance functions will be available to OSWAP token holders.
+            Governance will be enabled after the initial sale ends. Here you can preview what governance functions will be available to OSWAP token holders.
           </Warning>
         </div>
       )}

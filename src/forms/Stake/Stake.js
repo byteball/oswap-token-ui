@@ -125,7 +125,7 @@ export const StakeForm = () => {
   const userRewardBalanceView = +Number((reward || 0) / 10 ** decimals).toFixed(decimals);
 
   if (presaleFunds) {
-    btnLabel += `Send presale funds`;
+    btnLabel += `Send the initial sale funds`;
   } else if (stakeReward && (!amount.value || !amount.valid)) {
     btnLabel += `Stake rewards`;
   } else if (!disabled) {
@@ -220,7 +220,7 @@ export const StakeForm = () => {
       {userPresaleBalance ? (
         <div className="mb-5">
           <Switch value={presaleFunds} onChange={setPresaleFunds}>
-            Spend presale funds ({userPresaleBalanceView} {symbol})
+            Spend the initial sale funds ({userPresaleBalanceView} {symbol})
           </Switch>
         </div>
       ) : null}

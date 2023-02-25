@@ -54,7 +54,7 @@ export const PresaleInfoPanel = memo(() => {
       <InfoPanel loading={presaleStateVarsLoading || stateVarsLoading}>
         <InfoPanel.Item
           name="OPENING PRICE"
-          description="The price of 1 OSWAP token if the presale were to stop now. The price will increase if more people join, or decrease if some investors change their minds before the launch."
+          description="The price of 1 OSWAP token if the initial sale were to stop now. The price will increase if more people join, or decrease if some investors change their minds before the launch."
           value={currentPresalePriceView}
           suffix={<small className="text-sm"> GBYTE</small>}
         />

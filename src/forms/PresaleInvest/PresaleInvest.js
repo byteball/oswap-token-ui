@@ -221,10 +221,10 @@ export const PresaleInvestForm = ({ frozen, buyFreezePeriod }) => {
 
           <p className="mb-2">
             The price of OSWAP tokens depends on the total capital committed by all investors to buying them. If you change your mind, you can withdraw before the
-            presale ends.
+            initial ends.
           </p>
 
-          <p className="mb-2">You can add funds here up to {buyFreezePeriod} day before the presale ends.</p>
+          <p className="mb-2">You can add funds here up to {buyFreezePeriod} day before the initial sale ends.</p>
         </div>
 
         {token.network !== "Obyte" && (
@@ -277,7 +277,7 @@ export const PresaleInvestForm = ({ frozen, buyFreezePeriod }) => {
 
         <div>
           <p className="mt-3 text-xs leading-1 text-primary-gray-light">
-            *If no one else buys after you. You’ll know a more accurate price closer to the end of the presale.
+            *If no one else buys after you. You’ll know a more accurate price closer to the end of the initial sale.
           </p>
         </div>
       </div>
