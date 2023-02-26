@@ -127,7 +127,7 @@ export const PresaleInvestForm = ({ frozen, buyFreezePeriod }) => {
     (token.network === "Obyte" && token.symbol === "GBYTE" ? (amount.valid ? amount.value * 1e9 - 1e4 : 0) : !estimateError ? fullAmountAfterExchange : 0);
 
   const { final_price = 1, tokens = 0 } = get_presale_prices(new_reserve || 0);
-  const youGet = amount.valid && new_reserve ? Math.floor(((amount.value * 1e9) / new_reserve) * tokens) : 0;
+  const youGet = amount.valid && new_reserve ? Math.floor(((token.network === "Obyte" && token.symbol === "GBYTE" ? amount.value * 1e9 - 1e4 : (!estimateError ? fullAmountAfterExchange : 0)) / new_reserve) * tokens) : 0;
 
   const tokensCost = +Number((final_price * youGet) / 1e9).toPrecision(9);
 
