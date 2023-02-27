@@ -64,19 +64,19 @@ export const PresaleInfoPanel = memo(() => {
           value={capView}
           suffix={<small className="text-sm"> GBYTE</small>}
         />
+        <InfoPanel.Item
+          name="OPENING PRICE"
+          description="The price of 1 OSWAP token if the initial sale were to stop now. The price will increase if more people join, or decrease if some investors change their minds before the launch."
+          value={currentPresalePriceView}
+          suffix={<small className="text-sm"> GBYTE</small>}
+        />
+        <InfoPanel.Item
+          name="AVERAGE BUYING PRICE"
+          description="Average price of OSWAP tokens bought in the initial sale. All participants of the initial sale get this price. The price is less than the opening price after the initial sale ends."
+          value={averageBuyingPriceView}
+          suffix={<small className="text-sm"> GBYTE</small>}
+        />
       </InfoPanel>
-      <InfoPanel.Item
-        name="OPENING PRICE"
-        description="The price of 1 OSWAP token if the initial sale were to stop now. The price will increase if more people join, or decrease if some investors change their minds before the launch."
-        value={currentPresalePriceView}
-        suffix={<small className="text-sm"> GBYTE</small>}
-      />
-      <InfoPanel.Item
-        name="AVERAGE BUYING PRICE"
-        description="Average price of OSWAP tokens bought in the initial sale. All participants of the initial sale get this price. The price is less than the opening price after the initial sale ends."
-        value={averageBuyingPriceView}
-        suffix={<small className="text-sm"> GBYTE</small>}
-      />
     </>
   );
 });
