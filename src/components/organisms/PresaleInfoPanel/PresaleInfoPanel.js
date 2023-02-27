@@ -53,18 +53,6 @@ export const PresaleInfoPanel = memo(() => {
 
       <InfoPanel loading={presaleStateVarsLoading || stateVarsLoading}>
         <InfoPanel.Item
-          name="OPENING PRICE"
-          description="The price of 1 OSWAP token if the initial sale were to stop now. The price will increase if more people join, or decrease if some investors change their minds before the launch."
-          value={currentPresalePriceView}
-          suffix={<small className="text-sm"> GBYTE</small>}
-        />
-        <InfoPanel.Item
-          name="AVERAGE BUYING PRICE"
-          description="Average price of OSWAP tokens bought in the initial sale. All participants of the initial sale get this price. The price is less than the opening price after the initial sale ends."
-          value={averageBuyingPriceView}
-          suffix={<small className="text-sm"> GBYTE</small>}
-        />
-        <InfoPanel.Item
           name="RESERVE"
           description="Total GBYTE amount committed to buying OSWAP tokens so far."
           value={reserveView}
@@ -77,6 +65,18 @@ export const PresaleInfoPanel = memo(() => {
           suffix={<small className="text-sm"> GBYTE</small>}
         />
       </InfoPanel>
+      <InfoPanel.Item
+        name="OPENING PRICE"
+        description="The price of 1 OSWAP token if the initial sale were to stop now. The price will increase if more people join, or decrease if some investors change their minds before the launch."
+        value={currentPresalePriceView}
+        suffix={<small className="text-sm"> GBYTE</small>}
+      />
+      <InfoPanel.Item
+        name="AVERAGE BUYING PRICE"
+        description="Average price of OSWAP tokens bought in the initial sale. All participants of the initial sale get this price. The price is less than the opening price after the initial sale ends."
+        value={averageBuyingPriceView}
+        suffix={<small className="text-sm"> GBYTE</small>}
+      />
     </>
   );
 });

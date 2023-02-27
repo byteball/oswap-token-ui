@@ -221,7 +221,7 @@ export const PresaleInvestForm = ({ frozen, buyFreezePeriod }) => {
 
           <p className="mb-2">
             The price of OSWAP tokens depends on the total capital committed by all investors to buying them. If you change your mind, you can withdraw before the
-            initial ends.
+            initial sale ends.
           </p>
 
           <p className="mb-2">You can add funds here up to {buyFreezePeriod} day before the initial sale ends.</p>
