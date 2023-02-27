@@ -105,8 +105,11 @@ export const PresaleInvestForm = ({ frozen, buyFreezePeriod }) => {
   if (presaleStateVarsLoading || stateVarsLoading) return <Spin />;
 
   let inputError = null;
+  const isTransfer = token.network !== "Obyte";
   const isExchange = token.network !== "Obyte" || token.symbol !== "GBYTE";
-
+  const counterstakeFee = isTransfer && amount.valid && estimate > 0 && Number(amount.value) > 0 ? amount.value * 0.01 : 0;
+  const counterstakeFeeView = +Number(counterstakeFee).toPrecision(4);
+  
   if (amount.value && amount.valid) {
     const resultAmount = !isExchange ? amount.value : estimate;
 
@@ -203,6 +206,14 @@ export const PresaleInvestForm = ({ frozen, buyFreezePeriod }) => {
           </div>{" "}
           <span className={`w-full sm:w-auto`}>{tokensCost} GBYTE</span>
         </div>
+
+        {token.network !== "Obyte" && isExchange && (<div className="flex flex-wrap items-center mb-1 font-medium sm:mb-0">
+          <div className="mr-1 text-primary-gray-light">
+            Counterstake fee
+            <QuestionTooltip description={`The fee charged by Counterstake assistants for transferring ${token.symbol} from ${token.network} to Obyte`} />
+          </div>
+          <span className={`w-full sm:w-auto`}>{counterstakeFeeView} {token.symbol}</span>
+        </div>)}
 
         <div className="flex flex-wrap font-medium">
           <div className="mr-1 text-primary-gray-light">
