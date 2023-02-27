@@ -72,7 +72,7 @@ export const params = {
   },
   oracle: {
     description: "Address of the oracle that tracks and periodically posts the total TVL of all Oswap pools combined",
-    initValue: "WMFLGI2GLAB2MDF2KQAH37VNRRMK7A5N",
+    initValue: "KMCA3VLWKLO3AWSSDA3LQIKI3OQEN7TV",
     validate: (value) => obyte.utils.isValidAddress(value),
     helpText: "Address isn't valid",
     toBig: (value) => value,
