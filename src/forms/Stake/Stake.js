@@ -188,6 +188,7 @@ export const StakeForm = () => {
   };
 
   let termView = term.value || 0;
+  const termDateView = moment.utc().add(termView, 'd')?.format("LL");
 
   if (termView >= 360) {
     const years = Math.trunc(termView / 360);
@@ -260,7 +261,7 @@ export const StakeForm = () => {
       {!presaleFunds && (
         <div className="mb-5">
           <NumSlider minLabelValue={minTerm} className="mt-5" onChange={handleChangeTerm} value={term.value} min={14} max={MAX_TERM} />
-          <small>Locking term: {termView}</small>
+          <small>Locking term: {termView} — until {termDateView} {!!userData?.normalized_vp && '(this applies to the previously locked tokens too)'}</small>
         </div>
       )}
 
