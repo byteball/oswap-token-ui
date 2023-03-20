@@ -194,7 +194,7 @@ const PoolViewItem = ({ address, symbol, asset, decimals: pool_decimals, waiting
 
           {status === "WHITELISTED" && (
             <div>
-              <b>APY:</b> {+APY.toFixed(2)}%
+              <b>APY:</b> {APY}%
             </div>
           )}
         </div>
@@ -216,7 +216,7 @@ const PoolViewItem = ({ address, symbol, asset, decimals: pool_decimals, waiting
                 unless the balance of for and against votes changes
               </div>
             ) : (
-              <div className="flex items-center">
+              <div className="flex flex-col md:items-center md:flex-row">
                 Voting has ended.{" "}
                 <QRButton
                   text
@@ -224,7 +224,7 @@ const PoolViewItem = ({ address, symbol, asset, decimals: pool_decimals, waiting
                   disabled={!walletAddress}
                   onClick={sendCommitEvent}
                   href={commitUrl}
-                  className="mt-0 ml-1 mr-1 leading-none text-primary"
+                  className="p-0 mt-0 leading-none md:ml-1 md:mr-1 text-primary"
                 >
                   Commit
                 </QRButton>{" "}
