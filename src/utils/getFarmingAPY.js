@@ -35,7 +35,7 @@ export const getFarmingAPY = ({
 
     const rate_of_return = (1 + daily_pool_income_usd / (total_lp_tokens * lp_price_usd)) ** 360;
 
-    APY = Number((rate_of_return - 1) * 100).toFixed(4);
+    APY = Number((rate_of_return - 1) * 100).toPrecision(6);
   }
 
   return APY;
