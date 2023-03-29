@@ -31,7 +31,7 @@ export const PresaleWithdrawForm = () => {
   if (presaleStateVarsLoading || stateVarsLoading) return <Spin />;
 
   const maxAmount = walletAddress ? presaleStateVars[`user_${walletAddress}`] : presaleStateVars.total || 0;
-  const maxAmountView = walletAddress ? +Number(maxAmount / 10 ** decimals).toPrecision(9) : presaleStateVars.total || 0;
+  const maxAmountView = +Number((maxAmount || 0) / 10 ** decimals).toPrecision(9)
 
   const handleChange = (ev) => {
     const value = ev.target.value.trim();
