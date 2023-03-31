@@ -46,7 +46,7 @@ export const RewardForm = () => {
 
   const rewardView = Number(reward / 10 ** decimals).toFixed(decimals);
 
-  const link = generateLink({ amount: 1e4, aa: appConfig.AA_ADDRESS, from_address: walletAddress, data: { withdraw_staking_reward: 1 }, is_single: true });
+  const link = generateLink({ amount: 1e4, aa: appConfig.AA_ADDRESS, from_address: walletAddress, data: { withdraw_staking_reward: 1 }, is_single: !walletAddress });
 
   const sendRewardEvent = () => {
     ReactGA.event({

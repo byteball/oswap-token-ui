@@ -56,7 +56,7 @@ export const GovernanceParamItem = ({ name, description, value, leader, votes = 
     canChange = moment.utc().isAfter(canChangeTimeMoment);
 
     if (canChange) {
-      commitUrl = generateLink({ amount: 1e4, data: { vote_value: 1, name, value: leader.value }, aa: appConfig.AA_ADDRESS, from_address: walletAddress, is_single: true });
+      commitUrl = generateLink({ amount: 1e4, data: { vote_value: 1, name, value: leader.value }, aa: appConfig.AA_ADDRESS, from_address: walletAddress, is_single: !walletAddress });
     }
   }
 

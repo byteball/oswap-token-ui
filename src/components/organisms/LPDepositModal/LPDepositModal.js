@@ -36,7 +36,7 @@ export const LPDepositModal = ({ symbol, asset, decimals }) => {
   // calc
   const disabled = !amount.value || !amount.valid;
   const symbolView = symbol ? symbol : `${asset.slice(0, 10)}...`;
-  const link = generateLink({ aa: appConfig.AA_ADDRESS, asset, amount: amount.value * 10 ** decimals, data: { deposit: 1 }, from_address: walletAddress, is_single: true });
+  const link = generateLink({ aa: appConfig.AA_ADDRESS, asset, amount: amount.value * 10 ** decimals, data: { deposit: 1 }, from_address: walletAddress, is_single: !walletAddress });
 
   // handlers
   const handleChange = (ev) => {

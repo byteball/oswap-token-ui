@@ -22,7 +22,7 @@ export const ChangeParamsModal = ({ textBtn, name, disabled = false, validator, 
 
   // calc
   const nameView = name.split("_").join(" ");
-  const url = generateLink({ amount: 1e4, data: { vote_value: 1, name, value: toSmall(value.value) }, aa: appConfig.AA_ADDRESS, from_address: walletAddress, is_single: true });
+  const url = generateLink({ amount: 1e4, data: { vote_value: 1, name, value: toSmall(value.value) }, aa: appConfig.AA_ADDRESS, from_address: walletAddress, is_single: !walletAddress });
 
   // others hooks
   const btnRef = useRef();

@@ -122,7 +122,7 @@ export const BuyForm = () => {
   );
 
   const min_tokens = exchangeResult.delta_s - (exchangeResult.delta_s * currentSlippageTolerance) / 100;
-  const link = generateLink({ amount: Math.ceil(amount.value * 1e9), aa: appConfig.AA_ADDRESS, from_address: walletAddress, data: { min_tokens }, is_single: true });
+  const link = generateLink({ amount: Math.ceil(amount.value * 1e9), aa: appConfig.AA_ADDRESS, from_address: walletAddress, data: { min_tokens }, is_single: !walletAddress });
 
   const buyViaEVM = async () => {
     try {
