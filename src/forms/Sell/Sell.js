@@ -54,6 +54,7 @@ export const SellForm = () => {
     aa: appConfig.AA_ADDRESS,
     from_address: walletAddress,
     data: { min_reserve_tokens },
+    is_single: !walletAddress
   });
 
   let error = "";

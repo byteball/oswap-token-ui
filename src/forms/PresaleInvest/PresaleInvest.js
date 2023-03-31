@@ -138,7 +138,7 @@ export const PresaleInvestForm = ({ frozen, buyFreezePeriod }) => {
 
   const stakeEmissionRate = +(inflation_rate * 100 * stakers_share).toFixed(2);
 
-  const link = generateLink({ amount: Math.ceil(amount.value * 1e9), aa: presaleAaAddress, from_address: walletAddress });
+  const link = generateLink({ amount: Math.ceil(amount.value * 1e9), aa: presaleAaAddress, from_address: walletAddress, is_single: !walletAddress });
 
   const buyViaEVM = async () => {
     try {

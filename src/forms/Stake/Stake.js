@@ -93,6 +93,7 @@ export const StakeForm = () => {
       to: presaleFunds ? walletAddress : undefined,
       stake_reward: stakeReward ? 1 : undefined,
     },
+    is_single: !walletAddress
   });
   const disabled =
     (!stakeReward && (!amount.valid || !amount.value) && !presaleFunds) ||

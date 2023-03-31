@@ -154,6 +154,7 @@ export const MoveVPForm = () => {
     from_address: walletAddress,
     aa: appConfig.AA_ADDRESS,
     data: { changes, vote_shares: 1, group_key1: changedGroups[0], group_key2: changedGroups[1] },
+    is_single: !walletAddress
   });
 
   return (

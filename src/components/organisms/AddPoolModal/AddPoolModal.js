@@ -23,7 +23,7 @@ export const AddPoolModal = () => {
     setPool(pool);
   };
 
-  const whitelistedUrl = generateLink({ amount: 1e4, data: { vote_whitelist: 1, pool_asset: pool }, aa: appConfig.AA_ADDRESS, from_address: walletAddress });
+  const whitelistedUrl = generateLink({ amount: 1e4, data: { vote_whitelist: 1, pool_asset: pool }, aa: appConfig.AA_ADDRESS, from_address: walletAddress, is_single: !walletAddress });
 
   const sendAddPoolEvent = () => {
     ReactGA.event({

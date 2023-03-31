@@ -28,7 +28,7 @@ export const UnstakeForm = () => {
   const firstVotePool = pools.find(({ asset_key }) => asset_key === firstVoteAssetKey);
   const firstVotePoolGroup = firstVotePool?.group_key;
   const momentExpiryTs = userData.expiry_ts ? moment.unix(userData.expiry_ts) : null;
-  const link = generateLink({ amount: 1e4, aa: appConfig.AA_ADDRESS, from_address: walletAddress, data: { unstake: 1, group_key: firstVotePoolGroup } });
+  const link = generateLink({ amount: 1e4, aa: appConfig.AA_ADDRESS, from_address: walletAddress, data: { unstake: 1, group_key: firstVotePoolGroup }, is_single: !walletAddress });
   const isExpired = momentExpiryTs ? momentExpiryTs.isBefore() : false;
 
   if (isEmpty(userData) || !momentExpiryTs) {
