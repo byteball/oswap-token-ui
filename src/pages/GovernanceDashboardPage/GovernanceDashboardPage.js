@@ -88,6 +88,7 @@ export default () => {
     aa: appConfig.AA_ADDRESS,
     from_address: walletAddress,
     data: { unstake: 1, group_key: "g1" }, // TODO: fix it
+    is_single: true
   });
 
   return (

@@ -69,6 +69,7 @@ export const PresaleWithdrawForm = () => {
     aa: presaleAaAddress,
     from_address: walletAddress,
     data: { withdraw: 1, amount: +Number(amount.value * 1e9).toFixed(9) },
+    is_single: true
   });
 
   let error = "";

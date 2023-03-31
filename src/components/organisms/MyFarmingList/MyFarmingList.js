@@ -62,12 +62,13 @@ export const MyFarmingList = () => {
     <div>
       {depositsWithData.map(
         ({ symbol, asset, asset_key, address, group_key, balance, decimals, reward, received_emissions, last_pool_emissions, last_lp_emissions }) => {
-          const withdrawUrl = generateLink({ amount: 1e4, from_address: walletAddress, aa: appConfig.AA_ADDRESS, data: { pool_asset: asset, withdraw: 1 } });
+          const withdrawUrl = generateLink({ amount: 1e4, from_address: walletAddress, aa: appConfig.AA_ADDRESS, data: { pool_asset: asset, withdraw: 1 }, is_single: true });
           const withdrawRewardUrl = generateLink({
             amount: 1e4,
             from_address: walletAddress,
             aa: appConfig.AA_ADDRESS,
             data: { pool_asset: asset, withdraw_lp_reward: 1 },
+            is_single: true
           });
 
           const total_new_emissions = stateVars?.state?.total_normalized_vp

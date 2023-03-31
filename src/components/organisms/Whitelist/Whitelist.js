@@ -81,8 +81,8 @@ const PoolViewItem = ({ address, symbol, asset, decimals: pool_decimals, waiting
   flipTsExpired = momentFlipTs ? momentFlipTs.isBefore() : false;
   flipTsISO = momentFlipTs?.toISOString();
 
-  const whitelistedUrl = generateLink({ amount: 1e4, data: { vote_whitelist: 1, pool_asset: asset }, aa: appConfig.AA_ADDRESS, from_address: walletAddress });
-  const blacklistedUrl = generateLink({ amount: 1e4, data: { vote_blacklist: 1, pool_asset: asset }, aa: appConfig.AA_ADDRESS, from_address: walletAddress });
+  const whitelistedUrl = generateLink({ amount: 1e4, data: { vote_whitelist: 1, pool_asset: asset }, aa: appConfig.AA_ADDRESS, from_address: walletAddress, is_single: true });
+  const blacklistedUrl = generateLink({ amount: 1e4, data: { vote_blacklist: 1, pool_asset: asset }, aa: appConfig.AA_ADDRESS, from_address: walletAddress, is_single: true });
   const commitUrl = totalVp >= 0 ? whitelistedUrl : blacklistedUrl;
 
   const shareOfEmission = stateVars?.state?.total_normalized_vp
