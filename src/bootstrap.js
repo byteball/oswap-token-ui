@@ -9,8 +9,12 @@ import { loadUserBalance } from "store/thunks/loadUserBalance";
 import { loadPoolList } from "store/thunks/loadPoolList";
 import { updatePresaleStateVars } from "store/slices/presaleSlice";
 import { saveExchangeRates, savePresaleParams } from "store/slices/settingsSlice";
+import { loadPrice7d } from "store/thunks/loadPrice7d";
 
 import appConfig from "appConfig";
+
+const UPDATE_CHART_INTERVAL = 60 * 60 * 1000;
+const UPDATE_RATE_INTERVAL = 10 * 60 * 1000;
 
 export const bootstrap = async () => {
   console.log("connect");
@@ -55,6 +59,7 @@ export const bootstrap = async () => {
     challenging_period: stateVars.challenging_period || 432000, // 5 days
   };
 
+  store.dispatch(loadPrice7d());
   store.dispatch(saveSettings(settings));
   store.dispatch(updateAgentStateVars(stateVars));
   store.dispatch(saveOracleAddress(oracle));
@@ -170,10 +175,15 @@ export const bootstrap = async () => {
 
     const { result: currentTVL } = await client.api.executeGetter({ address: appConfig.AA_ADDRESS, getter: "get_tvl" });
     store.dispatch(updateCurrentTVL(currentTVL));
-  }, 10 * 60 * 1000);
+  }, UPDATE_RATE_INTERVAL);
+
+  const updateChart = setInterval(async () => {
+    store.dispatch(loadPrice7d());
+  }, UPDATE_CHART_INTERVAL);
 
   client.client.ws.addEventListener("close", () => {
     clearInterval(heartbeat);
     clearInterval(updateRate);
+    clearInterval(updateChart);
   });
 };

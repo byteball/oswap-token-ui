@@ -8,6 +8,7 @@ import settingsSlice from "./slices/settingsSlice";
 import userWalletSlice from "./slices/userWalletSlice";
 import presaleSlice from "./slices/presaleSlice";
 import notificationsSlice from "./slices/notificationsSlice";
+import chartSlice from "./slices/chartSlice";
 
 import config from "appConfig";
 
@@ -18,6 +19,7 @@ const rootReducer = combineReducers({
   cache: cacheSlice,
   presale: presaleSlice,
   notifications: notificationsSlice,
+  chart: chartSlice,
 });
 
 const persistConfig = {
