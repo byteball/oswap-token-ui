@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useCallback } from "react";
 import { useSelector } from "react-redux";
 
 import { InfoPanel } from "components/molecules";
@@ -6,6 +6,9 @@ import { InfoPanel } from "components/molecules";
 import { selectSettings, selectStateVars, selectStateVarsLoading, selectTokenInfo, selectTVLs } from "store/slices/agentSlice";
 import { convertBigNum, getCurrentPrice } from "utils";
 import { getAppreciationState, getExchangeResult } from "utils/getExchangeResult";
+import { selectPrice7d } from "store/slices/chartSlice";
+
+import { BackendService } from "services/backend";
 
 const PRECISION = 6;
 
@@ -15,6 +18,7 @@ export const MainInfoPanel = memo(() => {
   const settings = useSelector(selectSettings);
 
   const { symbol = "", decimals = 0 } = useSelector(selectTokenInfo);
+  const price7d = useSelector(selectPrice7d);
 
   const { state: old_state } = stateVars;
   const stateVarsLoading = useSelector(selectStateVarsLoading);
@@ -34,8 +38,13 @@ export const MainInfoPanel = memo(() => {
   const floorPice = Number(dryRunExchangeResult.new_price).toPrecision(PRECISION);
   const stakedInPercent = state.supply ? Number((stakedBalance / state.supply) * 100).toPrecision(PRECISION) : 0;
 
+  const getFullData = useCallback(async () => {
+    return await BackendService.getCandles();
+  }, [price7d]);
+
   return (
     <InfoPanel loading={stateVarsLoading}>
+      <InfoPanel.Chart name="7D PRICE" lightData={price7d} getFullData={getFullData} />
       <InfoPanel.Item name="CURRENT PRICE" value={currentPriceView} suffix={<small className="text-sm"> GBYTE</small>} />
       <InfoPanel.Item
         name="APPRECIATION RATE"
