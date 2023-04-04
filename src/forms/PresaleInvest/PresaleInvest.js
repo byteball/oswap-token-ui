@@ -235,7 +235,7 @@ export const PresaleInvestForm = ({ frozen, buyFreezePeriod }) => {
             initial sale ends.
           </p>
 
-          <p className="mb-2">You can add funds here up to {buyFreezePeriod} day before the initial sale ends.</p>
+          <p className="mb-2">You can add funds here up to {buyFreezePeriod} day before the launch.</p>
         </div>
 
         {token.network !== "Obyte" && (
