@@ -181,7 +181,7 @@ export const PresaleInvestForm = ({ frozen, buyFreezePeriod }) => {
       </div>
 
       <div className="mb-1 text-primary-gray-light">You send: </div>
-      <Input token={token} setToken={setToken} placeholder="Amount" error={inputError} value={amount.value} onChange={handleChange} onKeyDown={handleKeyDown} />
+      <Input token={token} setToken={setToken} placeholder="Amount" error={inputError} value={amount.value} onChange={handleChange} onKeyDown={handleKeyDown} disabled={frozen} />
 
       <div className="pt-2 text-white align-middle cursor-default">
         <div className="flex flex-wrap mb-2 text-lg">
@@ -269,7 +269,7 @@ export const PresaleInvestForm = ({ frozen, buyFreezePeriod }) => {
             className="mt-4"
             href={link}
             onClick={sendInvestEvent}
-            disabled={!amount.valid || !amount.value || amount.value < 0.0001}
+            disabled={!amount.valid || !amount.value || amount.value < 0.0001 || frozen}
           >
             Send {amount.valid && amount.value ? amount.value : ""} GBYTE
           </QRButton>
