@@ -12,7 +12,7 @@ export const agentSlice = createSlice({
     stateVars: {
       state: {
         coef: 1,
-        s0: 1e13,
+        s0: 1e12,
         supply: 0,
         reserve: 0,
         total_normalized_vp: 0,

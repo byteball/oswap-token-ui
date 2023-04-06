@@ -3,7 +3,7 @@ import moment from "moment";
 
 import { getCurrentPrice } from "./getCurrentPrice";
 
-const initial_s0 = 1e13;
+const initial_s0 = 1e12;
 
 const reserve_asset = appConfig.RESERVE_ASSET;
 
