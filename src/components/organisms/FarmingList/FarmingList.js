@@ -37,9 +37,11 @@ export const FarmingList = () => {
   useEffect(() => {
     const poolsWithAPY = [...pools];
 
-    poolsWithAPY.forEach(({ group_key, asset_key, decimals: pool_decimals, asset }, index) => {
+    poolsWithAPY.forEach(({ group_key, asset_key, decimals: pool_decimals, asset, blacklisted }, index) => {
       const lp_price_usd = exchangeRates[`${asset}_USD`] || 0;
       const total_lp_tokens = (stateVars[`pool_asset_balance_${asset_key}`] || 0) / 10 ** pool_decimals;
+      
+      poolsWithAPY[index].involve_in_distribution = !blacklisted && (stateVars[`pool_vps_${group_key}`][asset_key] ?? 0) > 0;
 
       poolsWithAPY[index].apy = getFarmingAPY({
         stateVars,
@@ -130,6 +132,7 @@ export const FarmingList = () => {
                 total_locked_usd = 0,
                 wallet_balance_usd = 0,
                 wallet_balance = 0,
+                involve_in_distribution = false
               }, index, list) => {
                 return (
                   <tr key={asset} className="text-white bg-primary-gray/50">
@@ -146,7 +149,7 @@ export const FarmingList = () => {
                       </Button>
                     </td>
 
-                    <td className="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">{apy}%</td>
+                    <td className="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">{involve_in_distribution && !total_locked ? <span>&infin;</span> : `${apy}%`}</td>
 
                     <td className="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
                       {total_locked ? (
