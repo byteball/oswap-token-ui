@@ -68,7 +68,7 @@ export const MainInfoPanel = memo(() => {
         name="FLOOR PRICE"
         description="The price of OSWAP token if all freely circulating OSWAP tokens were sold (and the supply became equal to the locked supply)."
         value={floorPice}
-        suffix={<small className="text-sm"> {symbol}</small>}
+        suffix={<small className="text-sm"> GBYTE</small>}
       />
     </InfoPanel>
   );
