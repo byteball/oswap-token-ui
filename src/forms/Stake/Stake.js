@@ -57,9 +57,11 @@ export const StakeForm = () => {
   const btnRef = useRef(null);
 
   useEffect(() => {
-    if (pools.length >= 1) {
-      const distributions = (pools.length !== 1 ? ["a1", "a2"] : ["a1"]).map((key, index) => {
-        const data = pools.find(({ asset_key }) => asset_key === key);
+    const filteredPools = pools.filter(({ blacklisted }) => !blacklisted);
+
+    if (filteredPools.length >= 1) {
+      const distributions = (filteredPools.length !== 1 ? [filteredPools[0].asset_key, filteredPools[1].asset_key] : filteredPools[0].asset_key).map((key) => {
+        const data = filteredPools.find(({ asset_key }) => asset_key === key);
 
         return {
           ...data,
@@ -148,8 +150,8 @@ export const StakeForm = () => {
   const stakeAPY =
     stateVars?.state?.total_normalized_vp && newBalance
       ? ((((inflation_rate * stakers_share * stateVars?.state?.supply) / newBalance) * (newNormalizedVP || 0)) /
-          (stateVars?.state?.total_normalized_vp + diffUserVp)) *
-        100
+        (stateVars?.state?.total_normalized_vp + diffUserVp)) *
+      100
       : 0;
 
   const newVPView = +Number(newNormalizedVP / 4 ** ((moment.utc().unix() - appConfig.COMMON_TS) / appConfig.YEAR) / 10 ** decimals).toFixed(decimals);

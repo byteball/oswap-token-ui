@@ -204,7 +204,7 @@ export const MoveVPForm = () => {
         newPools?.map(({ asset_key, newPercent }, index) => (
           <div key={`${asset_key}-${index}`} className="grid items-center grid-cols-2 gap-3 mb-3 sm:grid-cols-6 lg:grid-cols-7">
             <Select value={asset_key} onChange={(value) => changeNewPool(value, index)} className="col-span-2">
-              {notVotedPools.map(({ symbol, asset_key, group_key }) => (
+              {notVotedPools?.filter(({ blacklisted }) => !blacklisted).map(({ symbol, asset_key, group_key }) => (
                 <Select.Option
                   key={asset_key}
                   disabled={newPools.find(({ asset_key: a }) => a === asset_key) && newPools[index].asset_key !== asset_key}

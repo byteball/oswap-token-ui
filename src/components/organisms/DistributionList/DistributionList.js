@@ -41,11 +41,11 @@ export const DistributionList = ({ distributions, setDistributions }) => {
     <div className="mb-5">
       {distributions.length > 0 ? (
         <div>
-          {distributions.map(({ percent, asset }, index) => (
+          {distributions.map(({ percent, asset, blacklisted }, index) => (
             <div key={"list" + asset} className="grid items-center grid-cols-5 gap-2 mb-4">
               <div className="col-span-5 md:col-span-2">
                 <Select value={asset} key={`select-${asset}`} placeholder="Select a pool" onChange={(v) => handleChangePool(v, index)} className="md:mr-3">
-                  {pools.map(({ symbol, asset, group_key }) => {
+                  {pools.filter(({ blacklisted }) => !blacklisted).map(({ symbol, asset, group_key }) => {
                     const assetInAnotherField = distributions.find((ds) => ds.asset === asset);
 
                     return (

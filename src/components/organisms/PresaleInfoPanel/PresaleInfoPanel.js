@@ -19,15 +19,16 @@ export const PresaleInfoPanel = memo(() => {
 
   const reserveView = +Number((presaleStateVars.total || 0) / 10 ** 9).toPrecision(PRECISION);
 
-  const { final_price = 0, cap = 0, avg_price = 0 } = get_presale_prices(presaleStateVars.total);
+  const { final_price = 0, cap = 0, avg_price = 0, tokens = 0 } = get_presale_prices(presaleStateVars.total);
   const currentPresalePriceView = +Number(final_price).toPrecision(PRECISION);
   const capView = +Number(cap / 10 ** 9).toPrecision(PRECISION);
 
   const balance = walletAddress ? presaleStateVars[`user_${walletAddress}`] || 0 : 0;
   const balanceView = +Number(balance / 10 ** 9).toPrecision(PRECISION);
 
-  const userTokenCost = balance ? final_price * balance : 0;
-  const userTokenCostView = +Number(userTokenCost / 10 ** 9).toPrecision(PRECISION);
+  const userTokensAmount = balance && presaleStateVars.total !== 0 ? tokens * (balance / presaleStateVars.total) : 0;
+  const userTokensCost = userTokensAmount ? final_price * userTokensAmount : 0;
+  const userTokensCostView = +Number(userTokensCost / 10 ** 9).toPrecision(PRECISION);
 
   const averageBuyingPriceView = +Number(avg_price).toPrecision(PRECISION);
 
@@ -45,7 +46,7 @@ export const PresaleInfoPanel = memo(() => {
           <InfoPanel.Item
             name="Value of my future tokens"
             description="Expected value of your future OSWAP tokens at the current price (the price might change due to other people investing)"
-            value={userTokenCostView}
+            value={userTokensCostView}
             suffix={<small className="text-sm"> GBYTE</small>}
           />
         </InfoPanel>
