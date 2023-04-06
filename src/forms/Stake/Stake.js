@@ -105,7 +105,7 @@ export const StakeForm = () => {
   const userPresaleBalance = presaleStateVars[`user_${walletAddress}`] || 0;
   const userPresaleBalanceView = +Number(userPresaleBalance / 10 ** decimals).toFixed(decimals);
 
-  const userPresaleTokenBalance = presaleStateVars.total ? (userPresaleBalance / (presaleStateVars.total)) * presaleStateVars.tokens : 0;
+  const userPresaleTokenBalance = presaleStateVars.total ? (userPresaleBalance / presaleStateVars.total) * presaleStateVars.tokens : 0;
   const userPresaleTokenBalanceView = +Number(userPresaleTokenBalance / 10 ** decimals).toFixed(decimals);
 
   const ts = moment.utc().unix();
