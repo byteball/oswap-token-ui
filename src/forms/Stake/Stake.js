@@ -105,6 +105,9 @@ export const StakeForm = () => {
   const userPresaleBalance = presaleStateVars[`user_${walletAddress}`] || 0;
   const userPresaleBalanceView = +Number(userPresaleBalance / 10 ** decimals).toFixed(decimals);
 
+  const userPresaleTokenBalance = presaleStateVars.total ? (userPresaleBalance / (presaleStateVars.total)) * presaleStateVars.tokens : 0;
+  const userPresaleTokenBalanceView = +Number(userPresaleTokenBalance / 10 ** decimals).toFixed(decimals);
+
   const ts = moment.utc().unix();
   let btnLabel = "";
   let reward = 0;
@@ -136,7 +139,7 @@ export const StakeForm = () => {
   }
 
   const newBalance =
-    (userData?.balance || 0) + ((stakeReward ? reward || 0 : 0) + (presaleFunds ? userPresaleBalance : 0) + amount.value * 10 ** decimals || 0);
+    (userData?.balance || 0) + ((stakeReward ? reward || 0 : 0) + (presaleFunds ? userPresaleTokenBalance : 0) + (!presaleFunds ? amount.value : 0) * 10 ** decimals || 0);
   const final_voting_power = newBalance / 256;
   const newNormalizedVP = final_voting_power * 4 ** (term.value / 360 + (moment.utc().unix() - appConfig.COMMON_TS) / YEAR);
 
@@ -222,7 +225,7 @@ export const StakeForm = () => {
       {userPresaleBalance ? (
         <div className="mb-5">
           <Switch value={presaleFunds} onChange={setPresaleFunds}>
-            Spend the initial sale funds ({userPresaleBalanceView} {symbol})
+            Spend the initial sale funds ({userPresaleBalanceView} GBYTE = {userPresaleTokenBalanceView} {symbol})
           </Switch>
         </div>
       ) : null}
