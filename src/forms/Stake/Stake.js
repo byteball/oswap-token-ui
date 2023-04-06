@@ -143,7 +143,7 @@ export const StakeForm = () => {
   const final_voting_power = newBalance / 256;
   const newNormalizedVP = final_voting_power * 4 ** (term.value / 360 + (moment.utc().unix() - appConfig.COMMON_TS) / YEAR);
 
-  const diffUserVp = newNormalizedVP - userData.normalized_vp;
+  const diffUserVp = newNormalizedVP - (userData.normalized_vp || 0);
 
   const stakeAPY =
     stateVars?.state?.total_normalized_vp && newBalance
