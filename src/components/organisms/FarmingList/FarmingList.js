@@ -143,7 +143,7 @@ export const FarmingList = () => {
                         type="text-primary"
                         target="_blank"
                         rel="noopener"
-                        href={`https://${appConfig.ENVIRONMENT === "testnet" ? "v2-testnet" : ""}.oswap.io/#/swap/${address}`}
+                        href={`https://${appConfig.ENVIRONMENT === "testnet" ? "v2-testnet." : ""}oswap.io/#/swap/${address}`}
                         className="flex items-center"
                       >
                         {symbol ? symbol : `${asset.slice(0, 10)}...`}
@@ -160,11 +160,11 @@ export const FarmingList = () => {
                           trigger={["hover"]}
                           overlay={
                             <span>
-                              {total_locked} {symbol}
+                              {total_locked.toLocaleString("en")} {symbol}
                             </span>
                           }
                         >
-                          <span className="border-b border-gray-500 border-dotted">${total_locked_usd}</span>
+                          <span className="border-b border-gray-500 border-dotted">${total_locked_usd.toLocaleString("en")}</span>
                         </Tooltip>
                       ) : (
                         "-"
@@ -179,7 +179,7 @@ export const FarmingList = () => {
                             trigger={["hover"]}
                             overlay={
                               <span>
-                                {wallet_balance} {symbol}
+                                {wallet_balance.toLocaleString("en")} {symbol}
                               </span>
                             }
                           >
@@ -196,7 +196,7 @@ export const FarmingList = () => {
                         type="text-primary"
                         target="_blank"
                         rel="noopener"
-                        href={`https://${appConfig.ENVIRONMENT === "testnet" ? "v2-testnet" : ""}.oswap.io/#/add-liquidity/${address}`}
+                        href={`https://${appConfig.ENVIRONMENT === "testnet" ? "v2-testnet." : ""}oswap.io/#/add-liquidity/${address}`}
                       >
                         Add liquidity
                         <ArrowTopRightOnSquareIcon className="w-4 h-4 ml-2" aria-hidden="true" />

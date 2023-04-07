@@ -144,7 +144,7 @@ const PoolViewItem = ({ address, symbol, asset, decimals: pool_decimals, waiting
                 target="_blank"
                 rel="noopener"
                 className="flex items-center mb-3 text-xl text-primary md:mb-0"
-                href={`https://${appConfig.ENVIRONMENT === "testnet" ? "v2-testnet" : ""}.oswap.io/#/swap/${address}`}
+                href={`https://${appConfig.ENVIRONMENT === "testnet" ? "v2-testnet." : ""}oswap.io/#/swap/${address}`}
               >
                 {symbol || `${asset.slice(0, 13)}...`} <ArrowTopRightOnSquareIcon className="w-[1em] h-[1em] ml-2 mt-[-2px]" aria-hidden="true" />
               </a>

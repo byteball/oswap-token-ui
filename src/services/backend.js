@@ -17,7 +17,7 @@ class Backend {
   }
 
   async getCandles() {
-    const data = await this.service.get("/candles", { params: { type: "daily", limit: 360 } });
+    const data = await this.service.get("/candles", { params: { type: "auto" } });
 
     return data.data?.data.map(({ start_timestamp, ...rest }) => ({ ...rest, start_timestamp: moment.unix(start_timestamp).format("LLL") }));
   }
