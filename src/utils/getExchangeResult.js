@@ -59,11 +59,11 @@ export const getAppreciationState = (state, appreciation_rate) => {
   };
 };
 
-export const getExchangeResult = (tokens_amount, reserve_amount_with_fee, old_state, props) => {
+export const getExchangeResult = (tokens_amount, reserve_amount_with_fee, old_state, props, dryRun) => {
   const state = getAppreciationState(old_state, props.appreciation_rate);
   const reserve_amount = reserve_amount_with_fee - network_fee;
 
-  if ((!tokens_amount && !reserve_amount_with_fee) || (reserve_amount_with_fee < 100000 && !tokens_amount)) {
+  if (!dryRun && ((!tokens_amount && !reserve_amount_with_fee) || (reserve_amount_with_fee < 100000 && !tokens_amount))) {
     const p = getCurrentPrice(state);
 
     return {
@@ -143,7 +143,7 @@ export const getExchangeResult = (tokens_amount, reserve_amount_with_fee, old_st
     new_reserve: gross_new_r,
     delta_reserve: gross_new_r - r,
     old_price: p,
-    new_price: blocked ? p : new_p,
+    new_price: blocked && !dryRun ? p : new_p,
     swap_fee: swap_fee,
     arb_profit_tax: arb_profit_tax,
     total_fee: total_fee,

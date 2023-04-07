@@ -34,7 +34,7 @@ export const MainInfoPanel = memo(() => {
   const currentPriceView = Number(currentPrice).toPrecision(PRECISION);
   const stakedBalance = old_state?.total_staked_balance ?? 0;
   const notStakedBalance = old_state?.supply ? old_state?.supply - stakedBalance : 0;
-  const dryRunExchangeResult = getExchangeResult(notStakedBalance, 0, stateVars.state, settings);
+  const dryRunExchangeResult = getExchangeResult(notStakedBalance, 0, stateVars.state, settings, true);
   const floorPice = Number(dryRunExchangeResult.new_price).toPrecision(PRECISION);
   const stakedInPercent = state.supply ? Number((stakedBalance / state.supply) * 100).toPrecision(PRECISION) : 0;
 
