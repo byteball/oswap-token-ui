@@ -160,11 +160,11 @@ export const FarmingList = () => {
                           trigger={["hover"]}
                           overlay={
                             <span>
-                              {total_locked.toLocaleString("en")} {symbol}
+                              {total_locked.toLocaleString()} {symbol}
                             </span>
                           }
                         >
-                          <span className="border-b border-gray-500 border-dotted">${total_locked_usd.toLocaleString("en")}</span>
+                          <span className="border-b border-gray-500 border-dotted">${total_locked_usd.toLocaleString()}</span>
                         </Tooltip>
                       ) : (
                         "-"
@@ -179,7 +179,7 @@ export const FarmingList = () => {
                             trigger={["hover"]}
                             overlay={
                               <span>
-                                {wallet_balance.toLocaleString("en")} {symbol}
+                                {wallet_balance.toLocaleString()} {symbol}
                               </span>
                             }
                           >
