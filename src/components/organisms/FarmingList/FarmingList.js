@@ -40,7 +40,7 @@ export const FarmingList = () => {
     poolsWithAPY.forEach(({ group_key, asset_key, decimals: pool_decimals, asset, blacklisted }, index) => {
       const lp_price_usd = exchangeRates[`${asset}_USD`] || 0;
       const total_lp_tokens = (stateVars[`pool_asset_balance_${asset_key}`] || 0) / 10 ** pool_decimals;
-      
+
       poolsWithAPY[index].receives_emissions = !blacklisted && (stateVars[`pool_vps_${group_key}`][asset_key] ?? 0) > 0;
 
       poolsWithAPY[index].apy = getFarmingAPY({
@@ -54,7 +54,9 @@ export const FarmingList = () => {
         pool_decimals
       });
 
-      poolsWithAPY[index].total_locked_usd = +Number(total_lp_tokens * lp_price_usd).toFixed(4);
+      const totalLockedUsd = total_lp_tokens * lp_price_usd;
+
+      poolsWithAPY[index].total_locked_usd = +Number(totalLockedUsd).toFixed(totalLockedUsd > 1000 ? 0 : 4);
       poolsWithAPY[index].total_locked = +Number(total_lp_tokens).toFixed(pool_decimals);
 
       if (walletAddress) {
@@ -141,7 +143,7 @@ export const FarmingList = () => {
                         type="text-primary"
                         target="_blank"
                         rel="noopener"
-                        href={`https://${appConfig.ENVIRONMENT === "testnet" ? "v2-testnet" : ""}.oswap.io/#/swap/${address}`}
+                        href={`https://${appConfig.ENVIRONMENT === "testnet" ? "v2-testnet." : ""}oswap.io/#/swap/${address}`}
                         className="flex items-center"
                       >
                         {symbol ? symbol : `${asset.slice(0, 10)}...`}
@@ -158,11 +160,11 @@ export const FarmingList = () => {
                           trigger={["hover"]}
                           overlay={
                             <span>
-                              {total_locked} {symbol}
+                              {total_locked.toLocaleString()} {symbol}
                             </span>
                           }
                         >
-                          <span className="border-b border-gray-500 border-dotted">${total_locked_usd}</span>
+                          <span className="border-b border-gray-500 border-dotted">${total_locked_usd.toLocaleString()}</span>
                         </Tooltip>
                       ) : (
                         "-"
@@ -177,7 +179,7 @@ export const FarmingList = () => {
                             trigger={["hover"]}
                             overlay={
                               <span>
-                                {wallet_balance} {symbol}
+                                {wallet_balance.toLocaleString()} {symbol}
                               </span>
                             }
                           >
@@ -194,7 +196,7 @@ export const FarmingList = () => {
                         type="text-primary"
                         target="_blank"
                         rel="noopener"
-                        href={`https://${appConfig.ENVIRONMENT === "testnet" ? "v2-testnet" : ""}.oswap.io/#/add-liquidity/${address}`}
+                        href={`https://${appConfig.ENVIRONMENT === "testnet" ? "v2-testnet." : ""}oswap.io/#/add-liquidity/${address}`}
                       >
                         Add liquidity
                         <ArrowTopRightOnSquareIcon className="w-4 h-4 ml-2" aria-hidden="true" />

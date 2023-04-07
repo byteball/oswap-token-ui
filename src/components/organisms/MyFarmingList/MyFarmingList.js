@@ -135,7 +135,7 @@ export const MyFarmingList = () => {
                   <Button
                     className="text-xl"
                     type="text-primary"
-                    href={`https://${appConfig.ENVIRONMENT === "testnet" ? "v2-testnet" : ""}.oswap.io/#/swap/${address}`}
+                    href={`https://${appConfig.ENVIRONMENT === "testnet" ? "v2-testnet." : ""}oswap.io/#/swap/${address}`}
                     target="_blank"
                     rel="noopener"
                   >

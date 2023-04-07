@@ -1,6 +1,6 @@
 import { Children, Suspense, cloneElement, useState, memo, useEffect } from "react";
 import { TinyLine, Line, G2 } from "@ant-design/plots";
-import { isEqual, min } from "lodash";
+import { isEqual, min, minBy } from "lodash";
 import cn from "classnames";
 import Tooltip from "rc-tooltip";
 import { deepMix } from "@antv/util";
@@ -123,6 +123,8 @@ const Chart = memo(
       }
     }, [getFullData, lightData, inited]);
 
+    const minDailyPrice = minBy(fullData, (c) => c.close_price)?.close_price;
+    
     return (
       <div className={cn({ "animate-pulse opacity-30": loading })}>
         {loading ? (
@@ -152,7 +154,7 @@ const Chart = memo(
                       xField="start_timestamp"
                       renderer="svg"
                       yAxis={{
-                        min: 1,
+                        min: minDailyPrice,
                         grid: { line: { style: { stroke: "#30363d" } } },
                       }}
                       animation={false}
