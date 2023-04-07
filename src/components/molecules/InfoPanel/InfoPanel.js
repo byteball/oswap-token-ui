@@ -44,13 +44,13 @@ const InfoPanel = ({ children, className = "", loading }) => {
 
         {shown && filteredChildren.length > 3
           ? Children.toArray(otherChildren).map((item, i) => (
-              <div key={item.props.name}>
-                {cloneElement(item, {
-                  last: otherChildren.length - 1 === i,
-                  loading,
-                })}
-              </div>
-            ))
+            <div key={item.props.name}>
+              {cloneElement(item, {
+                last: otherChildren.length - 1 === i,
+                loading,
+              })}
+            </div>
+          ))
           : null}
       </div>
     </div>
@@ -124,7 +124,7 @@ const Chart = memo(
     }, [getFullData, lightData, inited]);
 
     const minDailyPrice = minBy(fullData, (c) => c.close_price)?.close_price;
-    
+
     return (
       <div className={cn({ "animate-pulse opacity-30": loading })}>
         {loading ? (
@@ -137,7 +137,7 @@ const Chart = memo(
 
         {!loading ? (
           <Suspense fallback={ChartPlaceholder}>
-            <Tooltip placement="bottom" trigger={["hover"]} overlay={!!getFullData && <span>click to enlarge</span>}>
+            <Tooltip placement="bottom" trigger={["hover"]} overlayStyle={{ zIndex: 1 }} overlay={!!getFullData && <span>click to enlarge</span>}>
               <div className="mb-3" onClick={() => setVisible(true)}>
                 <TinyLine {...config} state={{ active: { style: { cursor: "pointer" } } }} />
               </div>
