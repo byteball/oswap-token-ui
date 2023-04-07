@@ -56,7 +56,7 @@ export const FarmingList = () => {
 
       const totalLockedUsd = total_lp_tokens * lp_price_usd;
 
-      poolsWithAPY[index].total_locked_usd = +Number(totalLockedUsd).toFixed(totalLockedUsd > 1000 ? 0 : 4);
+      poolsWithAPY[index].total_locked_usd = +Number(totalLockedUsd).toFixed(0);
       poolsWithAPY[index].total_locked = +Number(total_lp_tokens).toFixed(pool_decimals);
 
       if (walletAddress) {
