@@ -137,7 +137,7 @@ const Chart = memo(
 
         {!loading ? (
           <Suspense fallback={ChartPlaceholder}>
-            <Tooltip placement="bottom" trigger={["hover"]} overlayStyle={{ zIndex: 1 }} overlay={!!getFullData && <span>click to enlarge</span>}>
+            <Tooltip placement="bottom" trigger={["hover"]} overlayClassName="chart-tooltip" overlay={!!getFullData && <span>click to enlarge</span>}>
               <div className="mb-3" onClick={() => setVisible(true)}>
                 <TinyLine {...config} state={{ active: { style: { cursor: "pointer" } } }} />
               </div>

@@ -518,4 +518,21 @@ html {
 
 canvas {
   cursor: pointer;
+  user-select: none;
+  outline: none;
+}
+
+canvas:active, canvas:focus {
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.chart-tooltip {
+  z-index: 1;
+}
+
+@media (hover: none) and (pointer: coarse), (max-width: 600px) {
+  .chart-tooltip {
+    display: none !important;
+  }
 }
