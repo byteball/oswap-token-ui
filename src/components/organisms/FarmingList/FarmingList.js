@@ -40,7 +40,7 @@ export const FarmingList = () => {
     poolsWithAPY.forEach(({ group_key, asset_key, decimals: pool_decimals, asset, blacklisted }, index) => {
       const lp_price_usd = exchangeRates[`${asset}_USD`] || 0;
       const total_lp_tokens = (stateVars[`pool_asset_balance_${asset_key}`] || 0) / 10 ** pool_decimals;
-      
+
       poolsWithAPY[index].receives_emissions = !blacklisted && (stateVars[`pool_vps_${group_key}`][asset_key] ?? 0) > 0;
 
       poolsWithAPY[index].apy = getFarmingAPY({
@@ -54,7 +54,9 @@ export const FarmingList = () => {
         pool_decimals
       });
 
-      poolsWithAPY[index].total_locked_usd = +Number(total_lp_tokens * lp_price_usd).toFixed(4);
+      const totalLockedUsd = total_lp_tokens * lp_price_usd;
+
+      poolsWithAPY[index].total_locked_usd = +Number(totalLockedUsd).toFixed(totalLockedUsd > 1000 ? 0 : 4);
       poolsWithAPY[index].total_locked = +Number(total_lp_tokens).toFixed(pool_decimals);
 
       if (walletAddress) {

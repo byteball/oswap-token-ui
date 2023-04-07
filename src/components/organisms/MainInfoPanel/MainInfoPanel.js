@@ -5,7 +5,7 @@ import { InfoPanel } from "components/molecules";
 
 import { selectSettings, selectStateVars, selectStateVarsLoading, selectTokenInfo, selectTVLs } from "store/slices/agentSlice";
 import { convertBigNum, getCurrentPrice } from "utils";
-import { getAppreciationState, getExchangeResult } from "utils/getExchangeResult";
+import { getAppreciationState } from "utils/getExchangeResult";
 import { selectPrice7d } from "store/slices/chartSlice";
 
 import { BackendService } from "services/backend";
@@ -33,9 +33,8 @@ export const MainInfoPanel = memo(() => {
   const currentPrice = getCurrentPrice(state);
   const currentPriceView = Number(currentPrice).toPrecision(PRECISION);
   const stakedBalance = old_state?.total_staked_balance ?? 0;
-  const notStakedBalance = old_state?.supply ? old_state?.supply - stakedBalance : 0;
-  const dryRunExchangeResult = getExchangeResult(notStakedBalance, 0, stateVars.state, settings, true);
-  const floorPice = Number(dryRunExchangeResult.new_price).toPrecision(PRECISION);
+  const floorPice = state.coef * (state.s0 / (state.s0 - stakedBalance)) ** 2;
+  const floorPiceView = Number(floorPice).toPrecision(PRECISION);
   const stakedInPercent = state.supply ? Number((stakedBalance / state.supply) * 100).toPrecision(PRECISION) : 0;
 
   const getFullData = useCallback(async () => {
@@ -67,7 +66,7 @@ export const MainInfoPanel = memo(() => {
       <InfoPanel.Item
         name="FLOOR PRICE"
         description="The price of OSWAP token if all freely circulating OSWAP tokens were sold (and the supply became equal to the locked supply)."
-        value={floorPice}
+        value={floorPiceView}
         suffix={<small className="text-sm"> GBYTE</small>}
       />
     </InfoPanel>
