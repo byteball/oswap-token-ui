@@ -45,7 +45,7 @@ export default () => {
           tokens at any time.
         </div>
 
-        {!!totalDailyLpEmissions.oswap && <div className="mb-5 text-primary-gray-light">Total daily emissions to all pools: {+totalDailyLpEmissions.oswap.toFixed(decimals)} OSWAP (${(+totalDailyLpEmissions.usd.toFixed(0)).toLocaleString()})</div>}
+        {!!totalDailyLpEmissions.oswap && <div className="mb-5 text-primary-gray-light">Total daily emissions to all pools: {+totalDailyLpEmissions.oswap.toFixed(decimals)} OSWAP (${(+totalDailyLpEmissions.usd.toFixed(0)).toLocaleString()}).</div>}
 
         <div className="mb-5">
           <Navigation border direction="horizontal">
