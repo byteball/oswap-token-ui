@@ -1,17 +1,33 @@
 import { Route, Routes, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Helmet } from "react-helmet-async";
+import { useEffect, useState } from "react";
 
 import { Redirect } from "components/atoms";
 import { Navigation } from "components/molecules";
 import { MyFarmingList } from "components/organisms/MyFarmingList/MyFarmingList";
 import { FarmingList } from "components/organisms/FarmingList/FarmingList";
 
-import { selectWalletAddress } from "store/slices/settingsSlice";
+import { selectExchangeRates, selectWalletAddress } from "store/slices/settingsSlice";
+import { selectSettings, selectStateVars, selectTokenInfo } from "store/slices/agentSlice";
+
+import { getDailyLPEmissions } from "utils";
 
 export default () => {
   const walletAddress = useSelector(selectWalletAddress);
   const location = useLocation();
+  const { decimals } = useSelector(selectTokenInfo);
+  const stateVars = useSelector(selectStateVars);
+  const exchangeRates = useSelector(selectExchangeRates);
+  const settings = useSelector(selectSettings);
+
+  const [totalDailyLpEmissions, setTotalDailyLpEmissions] = useState({ oswap: 0, usd: 0 });
+
+  useEffect(() => {
+    const { oswap: dailyLPEmissions, usd: dailyLPEmissionsUSD } = getDailyLPEmissions({ stateVars, exchangeRates, settings, decimals });
+
+    setTotalDailyLpEmissions({ oswap: dailyLPEmissions, usd: dailyLPEmissionsUSD });
+  }, [stateVars, exchangeRates, settings, decimals]);
 
   if (location.pathname.replaceAll("/", "") === "farming") {
     return <Redirect path="/farming/all" />
@@ -28,6 +44,8 @@ export default () => {
           Here are incentivized pools. Deposit your LP tokens here to receive additional rewards in OSWAP tokens. You can withdraw your accrued rewards and LP
           tokens at any time.
         </div>
+
+        {!!totalDailyLpEmissions.oswap && <div className="mb-5 text-primary-gray-light">Total daily emissions to all pools: {+totalDailyLpEmissions.oswap.toFixed(decimals)} OSWAP (${(+totalDailyLpEmissions.usd.toFixed(0)).toLocaleString()})</div>}
 
         <div className="mb-5">
           <Navigation border direction="horizontal">

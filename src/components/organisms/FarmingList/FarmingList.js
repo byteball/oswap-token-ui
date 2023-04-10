@@ -8,7 +8,7 @@ import { Button, Spin } from "components/atoms";
 import { LPDepositModal } from "components/organisms";
 import { selectPools, selectSettings, selectStateVars, selectStateVarsLoading, selectTokenInfo } from "store/slices/agentSlice";
 import { selectExchangeRates, selectWalletAddress } from "store/slices/settingsSlice";
-import { getDailyLPEmissions, getFarmingAPY } from "utils";
+import { getFarmingAPY } from "utils";
 
 import { selectWalletBalance } from "store/slices/userWalletSlice";
 
@@ -28,7 +28,6 @@ export const FarmingList = () => {
 
   const [poolsWithAPY, setPoolsWithAPY] = useState([]);
   const [sortType, setSortType] = useState("apy");
-  const [totalDailyLpEmissions, setTotalDailyLpEmissions] = useState({ oswap: 0, usd: 0 });
 
   const [page, setPage] = useState(1);
   const maxPage = Math.ceil(pools.length / MAX_POOLS_ON_PAGE);
@@ -37,7 +36,6 @@ export const FarmingList = () => {
 
   useEffect(() => {
     const poolsWithAPY = [...pools];
-    const { oswap: dailyLPEmissions, usd: dailyLPEmissionsUSD } = getDailyLPEmissions({ stateVars, exchangeRates, settings, decimals });
 
     poolsWithAPY.forEach(({ group_key, asset_key, decimals: pool_decimals, asset, blacklisted }, index) => {
       const lp_price_usd = exchangeRates[`${asset}_USD`] || 0;
@@ -70,7 +68,6 @@ export const FarmingList = () => {
     });
 
     setPoolsWithAPY(poolsWithAPY);
-    setTotalDailyLpEmissions({ oswap: dailyLPEmissions, usd: dailyLPEmissionsUSD });
   }, [pools, stateVars, decimals, appreciation_rate, exchangeRates, stakers_share, inflation_rate, walletAddress]);
 
   const sortedPoolsWithAPY = useMemo(
@@ -85,7 +82,6 @@ export const FarmingList = () => {
 
   return (
     <div className="overflow-x-auto">
-      <div className="mb-5 text-primary-gray-light">Total daily emissions to all pools: {+totalDailyLpEmissions.oswap.toFixed(decimals)} OSWAP (${(+totalDailyLpEmissions.usd.toFixed(0)).toLocaleString()})</div>
       <table className="min-w-full">
         <thead className="text-white bg-primary-gray">
           <tr>
