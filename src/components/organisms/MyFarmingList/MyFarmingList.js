@@ -144,7 +144,7 @@ export const MyFarmingList = () => {
                 </div>
 
                 <div>
-                  Balance: {balance / 10 ** decimals} {symbol || asset.slice(0, 9) + "..."}
+                  Balance: {(balance / 10 ** decimals).toLocaleString()} {symbol || asset.slice(0, 9) + "..."}
                 </div>
 
                 <div>
@@ -158,13 +158,13 @@ export const MyFarmingList = () => {
                       </span>
                     }
                   >
-                    <span>${Number(oswap_token_price_usd * expected_reward_view).toPrecision(4)}</span>
+                    <span>${+(Number(oswap_token_price_usd * expected_reward_view).toPrecision(4)).toLocaleString()}</span>
                   </Tooltip>
                 </div>
 
                 {APY ? (
                   <Tooltip placement="right" trigger={["hover"]} overlay={<span>≈${+daily_pool_income_usd.toPrecision(4)} / day</span>}>
-                    <span> APY: {APY}%</span>
+                    <span> APY: {Number(APY).toLocaleString()}%</span>
                   </Tooltip>
                 ) : null}
               </div>

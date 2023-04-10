@@ -26,7 +26,7 @@ export const SellForm = () => {
   // other hooks
   const refBtn = useRef(null);
 
-  if (isEmpty(stateVars.state)) return <Spin />;
+  if (isEmpty(stateVars.state) || !symbol) return <Spin />;
 
   const exchangeResult = getExchangeResult(amount.valid ? amount.value * 10 ** decimals : 0, 0, stateVars.state, settings);
 
@@ -50,7 +50,7 @@ export const SellForm = () => {
   const min_reserve_tokens = exchangeResult.payout - (exchangeResult.payout * currentSlippageTolerance) / 100;
   const link = generateLink({
     amount: Math.ceil(amount.value * 1e9),
-    asset: stateVars.constants.asset,
+    asset: stateVars?.constants?.asset,
     aa: appConfig.AA_ADDRESS,
     from_address: walletAddress,
     data: { min_reserve_tokens },
