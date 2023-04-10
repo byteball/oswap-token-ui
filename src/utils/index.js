@@ -6,3 +6,4 @@ export { getPoolListByStateVars } from "./getPoolListByStateVars";
 export { getCountOfDecimals } from "./getCountOfDecimals";
 export { getCurrentVpByNormalized } from "./getCurrentVpByNormalized";
 export { getFarmingAPY } from "./getFarmingAPY";
+export { getDailyLPEmissions } from "./getDailyLPEmissions";

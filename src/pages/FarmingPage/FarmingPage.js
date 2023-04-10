@@ -1,7 +1,8 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Helmet } from "react-helmet-async";
 
+import { Redirect } from "components/atoms";
 import { Navigation } from "components/molecules";
 import { MyFarmingList } from "components/organisms/MyFarmingList/MyFarmingList";
 import { FarmingList } from "components/organisms/FarmingList/FarmingList";
@@ -10,6 +11,11 @@ import { selectWalletAddress } from "store/slices/settingsSlice";
 
 export default () => {
   const walletAddress = useSelector(selectWalletAddress);
+  const location = useLocation();
+
+  if (location.pathname.replaceAll("/", "") === "farming") {
+    return <Redirect path="/farming/all" />
+  }
 
   return (
     <div>
