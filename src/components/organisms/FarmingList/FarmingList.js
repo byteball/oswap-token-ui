@@ -155,7 +155,7 @@ export const FarmingList = () => {
                       </Button>
                     </td>
 
-                    <td className="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">{receives_emissions && !total_locked ? <span>&infin;</span> : `${apy}%`}</td>
+                    <td className="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">{receives_emissions && !total_locked ? <span>&infin;</span> : `${Number(apy).toLocaleString()}%`}</td>
 
                     <td className="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
                       {total_locked ? (
@@ -187,7 +187,7 @@ export const FarmingList = () => {
                               </span>
                             }
                           >
-                            <span className="border-b border-gray-500 border-dotted">${wallet_balance_usd}</span>
+                            <span className="border-b border-gray-500 border-dotted">${Number(wallet_balance_usd).toLocaleString()}</span>
                           </Tooltip>
                         ) : (
                           "-"
