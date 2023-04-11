@@ -35,7 +35,7 @@ export default () => {
     );
   }
 
-  const ts = moment().unix();
+  const ts = moment.utc().unix();
 
   // balances
   const tokenWalletBalance = userBalance?.[asset]?.total || 0;
@@ -69,7 +69,7 @@ export default () => {
   const newEmissionsSincePrevVisit = appreciationState.stakers_emissions - (userData.last_stakers_emissions || 0);
 
   const reward =
-    appreciationState.total_normalized_vp !== 0 ? (newEmissionsSincePrevVisit * (userData.normalized_vp || 0)) / appreciationState.total_normalized_vp : 0;
+  (userData.reward || 0) + (appreciationState.total_normalized_vp !== 0 ? (newEmissionsSincePrevVisit * (userData.normalized_vp || 0)) / appreciationState.total_normalized_vp : 0);
 
   const rewardView = reward / 10 ** decimals;
 

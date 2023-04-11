@@ -27,7 +27,7 @@ export const RewardForm = () => {
   }
 
   // calc
-  const ts = moment().unix();
+  const ts = moment.utc().unix();
   let reward = 0;
 
   const new_state = { ...getAppreciationState(stateVars.state, appreciation_rate) };
@@ -41,7 +41,7 @@ export const RewardForm = () => {
   const new_emissions_since_prev_visit = new_state.stakers_emissions - userData.last_stakers_emissions;
 
   if (userData.normalized_vp && new_state.total_normalized_vp) {
-    reward = (new_emissions_since_prev_visit * userData.normalized_vp) / new_state.total_normalized_vp;
+    reward = (userData.reward || 0) + new_emissions_since_prev_visit * userData.normalized_vp / new_state.total_normalized_vp;
   }
 
   const rewardView = Number(reward / 10 ** decimals).toFixed(decimals);
