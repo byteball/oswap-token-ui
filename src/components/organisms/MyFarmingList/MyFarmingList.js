@@ -104,6 +104,7 @@ export const MyFarmingList = () => {
           let daily_pool_income = 0;
           let rate_of_return = 0;
           let oswap_token_price_usd = 0;
+          let my_daily_reward_usd = 0;
 
           const state = getAppreciationState(stateVars?.state || {}, appreciation_rate);
 
@@ -126,6 +127,7 @@ export const MyFarmingList = () => {
             rate_of_return = (1 + daily_pool_income_usd / (total_lp_tokens * lp_price_usd)) ** 360;
 
             APY = Number((rate_of_return - 1) * 100).toFixed(4);
+            my_daily_reward_usd = daily_pool_income_usd * (balance / total_lp_balance)
           }
 
           return (
@@ -163,7 +165,7 @@ export const MyFarmingList = () => {
                 </div>
 
                 {APY ? (
-                  <Tooltip placement="right" trigger={["hover"]} overlay={<span>≈${+daily_pool_income_usd.toPrecision(4)} / day</span>}>
+                  <Tooltip placement="right" trigger={["hover"]} overlay={<span>≈${+my_daily_reward_usd.toPrecision(4)} / day</span>}>
                     <span> APY: {Number(APY).toLocaleString()}%</span>
                   </Tooltip>
                 ) : null}
