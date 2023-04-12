@@ -28,6 +28,7 @@ export const StakeForm = () => {
   const [term, setTerm] = useState({ value: MAX_TERM, valid: true });
   const [presaleFunds, setPresaleFunds] = useState(false);
   const [stakeReward, setStakeReward] = useState(false);
+  const [poolListInited, setPoolListInited] = useState(false);
 
   // selectors
   const stateVars = useSelector(selectStateVars);
@@ -59,7 +60,7 @@ export const StakeForm = () => {
   useEffect(() => {
     const filteredPools = pools.filter(({ blacklisted }) => !blacklisted);
 
-    if (filteredPools.length >= 1) {
+    if (filteredPools.length >= 1 && !poolListInited) {
       const distributions = (filteredPools.length > 1 ? [filteredPools[0].asset_key, filteredPools[1].asset_key] : [filteredPools[0].asset_key]).map((key) => {
         const data = filteredPools.find(({ asset_key }) => asset_key === key);
 
@@ -70,6 +71,7 @@ export const StakeForm = () => {
       });
 
       setDistributions(distributions);
+      setPoolListInited(true);
     }
   }, [pools]);
 
