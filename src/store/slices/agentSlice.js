@@ -168,6 +168,6 @@ export const selectWaitingPools = createSelector(
       }
     });
 
-    return differenceBy(votedPools, pools, (obj) => obj.asset);
+    return differenceBy(votedPools.sort((a, b) => a.flip_ts - b.flip_ts), pools, (obj) => obj.asset);
   }
 );

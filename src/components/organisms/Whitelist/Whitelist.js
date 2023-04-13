@@ -24,7 +24,7 @@ export const Whitelist = () => {
   const waitingPools = useSelector(selectWaitingPools);
   const [page, setPage] = useState(1);
 
-  const listedOrWaitingPools = [...pools, ...waitingPools];
+  const listedOrWaitingPools = [...waitingPools, ...pools];
   const maxPage = Math.ceil(listedOrWaitingPools.length / POOLS_PER_PAGE);
 
   if (listedOrWaitingPools.length === 0) return "The whitelist is empty, please add the first pool.";
