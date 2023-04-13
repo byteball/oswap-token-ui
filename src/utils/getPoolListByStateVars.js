@@ -25,7 +25,32 @@ export const getPoolListByStateVars = (state, symbols, list) => {
     }
   });
 
-  return pools.sort((pool1, pool2) => {
-    return pool1.index - pool2.index;
+  let blacklisted = [];
+  let whitelisted = [];
+
+  pools.forEach((p) => {
+    if (p?.blacklisted) {
+      blacklisted.push(p);
+    } else {
+      whitelisted.push(p);
+    }
   });
+
+  blacklisted = blacklisted.sort(sortPool);
+  whitelisted = whitelisted.sort(sortPool);
+
+  return [...whitelisted, ...blacklisted];
 };
+
+const sortPool = (a, b) => {
+
+  if (a.symbol.toLowerCase() < b.symbol.toLowerCase()) {
+    return -1;
+  }
+
+  if (a.symbol.toLowerCase() > b.symbol.toLowerCase()) {
+    return 1;
+  }
+
+  return 0;
+}
