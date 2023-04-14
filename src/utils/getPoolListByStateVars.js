@@ -43,6 +43,7 @@ export const getPoolListByStateVars = (state, symbols, list) => {
 };
 
 const sortPool = (a, b) => {
+  if (!a.symbol || !b.symbol) return -1;
 
   if (a.symbol.toLowerCase() < b.symbol.toLowerCase()) {
     return -1;

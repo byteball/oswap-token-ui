@@ -71,7 +71,7 @@ export const FarmingList = () => {
   }, [pools, stateVars, decimals, appreciation_rate, exchangeRates, stakers_share, inflation_rate, walletAddress]);
 
   const sortedPoolsWithAPY = useMemo(
-    () => poolsWithAPY.sort((a, b) => (sortType === "apy" ? (b.apy || 0) - (a.apy || 0) : (b.total_locked || 0) - (a.total_locked || 0))),
+    () => poolsWithAPY.sort((a, b) => (sortType === "apy" ? (b.apy || 0) - (a.apy || 0) : (b.total_locked_usd || 0) - (a.total_locked_usd || 0))),
     [sortType, poolsWithAPY]
   );
 
