@@ -80,7 +80,7 @@ export const Header = () => {
           </div>
           <div className="-my-2 -mr-2 md:hidden">
             <Popover.Button className="inline-flex items-center justify-center p-2 text-gray-400 rounded-md bg-primary-gray hover:bg-primary-gray-light/75 hover:white focus:outline-none focus:ring-2 focus:ring-inset">
-              <Bars3Icon className="w-6 h-6" aria-hidden="true" onClick={()=> setVisibleMobMenu(true)} />
+              <Bars3Icon className="w-6 h-6" aria-hidden="true" onClick={() => setVisibleMobMenu(true)} />
             </Popover.Button>
           </div>
           <nav className="hidden space-x-10 md:flex">
@@ -170,7 +170,7 @@ export const Header = () => {
                     </span>
                   </div>
                   <div className="-mr-2">
-                    <Popover.Button onClick={()=> setVisibleMobMenu(false)} className="inline-flex items-center justify-center p-2 text-gray-400 bg-white rounded-md hover:bg-primary/75 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary">
+                    <Popover.Button onClick={() => setVisibleMobMenu(false)} className="inline-flex items-center justify-center p-2 text-gray-400 bg-white rounded-md hover:bg-primary/75 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary">
                       <span className="sr-only">Close menu</span>
                       <XMarkIcon className="w-6 h-6" aria-hidden="true" />
                     </Popover.Button>
@@ -182,7 +182,7 @@ export const Header = () => {
                       <Link
                         key={link.name}
                         to={link.href}
-                        onClick={()=> setVisibleMobMenu(false)}
+                        onClick={() => setVisibleMobMenu(false)}
                         className="flex items-center p-3 -m-3 text-white rounded-lg hover:bg-gray-50 hover:text-primary-gray"
                       >
                         <div className="flex items-center justify-center flex-shrink-0 w-10 h-10 text-white rounded-md bg-primary">
@@ -226,7 +226,10 @@ export const Header = () => {
         </Transition>
       </Popover>
 
-      <WalletModal visible={visibleWalletModal} onClose={() => setVisibleWalletModal(false)} />
+      <WalletModal visible={visibleWalletModal} onClose={() => {
+        setVisibleWalletModal(false);
+        setVisibleMobMenu(false);
+      }} />
     </>
   );
 };
