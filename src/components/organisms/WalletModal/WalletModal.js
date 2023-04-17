@@ -63,6 +63,7 @@ export const WalletModal = ({ children, hideIfHas = false, visible: defaultVisib
       <Modal
         title="Add wallet"
         visible={visible}
+        secondModal={true}
         customControllers={[
           <Button type="primary" block className="mt-5" disabled={!address.value || !address.valid || address.value === walletAddress} onClick={save}>
             Save

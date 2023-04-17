@@ -8,6 +8,7 @@ export const Modal = ({
   width,
   height,
   textOk = "Save",
+  secondModal = false,
   textCancel = "Cancel",
   customControllers,
   onClose: customOnClose,
@@ -20,7 +21,7 @@ export const Modal = ({
 
   return (
     <Transition.Root show={visible} as={Fragment}>
-      <Dialog as="div" className={`relative z-10`} initialFocus={null} onClose={onClose}>
+      <Dialog as="div" className={`relative ${secondModal ? 'z-50' : 'z-10'}`} initialFocus={null} onClose={onClose}>
         <Transition.Child
           as={"div"}
           enter="ease-out duration-300"
