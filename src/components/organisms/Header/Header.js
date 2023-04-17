@@ -209,7 +209,10 @@ export const Header = () => {
                   ))}
                 </div>
                 <div className="mt-6">
-                  <Button block type="primary" onClick={() => setVisibleWalletModal(true)}>
+                  <Button block type="primary" onClick={() => {
+                    setVisibleWalletModal(true);
+                    setVisibleMobMenu(false);
+                  }}>
                     Change wallet
                   </Button>
 
