@@ -9,8 +9,6 @@ export default () => {
   const emission = (settings.inflation_rate * 100) || 0;
   const baseAppreciationRate = (settings.base_rate * 100) || 0;
 
-  console.log('baseAppreciationRate', baseAppreciationRate)
-
   const faqs = [
     {
       question: "What's the purpose of OSWAP token?",
@@ -113,7 +111,7 @@ export default () => {
     {
       question: "How fast does OSWAP token appreciate?",
       answer: <>
-        <p>You can see the current appreciation rate on the front page. It depends on the current TVL of all Oswap pools combined, target TVL, and the target appreciation rate. The latter two are regulated by <Link className="text-primary" to="/governance/params">governance</Link>, currently they are set to {emission}% p.a. appreciation at $1m TVL. When the current TVL is different from the target TVL, the actual appreciation rate is scaled accordingly, so for example at $2m TVL it would be 60% per year.</p>
+        <p>You can see the current appreciation rate on the front page. It depends on the current TVL of all Oswap pools combined, target TVL, and the target appreciation rate. The latter two are regulated by <Link className="text-primary" to="/governance/params">governance</Link>, currently they are set to {baseAppreciationRate}% p.a. appreciation at $1m TVL. When the current TVL is different from the target TVL, the actual appreciation rate is scaled accordingly, so for example at $2m TVL it would be 60% per year.</p>
       </>,
     },
     {
