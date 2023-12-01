@@ -7,6 +7,9 @@ import { selectSettings } from "store/slices/agentSlice";
 export default () => {
   const settings = useSelector(selectSettings);
   const emission = (settings.inflation_rate * 100) || 0;
+  const baseAppreciationRate = (settings.base_rate * 100) || 0;
+
+  console.log('baseAppreciationRate', baseAppreciationRate)
 
   const faqs = [
     {
@@ -142,7 +145,7 @@ export default () => {
     {
       question: "How large are the staking rewards for staking OSWAP tokens?",
       answer: <>
-        <p>Currently, total yearly emissions are {emission}% of the total supply, and 50% of emissions go to stakers. However, it doesn't mean that the APY is {+Number(emission / 2).toFixed(2)}%. It actually depends on the share of OSWAP tokens that is being staked as emissions are distributed only among stakers while non-stakers are not eligible for emissions. Your APY also depends on your locking period — the farther away your unlock date is, the greater share of emissions you receive (it is proportional to your voting power). You can see your current staking APY on the <Link className="text-primary" to="/governance/dashboard">governance dashboard</Link>.</p>
+        <p>Currently, total yearly emissions are {emission}% of the total supply, and 50% of emissions go to stakers. However, it doesn't mean that the APY is {emission / 2}%. It actually depends on the share of OSWAP tokens that is being staked as emissions are distributed only among stakers while non-stakers are not eligible for emissions. Your APY also depends on your locking period — the farther away your unlock date is, the greater share of emissions you receive (it is proportional to your voting power). You can see your current staking APY on the <Link className="text-primary" to="/governance/dashboard">governance dashboard</Link>.</p>
       </>,
     },
     {
