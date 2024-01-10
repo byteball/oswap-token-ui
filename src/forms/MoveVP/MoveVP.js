@@ -14,6 +14,7 @@ import { selectWalletAddress } from "store/slices/settingsSlice";
 
 import { generateLink, getCountOfDecimals } from "utils";
 import appConfig from "appConfig";
+import client from "services/obyte";
 
 export const MoveVPForm = () => {
   const { votes } = useSelector(selectUserData);
@@ -23,6 +24,7 @@ export const MoveVPForm = () => {
   const [newPools, setNewPools] = useState([]);
   const [mVotes, setMVotes] = useState([]);
   const [changedGroups, setChangedGroups] = useState([]);
+  const [currentPercentSum, setCurrentPercentSum] = useState(0);
 
   const poolsByKey = useMemo(() => keyBy(pools, (p) => p.asset_key), [pools]);
   const votesVpSum = Object.values(votes).reduce((acc, current) => acc + Number(current), 0);
@@ -30,14 +32,19 @@ export const MoveVPForm = () => {
 
   const showGroups = Math.ceil(pools.length / 30) > 2;
 
-  const currentPercentSum = [...mVotes, ...newPools].reduce((acc, current) => {
-    if (Number(current.newPercent) === Number(current.percentView) && !current.isNew) {
-      return acc + Number(current.percentView);
-    } else {
-      return acc + Number(current.newPercent);
-    }
-  }, 0);
+  useEffect(() => {
+    const percentSum = [...mVotes, ...newPools].reduce((acc, current) => {
+      if (Number(current.newPercent) === Number(current.percentView) && !current.isNew) {
+        return acc + current.percent; // if percent not changed
+      } else {
+        return acc + Number(current.newPercent);
+      }
+    }, 0);
 
+    setCurrentPercentSum(percentSum);
+  }, [mVotes, newPools]);
+
+  // initial state for pools
   useEffect(() => {
     const mVotes = Object.entries(votes || {}).map(([asset_key, vp]) => ({
       asset_key,
@@ -106,47 +113,62 @@ export const MoveVPForm = () => {
     });
   };
 
-  if (isEmpty(votes)) {
-    return <div className="mb-5 text-base font-medium text-primary-gray-light">You don't have any staked tokens</div>;
-  }
 
   const changes = {};
-  let change = 0;
   let noAssetKey = false;
 
+  // generate changes object
   [...mVotes, ...newPools].forEach(({ asset_key, percentView = 0, newPercent = 0, vp = 0, isNew = false }) => {
     if (!asset_key) noAssetKey = true;
 
     if (Number(newPercent) !== Number(percentView)) {
       if (Number(newPercent || 0) === 0 && !isNew) {
-        change = vp - (percentView / 100) * votesVpSum;
         changes[asset_key] = -vp;
       } else if (!isNew) {
-        const roundingChange = vp - (percentView / 100) * votesVpSum;
-
-        changes[asset_key] = (newPercent / 100) * votesVpSum + roundingChange - vp;
+        changes[asset_key] = (newPercent / 100) * votesVpSum - vp;
       } else if (isNew) {
         changes[asset_key] = (newPercent / 100) * votesVpSum;
       }
     }
   });
 
+
+
+  let roundingError = Object.values(changes).reduce((acc, current) => acc + Number(current), 0); // sum of changes ----> 0
+  const roundingErrorPercent = (Math.abs(roundingError) / votesVpSum) * 100;
+  
   const disabled =
-    changedGroups.length < 1 || changedGroups.length > 2 || currentPercentSum > 100 * (1 + 1 / 9e6) || currentPercentSum <= 100 * (1 - 1 / 1e9) || noAssetKey;
+  changedGroups.length < 1 || changedGroups.length > 2 || noAssetKey || roundingErrorPercent >= 1e-4;
 
-  let roundingError = Object.values(changes).reduce((acc, current) => acc + Number(current), 0);
-
-  if (roundingError !== 0) {
+  if (roundingError !== 0 && roundingErrorPercent < 1e-4) {
     Object.entries(changes).forEach(([key, diff]) => {
-      if (roundingError !== 0) {
-        if (votes[key] !== Math.abs(diff)) {
-          if (diff < 0 || change > 0) {
-            changes[key] -= roundingError;
-            roundingError = 0;
-          }
+      if (roundingError !== 0 && diff !== 0) {
+        if (votes[key] !== Math.abs(diff) && Math.abs(diff) > Math.abs(roundingError)) {
+          changes[key] = changes[key] - roundingError;
+          roundingError = 0;
         }
       }
     });
+  }
+
+  useEffect(() => {
+    (async () => {
+      const data = await client.api.dryRunAa({
+        address: appConfig.AA_ADDRESS, trigger: {
+          address: "3Y24IXW57546PQAPQ2SXYEPEDNX4KC6Y",
+          outputs: { 'base': 1e4 },
+          data: { changes, vote_shares: 1, group_key1: changedGroups[0], group_key2: changedGroups[1] }
+        }
+      });
+
+      console.log('data', data, changes);
+    })();
+
+
+  }, [changes, changedGroups]);
+
+  if (isEmpty(votes)) {
+    return <div className="mb-5 text-base font-medium text-primary-gray-light">You don't have any staked tokens</div>;
   }
 
   const link = generateLink({
@@ -167,7 +189,7 @@ export const MoveVPForm = () => {
 
       <div className="items-center hidden grid-cols-6 gap-4 mb-4 sm:grid lg:grid-cols-7 text-primary-gray-light">
         <div className="col-span-2 text-left">Pool</div>
-        <div className="col-span-2 ">Current share</div>
+        <div className="col-span-2">Current share</div>
         <div className="col-span-2">New share</div>
         <div className="hidden lg:block lg:col-span-1">Change</div>
       </div>
@@ -247,8 +269,8 @@ export const MoveVPForm = () => {
           </Button>
         </div>
         <div className="flex items-center col-span-3 space-x-2 text-primary-gray-light">
-          <span>SUM: {+Number(currentPercentSum).toFixed(9)}%</span>{" "}
-          {currentPercentSum === 100 ? (
+          <span>SUM: {(currentPercentSum >= 100 - 1e-4 && currentPercentSum <= 100 + 1e-4) ? 100 : +Number(currentPercentSum).toFixed(9)}%</span>{" "}
+          {(currentPercentSum >= 100 - 1e-4 && currentPercentSum <= 100 + 1e-4) ? (
             <CheckCircleIcon className="w-[1em] inline text-green-500" />
           ) : (
             <Tooltip placement="top" trigger={["hover"]} overlayClassName="max-w-[250px]" overlay="The total percentage should be 100">
