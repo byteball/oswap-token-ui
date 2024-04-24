@@ -13,8 +13,10 @@ import { selectPools, selectUserData } from "store/slices/agentSlice";
 import { selectWalletAddress } from "store/slices/settingsSlice";
 
 import { generateLink, getCountOfDecimals } from "utils";
-import appConfig from "appConfig";
+
 import client from "services/obyte";
+
+import appConfig from "appConfig";
 
 export const MoveVPForm = () => {
   const { votes } = useSelector(selectUserData);
@@ -22,18 +24,18 @@ export const MoveVPForm = () => {
   const walletAddress = useSelector(selectWalletAddress);
 
   const [newPools, setNewPools] = useState([]);
-  const [mVotes, setMVotes] = useState([]);
+  const [oldPools, setOldPools] = useState([]);
   const [changedGroups, setChangedGroups] = useState([]);
   const [currentPercentSum, setCurrentPercentSum] = useState(0);
 
-  const poolsByKey = useMemo(() => keyBy(pools, (p) => p.asset_key), [pools]);
-  const votesVpSum = Object.values(votes).reduce((acc, current) => acc + Number(current), 0);
+  const poolsByKey = useMemo(() => keyBy(pools, (p) => p.asset_key), [pools]); // all OSWAP pools 
+  const totalUserVP = Object.values(votes).reduce((acc, current) => acc + Number(current), 0);
   const notVotedPools = pools.filter(({ asset_key }) => !(asset_key in votes));
 
   const showGroups = Math.ceil(pools.length / 30) > 2;
 
   useEffect(() => {
-    const percentSum = [...mVotes, ...newPools].reduce((acc, current) => {
+    const percentSum = [...oldPools, ...newPools].reduce((acc, current) => {
       if (Number(current.newPercent) === Number(current.percentView) && !current.isNew) {
         return acc + current.percent; // if percent not changed
       } else {
@@ -42,27 +44,30 @@ export const MoveVPForm = () => {
     }, 0);
 
     setCurrentPercentSum(percentSum);
-  }, [mVotes, newPools]);
+  }, [oldPools, newPools]);
 
-  // initial state for pools
+
+  // init oldPools and newPools
   useEffect(() => {
-    const mVotes = Object.entries(votes || {}).map(([asset_key, vp]) => ({
+    const oldPools = Object.entries(votes || {}).map(([asset_key, vp]) => ({
       asset_key,
       vp,
-      percent: (vp / votesVpSum) * 100,
-      newPercent: round(Number((vp / votesVpSum) * 100), 4),
-      percentView: round(Number((vp / votesVpSum) * 100), 4),
       ...poolsByKey[asset_key],
+      percent: (vp / totalUserVP) * 100,
+      newPercent: round(Number((vp / totalUserVP) * 100), 4),
+      percentView: round(Number((vp / totalUserVP) * 100), 4),
     }));
 
-    setMVotes(mVotes);
+    setOldPools(oldPools);
     setNewPools([]);
   }, [votes]);
 
+  // update changedGroups when newPools or oldPools changed 
+  // It's necessary to check if the user has changed more than 2 groups
   useEffect(() => {
     const groups = [];
 
-    [...newPools, ...mVotes].forEach(({ newPercent, percentView, group_key, isNew }) => {
+    [...newPools, ...oldPools].forEach(({ newPercent, percentView, group_key, isNew }) => {
       if (Number(newPercent) !== Number(percentView)) {
         if (!groups.includes(group_key) && !(Number(newPercent) === 0 && isNew)) {
           groups.push(group_key);
@@ -71,13 +76,13 @@ export const MoveVPForm = () => {
     });
 
     setChangedGroups(groups);
-  }, [newPools, mVotes]);
+  }, [newPools, oldPools]);
 
   const changePercent = (value, index) => {
     if (getCountOfDecimals(value) <= 4 && !isNaN(Number(value)) && Number(value) <= 1e3 && Number(value) >= 0) {
-      const v = [...mVotes];
+      const v = [...oldPools];
       v[index].newPercent = String(value).trim();
-      setMVotes(v);
+      setOldPools(v);
     }
   };
 
@@ -113,44 +118,55 @@ export const MoveVPForm = () => {
     });
   };
 
-
   const changes = {};
   let noAssetKey = false;
+  let changesRoundingError = 0;
+  let canModified = false;
 
   // generate changes object
-  [...mVotes, ...newPools].forEach(({ asset_key, percentView = 0, newPercent = 0, vp = 0, isNew = false }) => {
+  [...oldPools, ...newPools].forEach(({ asset_key, percentView = 0, newPercent = 0, vp = 0, isNew = false }) => {
     if (!asset_key) noAssetKey = true;
 
-    if (Number(newPercent) !== Number(percentView)) {
-      if (Number(newPercent || 0) === 0 && !isNew) {
+    if (Number(newPercent) !== Number(percentView)) { // if percent changed
+      if (Number(newPercent || 0) === 0 && !isNew) { // remove all user votes from the pool
         changes[asset_key] = -vp;
-      } else if (!isNew) {
-        changes[asset_key] = (newPercent / 100) * votesVpSum - vp;
-      } else if (isNew) {
-        changes[asset_key] = (newPercent / 100) * votesVpSum;
+      } else {
+        let change = 0;
+
+        if (!isNew) { // change user votes in the pool
+          change = Number((newPercent / 100) * totalUserVP - vp);
+        } else if (isNew) { // add user votes to this pool first time
+          change = Number((newPercent / 100) * totalUserVP);
+        }
+
+        changes[asset_key] = round(change, 8);
+        changesRoundingError += change - round(change, 8);
       }
     }
   });
 
+  const roundingError = Object.values(changes).reduce((acc, current) => acc + Number(current), 0); // sum of changes ----> 0
+  const roundingErrorPercent = (Math.abs(roundingError) / totalUserVP) * 100;
 
+  const poolWhichWillBeModifiedForDecreaseRoundingError = Object.entries(changes).find(([_key, diff]) => roundingError > 0 ? Math.abs(roundingError) <= diff && diff < 0 : Math.abs(roundingError) <= diff && diff > 0)?.[0];
 
-  let roundingError = Object.values(changes).reduce((acc, current) => acc + Number(current), 0); // sum of changes ----> 0
-  const roundingErrorPercent = (Math.abs(roundingError) / votesVpSum) * 100;
-  
-  const disabled =
-  changedGroups.length < 1 || changedGroups.length > 2 || noAssetKey || roundingErrorPercent >= 1e-4;
+  if (poolWhichWillBeModifiedForDecreaseRoundingError && roundingErrorPercent <= 1e-4) {
 
-  if (roundingError !== 0 && roundingErrorPercent < 1e-4) {
-    Object.entries(changes).forEach(([key, diff]) => {
-      if (roundingError !== 0 && diff !== 0) {
-        if (votes[key] !== Math.abs(diff) && Math.abs(diff) > Math.abs(roundingError)) {
-          changes[key] = changes[key] - roundingError;
-          roundingError = 0;
-        }
-      }
-    });
+    console.log("LOG: roundingError", poolWhichWillBeModifiedForDecreaseRoundingError, roundingError, `${roundingErrorPercent}%`, changes);
+    canModified = true;
+    if (roundingError > 0) {
+      changes[poolWhichWillBeModifiedForDecreaseRoundingError] = changes[poolWhichWillBeModifiedForDecreaseRoundingError] - Math.abs(roundingError);
+    } else {
+      changes[poolWhichWillBeModifiedForDecreaseRoundingError] = changes[poolWhichWillBeModifiedForDecreaseRoundingError] + Math.abs(roundingError);
+    }
+  } else {
+    console.log("LOG: roundingError; we can\t find");
   }
 
+  const disabled =
+    changedGroups.length < 1 || changedGroups.length > 2 || noAssetKey || !canModified || Math.abs(currentPercentSum) <= 99.999 //|| roundingErrorPercent >= 1e-4;
+
+  // Check working
   useEffect(() => {
     (async () => {
       const data = await client.api.dryRunAa({
@@ -161,11 +177,13 @@ export const MoveVPForm = () => {
         }
       });
 
-      // console.log('data', data, changes);
+      if (!disabled) {
+        console.log('data', changedGroups, data[0].bounced, changes, Object.values(changes).reduce((acc, current) => acc + Number(current), 0));
+      }
     })();
 
 
-  }, [changes, changedGroups]);
+  }, [oldPools, newPools, changedGroups, disabled]);
 
   if (isEmpty(votes)) {
     return <div className="mb-5 text-base font-medium text-primary-gray-light">You don't have any staked tokens</div>;
@@ -194,7 +212,7 @@ export const MoveVPForm = () => {
         <div className="hidden lg:block lg:col-span-1">Change</div>
       </div>
 
-      {mVotes.map(({ asset_key, percentView, newPercent, group_key, symbol }, index) => {
+      {oldPools.map(({ asset_key, percentView, newPercent, group_key, symbol }, index) => {
         const change = newPercent - percentView;
 
         return (
@@ -269,7 +287,7 @@ export const MoveVPForm = () => {
           </Button>
         </div>
         <div className="flex items-center col-span-3 space-x-2 text-primary-gray-light">
-          <span>SUM: {(currentPercentSum >= 100 - 1e-4 && currentPercentSum <= 100 + 1e-4) ? 100 : +Number(currentPercentSum).toFixed(9)}%</span>{" "}
+          <span>SUM: {(currentPercentSum >= 100 - 1e-4 && currentPercentSum <= 100 + 1e-4) ? 100 : +Number(currentPercentSum).toFixed(6)}%</span>{" "}
           {(currentPercentSum >= 100 - 1e-4 && currentPercentSum <= 100 + 1e-4) ? (
             <CheckCircleIcon className="w-[1em] inline text-green-500" />
           ) : (
