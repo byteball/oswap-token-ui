@@ -160,7 +160,7 @@ export const MoveVPForm = () => {
       changes[poolWhichWillBeModifiedForDecreaseRoundingError] = changes[poolWhichWillBeModifiedForDecreaseRoundingError] + Math.abs(roundingError);
     }
   } else {
-    console.log("LOG: roundingError; we can\t find");
+    console.log("LOG: can't modify");
   }
 
   const disabled =
