@@ -19,23 +19,25 @@ import client from "services/obyte";
 import appConfig from "appConfig";
 
 export const MoveVPForm = () => {
-  const { votes } = useSelector(selectUserData);
+  const { votes: userVotes = {} } = useSelector(selectUserData);
+  
   const pools = useSelector(selectPools);
   const walletAddress = useSelector(selectWalletAddress);
 
-  const [newPools, setNewPools] = useState([]);
-  const [oldPools, setOldPools] = useState([]);
+  const [addedPools, setNewPools] = useState([]);
+  const [initialPools, setInitialPools] = useState([]);
+
   const [changedGroups, setChangedGroups] = useState([]);
   const [currentPercentSum, setCurrentPercentSum] = useState(0);
 
   const poolsByKey = useMemo(() => keyBy(pools, (p) => p.asset_key), [pools]); // all OSWAP pools 
-  const totalUserVP = Object.values(votes).reduce((acc, current) => acc + Number(current), 0);
-  const notVotedPools = pools.filter(({ asset_key }) => !(asset_key in votes));
+  const totalUserVP = Object.values(userVotes).reduce((acc, current) => acc + Number(current), 0);
+  const notVotedPools = pools.filter(({ asset_key }) => !(asset_key in userVotes));
 
   const showGroups = Math.ceil(pools.length / 30) > 2;
 
   useEffect(() => {
-    const percentSum = [...oldPools, ...newPools].reduce((acc, current) => {
+    const percentSum = [...initialPools, ...addedPools].reduce((acc, current) => {
       if (Number(current.newPercent) === Number(current.percentView) && !current.isNew) {
         return acc + current.percent; // if percent not changed
       } else {
@@ -44,12 +46,12 @@ export const MoveVPForm = () => {
     }, 0);
 
     setCurrentPercentSum(percentSum);
-  }, [oldPools, newPools]);
+  }, [initialPools, addedPools]);
 
 
-  // init oldPools and newPools
+  // init pools arrays
   useEffect(() => {
-    const oldPools = Object.entries(votes || {}).map(([asset_key, vp]) => ({
+    const initialPools = Object.entries(userVotes).map(([asset_key, vp]) => ({
       asset_key,
       vp,
       ...poolsByKey[asset_key],
@@ -58,16 +60,16 @@ export const MoveVPForm = () => {
       percentView: round(Number((vp / totalUserVP) * 100), 4),
     }));
 
-    setOldPools(oldPools);
+    setInitialPools(initialPools);
     setNewPools([]);
-  }, [votes]);
+  }, [userVotes]);
 
-  // update changedGroups when newPools or oldPools changed 
+  // update changedGroups when addedPools or initialPools changed 
   // It's necessary to check if the user has changed more than 2 groups
   useEffect(() => {
     const groups = [];
 
-    [...newPools, ...oldPools].forEach(({ newPercent, percentView, group_key, isNew }) => {
+    [...addedPools, ...initialPools].forEach(({ newPercent, percentView, group_key, isNew }) => {
       if (Number(newPercent) !== Number(percentView)) {
         if (!groups.includes(group_key) && !(Number(newPercent) === 0 && isNew)) {
           groups.push(group_key);
@@ -76,38 +78,38 @@ export const MoveVPForm = () => {
     });
 
     setChangedGroups(groups);
-  }, [newPools, oldPools]);
+  }, [addedPools, initialPools]);
 
-  const changePercent = (value, index) => {
+  const changePercentInInitialPool = (value, index) => {
     if (getCountOfDecimals(value) <= 4 && !isNaN(Number(value)) && Number(value) <= 1e3 && Number(value) >= 0) {
-      const v = [...oldPools];
+      const v = [...initialPools];
       v[index].newPercent = String(value).trim();
-      setOldPools(v);
+      setInitialPools(v);
     }
   };
 
-  const changeNewPool = (asset_key, index) => {
-    const n = [...newPools];
+  const changeAddedPool = (asset_key, index) => {
+    const cloneOfAddedPool = [...addedPools];
 
-    n[index] = { ...n[index], ...poolsByKey[asset_key], newPercent: n[index].newPercent || "" };
+    cloneOfAddedPool[index] = { ...cloneOfAddedPool[index], ...poolsByKey[asset_key], newPercent: cloneOfAddedPool[index].newPercent || "" };
 
-    setNewPools(n);
+    setNewPools(cloneOfAddedPool);
   };
 
-  const changePercentInNewPool = (value, index) => {
+  const changePercentInAddedPool = (value, index) => {
     if (getCountOfDecimals(value) <= 4 && !isNaN(Number(value)) && Number(value) <= 1e3 && Number(value) >= 0) {
-      const np = [...newPools];
+      const np = [...addedPools];
       np[index].newPercent = String(value).trim();
       setNewPools(np);
     }
   };
 
   const removePool = (index) => {
-    const np = [...newPools];
+    const cloneAddedPools = [...addedPools];
 
-    remove(np, (_, i) => index === i);
+    remove(cloneAddedPools, (_, i) => index === i);
 
-    setNewPools(np);
+    setNewPools(cloneAddedPools);
   };
 
   const sendMoveEvent = () => {
@@ -124,7 +126,7 @@ export const MoveVPForm = () => {
   let canModified = false;
 
   // generate changes object
-  [...oldPools, ...newPools].forEach(({ asset_key, percentView = 0, newPercent = 0, vp = 0, isNew = false }) => {
+  [...initialPools, ...addedPools].forEach(({ asset_key, percentView = 0, newPercent = 0, vp = 0, isNew = false }) => {
     if (!asset_key) noAssetKey = true;
 
     if (Number(newPercent) !== Number(percentView)) { // if percent changed
@@ -160,7 +162,7 @@ export const MoveVPForm = () => {
       changes[poolWhichWillBeModifiedForDecreaseRoundingError] = changes[poolWhichWillBeModifiedForDecreaseRoundingError] + Math.abs(roundingError);
     }
   } else {
-    console.log("LOG: can't modify");
+    console.log("LOG: can't modify", roundingErrorPercent);
   }
 
   const disabled =
@@ -177,15 +179,15 @@ export const MoveVPForm = () => {
         }
       });
 
-      if (!disabled) {
+      // if (!disabled) {
         console.log('data', changedGroups, data[0].bounced, changes, Object.values(changes).reduce((acc, current) => acc + Number(current), 0));
-      }
+      // }
     })();
 
 
-  }, [oldPools, newPools, changedGroups, disabled]);
+  }, [initialPools, addedPools, changedGroups, disabled]);
 
-  if (isEmpty(votes)) {
+  if (isEmpty(userVotes)) {
     return <div className="mb-5 text-base font-medium text-primary-gray-light">You don't have any staked tokens</div>;
   }
 
@@ -212,7 +214,7 @@ export const MoveVPForm = () => {
         <div className="hidden lg:block lg:col-span-1">Change</div>
       </div>
 
-      {oldPools.map(({ asset_key, percentView, newPercent, group_key, symbol }, index) => {
+      {initialPools.map(({ asset_key, percentView, newPercent, group_key, symbol }, index) => {
         const change = newPercent - percentView;
 
         return (
@@ -227,7 +229,7 @@ export const MoveVPForm = () => {
               value={newPercent}
               className="col-span-2"
               error={newPercent > 100 && "Max value is 100."}
-              onChange={(ev) => changePercent(ev.target.value, index)}
+              onChange={(ev) => changePercentInInitialPool(ev.target.value, index)}
               suffix="%"
             />
 
@@ -240,14 +242,14 @@ export const MoveVPForm = () => {
         );
       })}
 
-      {newPools.length > 0 &&
-        newPools?.map(({ asset_key, newPercent }, index) => (
+      {addedPools.length > 0 &&
+        addedPools?.map(({ asset_key, newPercent }, index) => (
           <div key={`${asset_key}-${index}`} className="grid items-center grid-cols-2 gap-3 mb-3 sm:grid-cols-6 lg:grid-cols-7">
-            <Select value={asset_key} onChange={(value) => changeNewPool(value, index)} className="col-span-2">
+            <Select value={asset_key} onChange={(value) => changeAddedPool(value, index)} className="col-span-2">
               {notVotedPools?.filter(({ blacklisted }) => !blacklisted).map(({ symbol, asset_key, group_key }) => (
                 <Select.Option
                   key={asset_key}
-                  disabled={newPools.find(({ asset_key: a }) => a === asset_key) && newPools[index].asset_key !== asset_key}
+                  disabled={addedPools.find(({ asset_key: a }) => a === asset_key) && addedPools[index].asset_key !== asset_key}
                   value={asset_key}
                 >
                   {`${symbol} ${showGroups ? `(${group_key.toUpperCase()})` : ""}`}
@@ -261,7 +263,7 @@ export const MoveVPForm = () => {
               value={newPercent}
               className="col-span-1 lg:col-span-2"
               error={newPercent > 100 && "Max value is 100."}
-              onChange={(ev) => changePercentInNewPool(ev.target.value, index)}
+              onChange={(ev) => changePercentInAddedPool(ev.target.value, index)}
               suffix="%"
             />
 
@@ -281,7 +283,7 @@ export const MoveVPForm = () => {
             type="text"
             onClick={() => setNewPools((n) => [...n, { vp: 0, newPercent: "", isNew: true }])}
             icon={<PlusIcon style={{ width: 20, height: 20 }} />}
-            disabled={newPools.length >= notVotedPools.length}
+            disabled={addedPools.length >= notVotedPools.length}
           >
             Add a pool
           </Button>
