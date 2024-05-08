@@ -1,7 +1,8 @@
-import { remove } from "lodash";
+import { remove, round } from "lodash";
 
 import { getChangedGroupKeysByUserPools } from "./utils/getChangedGroupKeysByUserPools";
 import { getPercentByUserPools } from "./utils/getPercentByUserPools";
+import { Decimal } from "utils";
 
 export const reducer = (state, action) => {
     const { type, payload } = action;
@@ -11,7 +12,7 @@ export const reducer = (state, action) => {
             const userPools = [...state.userPools];
             const index = userPools.findIndex((pool) => pool.asset_key === payload.asset_key);
 
-            userPools[index].newPercent = payload.value;
+            userPools[index].newPercent = payload.value ? payload.value : null;
 
             return {
                 ...state,
@@ -21,7 +22,7 @@ export const reducer = (state, action) => {
             }
         };
 
-        case 'ADD_EMPTY_POOL': {
+        case 'ADD_EMPTY_POOL':
             return {
                 ...state,
                 poolIsAdding: true,
@@ -31,8 +32,7 @@ export const reducer = (state, action) => {
                         newPercent: "",
                         isNew: true,
                     }]
-            }
-        };
+            };
 
         case 'SELECT_NEW_POOL': {
             const userPools = [...state.userPools];
@@ -59,7 +59,7 @@ export const reducer = (state, action) => {
             const userPools = [...state.userPools];
 
             remove(userPools, (_, i) => index === i);
-            
+
             return {
                 ...state,
                 userPools,
@@ -67,6 +67,26 @@ export const reducer = (state, action) => {
                 changedGroups: getChangedGroupKeysByUserPools(userPools),
                 userPoolsPercentSum: getPercentByUserPools(userPools),
             }
+        }
+
+        case 'AUTO_FILL': {
+            const { asset_key } = payload;
+            const userPools = [...state.userPools];
+            const index = userPools.findIndex((pool) => pool.asset_key === asset_key);
+
+            if (index >= 0) {
+                userPools[index].newPercent = round(state.userPoolsPercentSum < 100 ? new Decimal(100).minus(state.userPoolsPercentSum).toNumber() : 0, 4);
+
+                return {
+                    ...state,
+                    userPools,
+                    userPoolsPercentSum: getPercentByUserPools(userPools),
+                    changedGroups: getChangedGroupKeysByUserPools(userPools)
+                }
+            } else {
+                return state;
+            }
+
         }
 
         default:

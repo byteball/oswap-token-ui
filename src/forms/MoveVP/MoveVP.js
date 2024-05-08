@@ -1,5 +1,5 @@
 import { isEmpty } from "lodash";
-import { useEffect, useReducer } from "react";
+import { useReducer } from "react";
 import { useSelector } from "react-redux";
 import cn from "classnames";
 import { CheckCircleIcon, PlusIcon, XCircleIcon, XMarkIcon } from "@heroicons/react/24/outline";
@@ -28,12 +28,9 @@ export const MoveVPForm = () => {
   const walletAddress = useSelector(selectWalletAddress);
 
   const [formState, dispatchFormState] = useReducer(reducer, [pools, userVotes], initializeState);
-  const addedPools = formState.userPools.filter(({ isNew }) => isNew);
 
   const notVotedPools = pools.filter(({ asset_key }) => !(asset_key in userVotes));
   const showGroups = Math.ceil(pools.length / 30) > 2;
-
-  console.log('formState', formState);
 
   const changePercent = (value, asset_key) => {
     if (getCountOfDecimals(value) <= 4 && !isNaN(Number(value)) && Number(value) <= 1e3 && Number(value) >= 0) {
@@ -59,27 +56,26 @@ export const MoveVPForm = () => {
 
   const changes = getChangesObjectByFormState(formState);
 
-  console.error('changes', changes)
-  const disabled = formState.changedGroups.length < 1 || formState.changedGroups.length > 2 || formState.poolIsAdding || Math.abs(formState.userPoolsPercentSum) <= 99.999 //|| roundingErrorPercent >= 1e-4;
+  const disabled = formState.changedGroups.length < 1 || formState.changedGroups.length > 2 || formState.poolIsAdding || formState.userPoolsPercentSum <= 99.9999 || formState.userPoolsPercentSum >= 100.0001 || changes === false;
 
-  // Check working
-  useEffect(() => {
-    (async () => {
-      const data = await client.api.dryRunAa({
-        address: appConfig.AA_ADDRESS, trigger: {
-          address: "3Y24IXW57546PQAPQ2SXYEPEDNX4KC6Y",
-          outputs: { 'base': 1e4 },
-          data: { changes, vote_shares: 1, group_key1: formState.changedGroups[0], group_key2: formState.changedGroups[1] }
-        }
-      });
+  // // Check working
+  // useEffect(() => {
+  //   (async () => {
+  //     const data = await client.api.dryRunAa({
+  //       address: appConfig.AA_ADDRESS, trigger: {
+  //         address: "3Y24IXW57546PQAPQ2SXYEPEDNX4KC6Y",
+  //         outputs: { 'base': 1e4 },
+  //         data: { changes, vote_shares: 1, group_key1: formState.changedGroups[0], group_key2: formState.changedGroups[1] }
+  //       }
+  //     });
 
-      // if (!disabled) {
-      console.log('data', formState.changedGroups, data[0].bounced, changes, Object.values(changes).reduce((acc, current) => acc + Number(current), 0));
-      // }
-    })();
+  //     if (!disabled) {
+  //       console.log('NEW: dry run', formState.changedGroups, data[0], changes, Object.values(changes).reduce((acc, current) => acc + Number(current), 0));
+  //     }
+  //   })();
 
 
-  }, [formState, disabled]);
+  // }, [formState, disabled]);
 
   if (isEmpty(formState.userPools)) {
     return <div className="mb-5 text-base font-medium text-primary-gray-light">You don't have any staked tokens</div>;
@@ -92,6 +88,12 @@ export const MoveVPForm = () => {
     data: { changes, vote_shares: 1, group_key1: formState.changedGroups[0], group_key2: formState.changedGroups[1] },
     is_single: !walletAddress
   });
+
+  // console.log("NEW PERCENT LIST", getPercentByChanges({ totalUserVP: formState.totalUserVP, userVotes, changes }));
+
+  const autoFill = (asset_key) => {
+    dispatchFormState({ type: "AUTO_FILL", payload: { asset_key } });
+  }
 
   return (
     <div>
@@ -108,70 +110,53 @@ export const MoveVPForm = () => {
         <div className="hidden lg:block lg:col-span-1">Change</div>
       </div>
 
-      {formState.userPools.map(({ asset_key, percentView, newPercent, group_key, symbol, isNew }, index) => {
-        if (isNew) return null;
-
-        const change = newPercent - percentView;
+      {formState.userPools.map(({ asset_key, percentView, newPercent, group_key, symbol, isNew }) => {
+        const change = !isNew ? newPercent - percentView : 0;
 
         return (
           <div key={`vote_${asset_key}_${group_key}`} className="grid items-center grid-cols-2 gap-4 mb-4 sm:grid-cols-6 lg:grid-cols-7">
-            <div className="col-span-2 text-left break-all">
-              {symbol} {showGroups && `(${group_key.toUpperCase()})`}
-            </div>
+            {isNew
+              ? <Select value={asset_key} onChange={(value) => changeAddedPool(value, asset_key)} className="col-span-2">
+                {notVotedPools?.filter(({ blacklisted }) => !blacklisted).map(({ symbol, asset_key, group_key }) => (
+                  <Select.Option
+                    key={asset_key}
+                    disabled={formState.userPools.find(({ asset_key: a }) => a === asset_key)}
+                    value={asset_key}
+                  >
+                    {`${symbol} ${showGroups ? `(${group_key.toUpperCase()})` : ""}`}
+                  </Select.Option>
+                ))}
+              </Select> :
+              <div className="col-span-2 text-left break-all">
+                {symbol} {showGroups && `(${group_key.toUpperCase()})`}
+              </div>}
 
-            <Input value={percentView} className="col-span-2" suffix="%" disabled={true} />
+            <Input value={percentView || 0} className="col-span-2" suffix="%" disabled={true} />
 
             <Input
-              value={newPercent}
+              value={newPercent || ""}
               className="col-span-2"
               error={newPercent > 100 && "Max value is 100."}
               onChange={(ev) => changePercent(ev.target.value, asset_key)}
-              suffix="%"
+              suffix={<span>{(!newPercent && asset_key && formState.userPoolsPercentSum < 100) ? <Button type="text-primary" onClick={() => autoFill(asset_key)}>auto fill</Button> : null} %</span>}
             />
 
-            {newPercent <= 100 && (
-              <div className={cn("col-span-1 hidden lg:block", { "text-green-500": change > 0, "text-red-500": change < 0 })}>
-                {change !== 0 && `${change > 0 ? "+" : "-"}${+Number(Math.abs(change)).toFixed(4)}%`}
+            {isNew ?
+              <div className="w-[50px] relative flex items-center">
+                <Tooltip className="inline-block ml-2" overlay="Remove pool">
+                  <span className="inline ml-2 mr-2 font-medium text-white cursor-pointer" onClick={() => removePool(asset_key)}>
+                    <XMarkIcon width={20} />{" "}
+                  </span>
+                </Tooltip>
               </div>
-            )}
+              : newPercent <= 100 && (
+                <div className={cn("col-span-1 hidden lg:block", { "text-green-500": change > 0, "text-red-500": change < 0 })}>
+                  {change !== 0 && `${change > 0 ? "+" : "-"}${+Number(Math.abs(change)).toFixed(8)}%`}
+                </div>
+              )}
           </div>
         );
       })}
-
-      {addedPools.length > 0 &&
-        addedPools?.map(({ asset_key, newPercent }, index) => (
-          <div key={`${asset_key}-${index}`} className="grid items-center grid-cols-2 gap-3 mb-3 sm:grid-cols-6 lg:grid-cols-7">
-            <Select value={asset_key} onChange={(value) => changeAddedPool(value, asset_key)} className="col-span-2">
-              {notVotedPools?.filter(({ blacklisted }) => !blacklisted).map(({ symbol, asset_key, group_key }) => (
-                <Select.Option
-                  key={asset_key}
-                  disabled={addedPools.find(({ asset_key: a }) => a === asset_key) && addedPools[index].asset_key !== asset_key}
-                  value={asset_key}
-                >
-                  {`${symbol} ${showGroups ? `(${group_key.toUpperCase()})` : ""}`}
-                </Select.Option>
-              ))}
-            </Select>
-
-            <Input value={0} className="col-span-2" suffix="%" disabled={true} />
-
-            <Input
-              value={newPercent}
-              className="col-span-1 lg:col-span-2"
-              error={newPercent > 100 && "Max value is 100."}
-              onChange={(ev) => changePercent(ev.target.value, asset_key)}
-              suffix="%"
-            />
-
-            <div className="w-[50px] relative flex items-center">
-              <Tooltip className="inline-block ml-2" overlay="Remove pool">
-                <span className="inline ml-2 mr-2 font-medium text-white cursor-pointer" onClick={() => removePool(asset_key)}>
-                  <XMarkIcon width={20} />{" "}
-                </span>
-              </Tooltip>
-            </div>
-          </div>
-        ))}
 
       <div className="grid items-center grid-cols-2 gap-3 mb-3 sm:grid-cols-6 lg:grid-cols-7">
         <div className="col-span-4">
@@ -185,7 +170,7 @@ export const MoveVPForm = () => {
           </Button>
         </div>
         <div className="flex items-center col-span-3 space-x-2 text-primary-gray-light">
-          <span>SUM: {(formState.userPoolsPercentSum >= 100 - 1e-4 && formState.userPoolsPercentSum <= 100 + 1e-4) ? 100 : +Number(formState.userPoolsPercentSum).toFixed(6)}%</span>{" "}
+          <span>SUM: {(formState.userPoolsPercentSum > 100 - 1e-4 && formState.userPoolsPercentSum < 100 + 1e-4) ? 100 : +Number(formState.userPoolsPercentSum).toFixed(5)}%</span>{" "}
           {(formState.userPoolsPercentSum >= 100 - 1e-4 && formState.userPoolsPercentSum <= 100 + 1e-4) ? (
             <CheckCircleIcon className="w-[1em] inline text-green-500" />
           ) : (

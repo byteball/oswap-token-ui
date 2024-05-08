@@ -1,46 +1,68 @@
-import { round } from "lodash";
+import { Decimal } from "utils";
 
-export const getChangesObjectByFormState = ({ userPools, totalUserVP }) => {
-  const changes = {};
-  let changesRoundingError = 0;
-  let canModified = false;
+export const getChangesObjectByFormState = ({ userPools, totalUserVP }) => { // formState object
+  const changes = {}; // object winch will be sended to AA
 
   // generate changes object
-  userPools.forEach(({ asset_key, percentView = 0, newPercent = 0, vp = 0, isNew = false }) => {
-    if (Number(newPercent) !== Number(percentView)) { // if percent changed
-      if (Number(newPercent || 0) === 0 && !isNew) { // remove all user votes from the pool
+  userPools.forEach(({ asset_key, percentView = 0, newPercent: sNewPercent = 0, vp = 0, isNew = false }) => {
+    const newPercent = sNewPercent ? Number(sNewPercent) : 0;
+
+    if (newPercent !== percentView) { // if percent changed
+      if (!newPercent && !isNew) { // remove all user votes from the pool
         changes[asset_key] = -vp;
       } else {
         let change = 0;
 
         if (!isNew) { // change user votes in the pool
-          change = Number((newPercent / 100) * totalUserVP - vp);
+          change = new Decimal(newPercent).dividedBy(100).mul(totalUserVP).minus(vp).toNumber();
         } else if (isNew) { // add user votes to this pool first time
-          change = Number((newPercent / 100) * totalUserVP);
+          change = new Decimal(newPercent).dividedBy(100).mul(totalUserVP).toNumber();
         }
-
-        changes[asset_key] = round(change, 8);
-        changesRoundingError += change - round(change, 8);
+        
+        changes[asset_key] = change;
       }
     }
   });
 
-  const roundingError = Object.values(changes).reduce((acc, current) => acc + Number(current), 0); // sum of changes ----> 0
-  const roundingErrorPercent = (Math.abs(roundingError) / totalUserVP) * 100;
 
-  const poolWhichWillBeModifiedForDecreaseRoundingError = Object.entries(changes).find(([_key, diff]) => roundingError > 0 ? Math.abs(roundingError) <= diff && diff < 0 : Math.abs(roundingError) <= diff && diff > 0)?.[0];
+  let roundingError = (Object.values(changes).reduce((acc, current) => acc.plus(current), new Decimal(0)))  // sum of changes ----> 0
 
-  if (poolWhichWillBeModifiedForDecreaseRoundingError && roundingErrorPercent <= 1e-4) {
+  const roundingErrorPercent = roundingError.abs().div(totalUserVP).mul(100).toNumber();
+  roundingError = roundingError.toNumber();
 
-    console.log("LOG: roundingError", poolWhichWillBeModifiedForDecreaseRoundingError, roundingError, `${roundingErrorPercent}%`, changes);
-    canModified = true;
-    if (roundingError > 0) {
-      changes[poolWhichWillBeModifiedForDecreaseRoundingError] = changes[poolWhichWillBeModifiedForDecreaseRoundingError] - Math.abs(roundingError);
+  if (roundingErrorPercent < 0.00005) { // if rounding error less than 0.00005% we just modif one pool
+    console.log("NEW: SMALL ROUNDING ERROR", roundingErrorPercent, roundingError)
+    const poolWhichWillBeModifiedForDecreaseRoundingError = Object.entries(changes).find(([_key, diff]) => {
+      if (roundingError > 0) {
+        return Math.abs(roundingError) <= Math.abs(diff) && diff > 0
+      } else {
+        return Math.abs(roundingError) <= Math.abs(diff) && diff < 0
+      }
+    })?.[0];
+
+    if (poolWhichWillBeModifiedForDecreaseRoundingError) {
+      changes[poolWhichWillBeModifiedForDecreaseRoundingError] = changes[poolWhichWillBeModifiedForDecreaseRoundingError] - roundingError;
     } else {
-      changes[poolWhichWillBeModifiedForDecreaseRoundingError] = changes[poolWhichWillBeModifiedForDecreaseRoundingError] + Math.abs(roundingError);
+      console.error('NEW: can\'t found ')
     }
-  } else {
-    console.log("LOG: can't modify", roundingErrorPercent);
+
+  } else if (Math.abs(roundingErrorPercent) < 1e-4) {
+    console.log('NEW: BIG ROUNDING ERROR', roundingErrorPercent, roundingError)
+    const changesCount = Object.keys(changes).length;
+    const roundingErrorFraction = new Decimal(roundingError).div(changesCount);
+    let maxChangeAssetKey = null;
+
+    for (const asset_key in changes) {
+      changes[asset_key] = new Decimal(changes[asset_key]).minus(roundingErrorFraction).toNumber()
+
+      if (maxChangeAssetKey === null || Math.abs(changes[asset_key]) > Math.abs(changes[maxChangeAssetKey])) {
+        maxChangeAssetKey = asset_key;
+      }
+    }
+
+    const finalRoundingError = (Object.values(changes).reduce((acc, current) => acc.add(current), new Decimal(0))).toNumber()
+    console.log('NEW: finalRoundingError', finalRoundingError);
+    changes[maxChangeAssetKey] = new Decimal(changes[maxChangeAssetKey]).minus(finalRoundingError).toNumber();
   }
 
   return changes;

@@ -1,4 +1,4 @@
-import Big from "big.js";
+import { Decimal } from "utils";
 
 export const getPercentByUserPools = (userPools = []) => {
     return userPools.reduce((acc, current) => {
@@ -7,5 +7,5 @@ export const getPercentByUserPools = (userPools = []) => {
         } else {
             return acc.plus(current.newPercent || 0);
         }
-    }, Big(0)).toNumber();
+    }, new Decimal(0)).toNumber();
 }

@@ -19,6 +19,7 @@ export const initializeState = ([pools, userVotes]) => {
     return {
         poolsByKey, // { asset_key: pool }
         totalUserVP,
+        userVotes, // { asset_key: vp }
         userPools, // [{ asset_key, vp, pool, percent, newPercent, percentView }]
         userPoolsPercentSum: getPercentByUserPools(userPools),
         changedGroups: getChangedGroupKeysByUserPools(userPools), // [group_key]
