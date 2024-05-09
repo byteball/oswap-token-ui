@@ -70,12 +70,14 @@ export const reducer = (state, action) => {
         }
 
         case 'AUTO_FILL': {
-            const { asset_key } = payload;
+            const { asset_key, current } = payload;
             const userPools = [...state.userPools];
             const index = userPools.findIndex((pool) => pool.asset_key === asset_key);
 
             if (index >= 0) {
-                userPools[index].newPercent = round(state.userPoolsPercentSum < 100 ? new Decimal(100).minus(state.userPoolsPercentSum).toNumber() : 0, 4);
+                userPools[index].newPercent = !current
+                    ? round(state.userPoolsPercentSum < 100 ? new Decimal(100).minus(state.userPoolsPercentSum).toNumber() : 0, 4)
+                    : round(new Decimal(current).plus(new Decimal(100).minus(state.userPoolsPercentSum)).toNumber(), 4);
 
                 return {
                     ...state,

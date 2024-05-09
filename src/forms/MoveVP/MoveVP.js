@@ -1,8 +1,8 @@
-import { isEmpty } from "lodash";
+import { isEmpty, round } from "lodash";
 import { useReducer } from "react";
 import { useSelector } from "react-redux";
 import cn from "classnames";
-import { CheckCircleIcon, PlusIcon, XCircleIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { ArrowDownTrayIcon, CheckCircleIcon, PlusIcon, XCircleIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import ReactGA from "react-ga";
 import Tooltip from "rc-tooltip";
 
@@ -91,8 +91,8 @@ export const MoveVPForm = () => {
 
   // console.log("NEW PERCENT LIST", getPercentByChanges({ totalUserVP: formState.totalUserVP, userVotes, changes }));
 
-  const autoFill = (asset_key) => {
-    dispatchFormState({ type: "AUTO_FILL", payload: { asset_key } });
+  const autoFill = (asset_key, currentPercent) => {
+    dispatchFormState({ type: "AUTO_FILL", payload: { asset_key, current: currentPercent } });
   }
 
   return (
@@ -138,7 +138,14 @@ export const MoveVPForm = () => {
               className="col-span-2"
               error={newPercent > 100 && "Max value is 100."}
               onChange={(ev) => changePercent(ev.target.value, asset_key)}
-              suffix={<span>{(!newPercent && asset_key && formState.userPoolsPercentSum < 100) ? <Button type="text-primary" onClick={() => autoFill(asset_key)}>auto fill</Button> : null} %</span>}
+              suffix={<span className="flex items-center">{(asset_key && formState.userPoolsPercentSum < 99.9999) ?
+                <Tooltip
+                  placement="top"
+                  trigger={["hover"]}
+                  overlay={`add the remaining ${round(100 - formState.userPoolsPercentSum, 4)}% here`}
+                >
+                  <Button icon={<ArrowDownTrayIcon className="w-[1.2em] h-[1.2em] mr-1" />} type="text-primary" onClick={() => autoFill(asset_key, newPercent || 0)} />
+                </Tooltip> : null} %</span>}
             />
 
             {isNew ?
