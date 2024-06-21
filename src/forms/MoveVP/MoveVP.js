@@ -14,8 +14,6 @@ import { selectWalletAddress } from "store/slices/settingsSlice";
 
 import { generateLink, getCountOfDecimals } from "utils";
 
-import client from "services/obyte";
-
 import appConfig from "appConfig";
 
 import { initializeState, reducer } from "./formState";

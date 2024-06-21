@@ -77,11 +77,9 @@ export const Footer = () => (
       </div>
       <div className="mt-3 md:order-1 md:mt-0">
         <p className="text-base text-center text-gray-400">
-          &copy; 2023{" "}
           <a href="https://obyte.org/" target="_blank" rel="noopener">
-            Obyte
+            Built on Obyte
           </a>
-          . All rights reserved.
         </p>
       </div>
     </div>
