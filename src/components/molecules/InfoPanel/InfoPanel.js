@@ -156,6 +156,7 @@ const Chart = memo(
                       yAxis={{
                         min: minDailyPrice,
                         grid: { line: { style: { stroke: "#30363d" } } },
+                        label: { formatter: (v) => `${+Number(v).toFixed(9)}` },
                       }}
                       animation={false}
                       color="#295eff"
