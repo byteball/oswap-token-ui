@@ -4,6 +4,7 @@ import { isEqual, min, minBy } from "lodash";
 import cn from "classnames";
 import Tooltip from "rc-tooltip";
 import { deepMix } from "@antv/util";
+import moment from "moment";
 
 import { Modal, QuestionTooltip } from "components/molecules";
 import { Button, Spin } from "components/atoms";
@@ -118,7 +119,48 @@ const Chart = memo(
     useEffect(() => {
       if (getFullData && lightData.length && inited) {
         getFullData().then((data) => {
-          setFullData(data);
+          const sortedData = data.sort(
+            (a, b) => moment(a.start_timestamp).valueOf() - moment(b.start_timestamp).valueOf()
+          );
+
+          const tickCount = 6;
+          const tickInterval = Math.floor(data.length / tickCount);
+
+          let previousYear = null;
+          let lastLabelIndex = 0;
+
+          const processedData = sortedData.map((item, index) => {
+            const currentDate = moment(item.start_timestamp);
+            const currentYear = currentDate.year();
+
+            // Check if the year has changed compared to the previous date
+            const yearChanged = currentDate.month() === 0 && currentYear !== previousYear;
+            previousYear = currentYear;
+
+            // Format the date label depending on the year change
+            const formattedDateLabel = currentDate.format(yearChanged ? "MMM YYYY" : "MMM");
+
+            // Determine whether to show the label on the X axis
+            let showLabel = false;
+
+            if (
+              index === 0 || // Always show the first label
+              index === sortedData.length - 1 || // Always show the last label
+              yearChanged ||
+              (index > lastLabelIndex + tickInterval && index < sortedData.length - tickCount) 
+            ) {
+              showLabel = true;
+              lastLabelIndex = index;
+            }
+
+            return {
+              ...item,
+              label: formattedDateLabel,
+              showLabel,
+            };
+          });
+
+          setFullData(processedData);
         });
       }
     }, [getFullData, lightData, inited]);
@@ -156,10 +198,17 @@ const Chart = memo(
                       yAxis={{
                         min: minDailyPrice,
                         grid: { line: { style: { stroke: "#30363d" } } },
+                        label: { formatter: (v) => `${+Number(v).toFixed(9)}` },
                       }}
                       animation={false}
                       color="#295eff"
-                      xAxis={{ grid: { line: { style: { stroke: "#30363d" } } } }}
+                      xAxis={{
+                        grid: { line: { style: { stroke: "#30363d" } } },
+                        label: {
+                          autoHide: false,
+                          formatter: (_value, _obj, i) => fullData[i].showLabel ? fullData[i].label : '',
+                        }
+                      }}
                       theme={deepMix({}, theme, {
                         background: "#24292f",
                         defaultColor: "#fff",
