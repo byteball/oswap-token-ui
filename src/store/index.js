@@ -1,5 +1,5 @@
 import { combineReducers, configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
-import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from "redux-persist";
+import { persistStore, persistReducer, createMigrate, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
 import cacheSlice from "./slices/cacheSlice";
@@ -9,6 +9,7 @@ import userWalletSlice from "./slices/userWalletSlice";
 import presaleSlice from "./slices/presaleSlice";
 import notificationsSlice from "./slices/notificationsSlice";
 import chartSlice from "./slices/chartSlice";
+import { migrateSettingsToVersion2 } from "./migrations";
 
 import config from "appConfig";
 
@@ -22,11 +23,16 @@ const rootReducer = combineReducers({
   chart: chartSlice,
 });
 
+const migrations = {
+  2: migrateSettingsToVersion2,
+};
+
 const persistConfig = {
   key: `oswap-token${config.ENVIRONMENT === "testnet" ? "-tn" : ""}`,
-  version: 1,
+  version: 2,
   storage,
   whitelist: ["settings", "cache"],
+  migrate: createMigrate(migrations),
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
