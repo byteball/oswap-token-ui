@@ -78,26 +78,26 @@ export const bootstrap = async () => {
       presaleParams = presaleAADefinition[1]?.params;
 
       store.dispatch(savePresaleParams([presaleAAAddress, presaleParams]));
-    } else {
-      console.error("Please define an asset");
     }
   }
+
+  let presaleStateVars = {};
 
   if (presaleAAAddress) {
     await client.justsaying("light/new_aa_to_watch", {
       aa: presaleAAAddress,
     });
-  }
 
-  const [presaleStateVars] = await Promise.all([client.api.getAaStateVars({ address: presaleAAAddress })]);
+    presaleStateVars = await client.api.getAaStateVars({ address: presaleAAAddress });
 
-  if (presaleAAAddress && presaleStateVars.launch_date !== undefined && presaleStateVars.launch_date !== state.settings.presaleParams.launch_date) {
-    presaleParams = {
-      ...presaleParams,
-      launch_date: presaleStateVars.launch_date,
-    };
+    if (presaleStateVars.launch_date !== undefined && presaleStateVars.launch_date !== state.settings.presaleParams.launch_date) {
+      presaleParams = {
+        ...presaleParams,
+        launch_date: presaleStateVars.launch_date,
+      };
 
-    store.dispatch(savePresaleParams([presaleAAAddress, presaleParams]));
+      store.dispatch(savePresaleParams([presaleAAAddress, presaleParams]));
+    }
   }
 
   store.dispatch(updatePresaleStateVars(presaleStateVars));
