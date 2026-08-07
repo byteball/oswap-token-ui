@@ -1,21 +1,23 @@
 import { createSlice } from "@reduxjs/toolkit";
 import moment from "moment";
 
+export const settingsInitialState = {
+  walletAddress: undefined,
+  exchangeRates: {},
+  exchangeRatesUpdatedTs: 0,
+  presaleAAAddress: null,
+  slippageTolerance: 2,
+  presaleParams: {
+    buy_freeze_period: 0,
+    launch_date: null,
+    reserve_asset: "base",
+    token_aa: null,
+  },
+};
+
 export const settingsSlice = createSlice({
   name: "settings",
-  initialState: {
-    walletAddress: undefined,
-    exchangeRates: {},
-    exchangeRatesUpdatedTs: 0,
-    presaleAAAddress: null,
-    slippageTolerance: 2,
-    presaleParams: {
-      buy_freeze_period: 0,
-      launch_date: null,
-      reserve_asset: "base",
-      token_aa: null,
-    },
-  },
+  initialState: settingsInitialState,
   reducers: {
     changeWallet: (state, action) => {
       state.walletAddress = action.payload;
